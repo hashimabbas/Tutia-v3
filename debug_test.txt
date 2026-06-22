@@ -1,0 +1,109 @@
+﻿Test Runner Configured
+PHPUnit Started (PHPUnit 12.5.24 using PHP 8.4.0 (cli) on WINNT)
+Test Runner Configured
+Bootstrap Finished (C:\Users\User\Desktop\Hashim\Projects\tutia-updating\vendor/autoload.php)
+Event Facade Sealed
+Test Suite Loaded (35 tests)
+Test Runner Started
+Test Suite Sorted
+Test Runner Execution Started (35 tests)
+Test Suite Started (P\Tests\Unit\ExpressionEngineCoreTest, 35 tests)
+Before First Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUpBeforeClass)
+Before First Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUpBeforeClass
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_failed_result_with_errors)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_failed_result_with_errors)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_failed_result_with_errors)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_failed_result_with_errors)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result_with_matched_rules)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result_with_matched_rules)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result_with_matched_rules)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_creates_a_passed_result_with_matched_rules)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_is_immutable__readonly_)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_is_immutable__readonly_)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_is_immutable__readonly_)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionResult_DTO__ΓåÆ_it_is_immutable__readonly_)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_a_context_with_data)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_a_context_with_data)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_a_context_with_data)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_a_context_with_data)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_an_empty_context)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_an_empty_context)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_an_empty_context)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_creates_an_empty_context)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_is_immutable__readonly_)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_is_immutable__readonly_)
+Post Condition Method Called (P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged)
+Post Condition Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::__MarkTestIncompleteIfSnapshotHaveChanged
+After Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::tearDown)
+After Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::tearDown
+Test Passed (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_is_immutable__readonly_)
+Test Finished (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionContext_DTO__ΓåÆ_it_is_immutable__readonly_)
+Test Preparation Started (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionNode_abstract__ΓåÆ_it_returns_the_class_basename_as_type)
+Before Test Method Called (P\Tests\Unit\ExpressionEngineCoreTest::setUp)
+Before Test Method Finished:
+- P\Tests\Unit\ExpressionEngineCoreTest::setUp
+Test Prepared (P\Tests\Unit\ExpressionEngineCoreTest::__pest_evaluable__ExpressionNode_abstract__ΓåÆ_it_returns_the_class_basename_as_type)

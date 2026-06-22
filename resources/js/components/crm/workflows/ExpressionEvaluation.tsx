@@ -1,0 +1,224 @@
+import { cn } from '@/lib/utils';
+
+interface MatchedRule {
+    rule: string;
+    passed: boolean;
+}
+
+interface TraceEntry {
+    field: string;
+    operator: string;
+    expected: string | number | boolean | null;
+    actual: string | number | boolean | null;
+    passed: boolean;
+    rule: string;
+    ruleId: string;
+}
+
+interface Props {
+    expression: string | null;
+    matchedRules: MatchedRule[] | string[] | null;
+    trace: TraceEntry[] | null;
+    evaluatedRules: number;
+    passedRules: number;
+    status: string;
+}
+
+function isNewFormat(rules: MatchedRule[] | string[]): rules is MatchedRule[] {
+    return rules.length > 0 && typeof rules[0] === 'object' && 'rule' in rules[0];
+}
+
+function isTraceFormat(trace: TraceEntry[] | null | undefined): trace is TraceEntry[] {
+    return Array.isArray(trace) && trace.length > 0 && typeof trace[0] === 'object' && 'field' in trace[0];
+}
+
+function formatOperator(op: string): string {
+    const map: Record<string, string> = {
+        '=': '=',
+        '!=': '≠',
+        '>': '>',
+        '>=': '≥',
+        '<': '<',
+        '<=': '≤',
+        contains: 'contains',
+        starts_with: 'starts with',
+        ends_with: 'ends with',
+        in: 'in',
+        not_in: 'not in',
+    };
+    return map[op] ?? op;
+}
+
+function parseRuleLine(rule: string): { field: string; operator: string; value: string } | null {
+    const match = rule.match(/^([A-Za-z_.]+)\s+(=|!=|>=|<=|>|<|in|not_in|contains|starts_with|ends_with)\s+(.+)$/);
+    if (!match) return null;
+    return { field: match[1], operator: match[2], value: match[3] };
+}
+
+function formatValue(val: unknown): string {
+    if (val === null || val === undefined) return '—';
+    if (typeof val === 'boolean') return val ? 'true' : 'false';
+    return String(val);
+}
+
+function RuleRow({ rule, passed }: { rule: string; passed: boolean }) {
+    const parsed = parseRuleLine(rule);
+
+    return (
+        <div className="flex items-center gap-3 rounded-md px-3 py-2 text-xs">
+            <span className={cn(
+                'flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold',
+                passed ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-400/10 text-red-400',
+            )}>
+                {passed ? '✓' : '✗'}
+            </span>
+            {parsed ? (
+                <div className="flex items-center gap-1.5 font-mono text-xs">
+                    <span className="text-[#8b8b9e]">{parsed.field}</span>
+                    <span className={cn(
+                        'font-medium',
+                        passed ? 'text-emerald-400' : 'text-red-400',
+                    )}>
+                        {formatOperator(parsed.operator)}
+                    </span>
+                    <span className="text-[#e8e8ed]">{parsed.value}</span>
+                </div>
+            ) : (
+                <span className="font-mono text-[#e8e8ed]">{rule}</span>
+            )}
+        </div>
+    );
+}
+
+function TraceRow({ entry }: { entry: TraceEntry }) {
+    return (
+        <div className={cn(
+            'rounded-md border px-3 py-2.5',
+            entry.passed
+                ? 'border-emerald-500/10 bg-emerald-500/[0.02]'
+                : 'border-red-400/10 bg-red-400/[0.02]',
+        )}>
+            <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-1.5 font-mono text-xs">
+                    <span className={cn(
+                        'text-[10px]',
+                        entry.passed ? 'text-emerald-400' : 'text-red-400',
+                    )}>
+                        {entry.passed ? '✓' : '✗'}
+                    </span>
+                    <span className="text-[#8b8b9e]">{entry.field}</span>
+                    <span className={cn(
+                        'font-medium',
+                        entry.passed ? 'text-emerald-400' : 'text-red-400',
+                    )}>
+                        {formatOperator(entry.operator)}
+                    </span>
+                    <span className="text-[#e8e8ed]">{formatValue(entry.expected)}</span>
+                </div>
+                <span className={cn(
+                    'text-[10px] font-medium',
+                    entry.passed ? 'text-emerald-400' : 'text-red-400',
+                )}>
+                    {entry.passed ? 'Passed' : 'Failed'}
+                </span>
+            </div>
+            <div className="flex items-center gap-4 text-[10px] text-[#555570]">
+                <div>
+                    <span className="text-[#555570]">Actual: </span>
+                    <span className="font-mono text-[#8b8b9e]">{formatValue(entry.actual)}</span>
+                </div>
+                <div>
+                    <span className="text-[#555570]">Expected: </span>
+                    <span className="font-mono text-[#8b8b9e]">{formatValue(entry.expected)}</span>
+                </div>
+                <div>
+                    <span className="text-[#555570]">ID: </span>
+                    <span className="font-mono text-[#555570]">{entry.ruleId}</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function ExpressionEvaluation({
+    expression,
+    matchedRules,
+    trace,
+    evaluatedRules,
+    passedRules,
+    status,
+}: Props) {
+    const hasTrace = isTraceFormat(trace);
+
+    if ((!matchedRules || matchedRules.length === 0) && !hasTrace) {
+        return (
+            <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-6 text-center">
+                <p className="text-xs text-[#555570]">No expression evaluation data available for this run.</p>
+                <p className="mt-1 text-[10px] text-[#555570]">
+                    Expression evaluation results are only captured for v2 expression-based workflows.
+                </p>
+            </div>
+        );
+    }
+
+    const passed = status === 'completed' || status === 'passed';
+    const rules = matchedRules && matchedRules.length > 0
+        ? (isNewFormat(matchedRules) ? matchedRules : matchedRules.map(r => ({ rule: r, passed })))
+        : [];
+
+    const rulesCount = rules.length;
+    const rulesPassed = rules.filter(r => r.passed).length;
+    const totalRules = evaluatedRules || rulesCount;
+    const totalPassed = hasTrace ? trace.filter(t => t.passed).length : rulesPassed;
+
+    return (
+        <div className="space-y-4">
+            {expression && (
+                <div className="rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] p-4">
+                    <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-2">Expression</div>
+                    <code className="text-sm text-[#e8e8ed] break-all font-mono">{expression}</code>
+                </div>
+            )}
+
+            {rules.length > 0 && (
+                <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
+                    <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-3">Rule Evaluation</div>
+                    <div className="space-y-1">
+                        {rules.map((r, i) => (
+                            <RuleRow key={i} rule={r.rule} passed={r.passed} />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {hasTrace && (
+                <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
+                    <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-3">Debug Trace</div>
+                    <div className="space-y-2">
+                        {trace.map((entry, i) => (
+                            <TraceRow key={i} entry={entry} />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
+                <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-2">Result</div>
+                <div className="flex items-center gap-2">
+                    <span className={cn(
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
+                        passed
+                            ? 'bg-emerald-500/10 text-emerald-400'
+                            : 'bg-red-400/10 text-red-400',
+                    )}>
+                        <span className="text-[10px]">{passed ? '✓' : '✗'}</span>
+                        {passed ? 'PASSED' : 'FAILED'}
+                    </span>
+                    <span className="text-[10px] text-[#555570]">
+                        {totalPassed} of {totalRules} rules matched
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+}

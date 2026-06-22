@@ -1,0 +1,56 @@
+import { registerActionConfig, type ActionConfigProps } from './registry';
+
+function CreateRiskActionConfig({ value, onChange }: ActionConfigProps) {
+    return (
+        <div className="space-y-2.5">
+            <div>
+                <label className="mb-1 block text-[10px] text-[#555570]">Title</label>
+                <input
+                    value={value.title ?? ''}
+                    onChange={e => onChange({ ...value, title: e.target.value })}
+                    className="w-full rounded-md border border-[#1e1e2a] bg-transparent px-2.5 py-1.5 text-xs text-[#e8e8ed] outline-none focus:border-[#3b6cdb]"
+                    placeholder="Risk title"
+                />
+            </div>
+            <div>
+                <label className="mb-1 block text-[10px] text-[#555570]">Description</label>
+                <textarea
+                    value={value.description ?? ''}
+                    onChange={e => onChange({ ...value, description: e.target.value })}
+                    className="w-full rounded-md border border-[#1e1e2a] bg-transparent px-2.5 py-1.5 text-xs text-[#e8e8ed] outline-none focus:border-[#3b6cdb]"
+                    placeholder="Risk description"
+                    rows={2}
+                />
+            </div>
+            <div className="flex gap-3">
+                <div className="flex-1">
+                    <label className="mb-1 block text-[10px] text-[#555570]">Severity</label>
+                    <select
+                        value={value.severity ?? 'medium'}
+                        onChange={e => onChange({ ...value, severity: e.target.value })}
+                        className="w-full rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#e8e8ed] outline-none focus:border-[#3b6cdb]"
+                    >
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div className="flex-1">
+                    <label className="mb-1 block text-[10px] text-[#555570]">Probability</label>
+                    <select
+                        value={value.probability ?? 'medium'}
+                        onChange={e => onChange({ ...value, probability: e.target.value })}
+                        className="w-full rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#e8e8ed] outline-none focus:border-[#3b6cdb]"
+                    >
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+registerActionConfig('create_risk', CreateRiskActionConfig);

@@ -1,0 +1,12 @@
+export type * from './auth';
+export type * from './navigation';
+export type * from './ui';
+export type * from './i18n';
+export type * from './brand';
+export type * from './services';
+export type * from './platform';
+export type * from './work';
+export type * from './about';
+export type * from './crm';
+export type * from './home';
+export type * from './work';
