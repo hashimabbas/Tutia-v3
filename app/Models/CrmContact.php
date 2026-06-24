@@ -32,7 +32,7 @@ class CrmContact extends Model
 
     public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(CrmOrganization::class, 'crm_organization_contact')
+        return $this->belongsToMany(CrmOrganization::class, 'crm_organization_contact', 'contact_id', 'organization_id')
             ->withPivot(['contact_role_id', 'is_primary', 'job_title'])
             ->withTimestamps();
     }
@@ -54,7 +54,7 @@ class CrmContact extends Model
 
     public function tags()
     {
-        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables');
+        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables', 'taggable_id', 'tag_id');
     }
 
     public function activities(): MorphMany

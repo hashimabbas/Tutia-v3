@@ -10,6 +10,7 @@ use App\Services\Crm\Analytics\ApprovalIntelligenceService;
 use App\Services\Crm\Analytics\ApprovalRecommendationService;
 use App\Services\Crm\Analytics\AutomationInsightService;
 use App\Services\Crm\Analytics\CapacityForecastService;
+use App\Services\Crm\Analytics\Explainability\RecommendationExplanationFactory;
 use App\Services\Crm\Analytics\HealthScoreService;
 use App\Services\Crm\Analytics\SlaBreachPredictionService;
 use App\Services\Crm\Analytics\WorkflowAnalyticsService;
@@ -30,6 +31,7 @@ class AnalyticsController extends Controller
         private readonly ApprovalRecommendationService $approvalRecommendations,
         private readonly HealthScoreService $healthScores,
         private readonly AutomationInsightService $automationInsights,
+        private readonly RecommendationExplanationFactory $explanationFactory,
         private readonly WorkflowRiskPredictionService $workflowRiskPrediction,
         private readonly SlaBreachPredictionService $slaBreachPrediction,
         private readonly ApprovalDelayForecastService $approvalDelayForecast,
@@ -73,7 +75,10 @@ class AnalyticsController extends Controller
             'recommendations' => $this->workflowRecommendations->recommendations()
                 ->concat($this->approvalRecommendations->recommendations())
                 ->sortByDesc('priority')
-                ->values(),
+                ->values()
+                ->map(fn (array $r) => array_merge($r, [
+                    'explanation' => $this->explanationFactory->explain($r),
+                ])),
             'healthScores' => [
                 'workflows' => $this->healthScores->workflowHealth(),
                 'approvals' => $this->healthScores->approvalHealth(),

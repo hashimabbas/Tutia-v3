@@ -69,8 +69,8 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
             <Head title="CRM · Workflows" />
 
             <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-[#1e1e2a] px-6 py-3">
-                    <h1 className="text-base font-medium text-[#e8e8ed]">Workflows</h1>
+                <div className="flex items-center justify-between border-b border-gray-200 bg-white/90 backdrop-blur-xl px-6 py-3 sticky top-0 z-10">
+                    <h1 className="text-base font-semibold text-gray-900">Workflows</h1>
                     <Link
                         href="/crm/workflows/create"
                         className="flex items-center gap-1.5 rounded-md bg-[#2B4C8C] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#3b5d9c]"
@@ -80,22 +80,22 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                     </Link>
                 </div>
 
-                <div className="flex items-center gap-3 border-b border-[#1e1e2a] px-6 py-2.5">
+                <div className="flex items-center gap-3 border-b border-gray-200 bg-gray-50/50 px-6 py-2.5">
                     <div className="relative flex-1">
-                        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#555570]" />
+                        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             value={search}
                             onChange={e => handleSearch(e.target.value)}
                             placeholder="Search workflows..."
-                            className="w-full rounded-md border border-[#1e1e2a] bg-[#0f0f14] py-1.5 pl-8 pr-3 text-xs text-[#e8e8ed] placeholder-[#555570] outline-none focus:border-[#3b6cdb]"
+                            className="w-full rounded-md border border-gray-200 bg-white py-1.5 pl-8 pr-3 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                         />
                     </div>
 
                     <select
                         value={entityFilter}
                         onChange={e => { setEntityFilter(e.target.value); applyFilter('entity_type', e.target.value); }}
-                        className="rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#8b8b9e] outline-none focus:border-[#3b6cdb]"
+                        className="rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                     >
                         <option value="">All entities</option>
                         {entity_types.map(t => <option key={t} value={t}>{t}</option>)}
@@ -104,7 +104,7 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                     <select
                         value={activeFilter}
                         onChange={e => { setActiveFilter(e.target.value); applyFilter('is_active', e.target.value); }}
-                        className="rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#8b8b9e] outline-none focus:border-[#3b6cdb]"
+                        className="rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                     >
                         <option value="">All status</option>
                         <option value="1">Active</option>
@@ -115,7 +115,7 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                 <div className="flex-1 overflow-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-[#1e1e2a] text-[10px] font-medium uppercase tracking-wider text-[#555570]">
+                            <tr className="border-b border-gray-200 bg-gray-50/50 text-[10px] font-medium uppercase tracking-wider text-gray-500">
                                 <th className="px-6 py-2.5 text-left">Name</th>
                                 <th className="px-4 py-2.5 text-left">Entity</th>
                                 <th className="px-4 py-2.5 text-center">Triggers</th>
@@ -126,39 +126,39 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                                 <th className="px-4 py-2.5 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="text-xs text-[#e8e8ed]">
+                        <tbody className="text-xs text-gray-700">
                             {workflows.data.map(workflow => (
                                 <tr
                                     key={workflow.id}
-                                    className="cursor-pointer border-b border-[#1e1e2a] transition-colors hover:bg-[#0f0f14]"
+                                    className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-gray-50"
                                 >
                                     <td className="px-6 py-3" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
                                         <div>
-                                            <span className="font-medium text-[#e8e8ed]">{workflow.name}</span>
+                                            <span className="font-medium text-gray-900">{workflow.name}</span>
                                             {workflow.description && (
-                                                <div className="mt-0.5 max-w-md truncate text-[10px] text-[#555570]">{workflow.description}</div>
+                                                <div className="mt-0.5 max-w-md truncate text-[10px] text-gray-500">{workflow.description}</div>
                                             )}
                                         </div>
                                     </td>
                                     <td className="px-4 py-3" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
-                                        <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[10px] text-[#8b8b9e]">{workflow.entity_type}</span>
+                                        <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] text-gray-600">{workflow.entity_type}</span>
                                     </td>
                                     <td className="px-4 py-3 text-center" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
-                                        <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[#8b8b9e]">{workflow.triggers_count}</span>
+                                        <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">{workflow.triggers_count}</span>
                                     </td>
                                     <td className="px-4 py-3 text-center" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
-                                        <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[#8b8b9e]">{workflow.conditions_count}</span>
+                                        <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">{workflow.conditions_count}</span>
                                     </td>
                                     <td className="px-4 py-3 text-center" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
-                                        <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[#8b8b9e]">{workflow.actions_count}</span>
+                                        <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">{workflow.actions_count}</span>
                                     </td>
                                     <td className="px-4 py-3 text-center" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
                                         <span
                                             className={cn(
                                                 'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium',
                                                 workflow.is_active
-                                                    ? 'bg-emerald-500/10 text-emerald-400'
-                                                    : 'bg-[#1a1a24] text-[#555570]',
+                                                    ? 'bg-emerald-50 text-emerald-600'
+                                                    : 'bg-gray-100 text-gray-500',
                                             )}
                                         >
                                             {workflow.is_active ? <Play className="h-2.5 w-2.5" fill="currentColor" /> : <Pause className="h-2.5 w-2.5" />}
@@ -166,27 +166,27 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                                         </span>
                                     </td>
                                     <td className="px-4 py-3 text-center" onClick={() => router.visit(`/crm/workflows/${workflow.id}`)}>
-                                        <span className="text-[#555570]">v{workflow.version}</span>
+                                        <span className="text-gray-500">v{workflow.version}</span>
                                     </td>
                                     <td className="px-4 py-3 text-right">
                                         <div className="flex items-center justify-end gap-1">
                                             <button
                                                 onClick={e => { e.stopPropagation(); handleToggle(workflow); }}
-                                                className="rounded p-1.5 text-[#555570] transition-colors hover:bg-[#1a1a24] hover:text-[#e8e8ed]"
+                                                className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
                                                 title={workflow.is_active ? 'Deactivate' : 'Activate'}
                                             >
                                                 {workflow.is_active ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
                                             </button>
                                             <button
                                                 onClick={e => { e.stopPropagation(); handleDuplicate(workflow); }}
-                                                className="rounded p-1.5 text-[#555570] transition-colors hover:bg-[#1a1a24] hover:text-[#e8e8ed]"
+                                                className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
                                                 title="Duplicate"
                                             >
                                                 <Copy className="h-3.5 w-3.5" />
                                             </button>
                                             <button
                                                 onClick={e => { e.stopPropagation(); handleDelete(workflow); }}
-                                                className="rounded p-1.5 text-[#555570] transition-colors hover:bg-[#1a1a24] hover:text-red-400"
+                                                className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500"
                                                 title="Delete"
                                             >
                                                 <Trash2 className="h-3.5 w-3.5" />
@@ -201,15 +201,15 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                     {workflows.data.length === 0 && (
                         <div className="flex h-64 items-center justify-center">
                             <div className="text-center">
-                                <Workflow className="mx-auto mb-3 h-8 w-8 text-[#1e1e2a]" />
-                                <p className="text-sm text-[#555570]">No workflows yet</p>
-                                <p className="mt-1 text-xs text-[#555570]">Create your first automation workflow.</p>
+                                <Workflow className="mx-auto mb-3 h-8 w-8 text-gray-300" />
+                                <p className="text-sm text-gray-500">No workflows yet</p>
+                                <p className="mt-1 text-xs text-gray-400">Create your first automation workflow.</p>
                             </div>
                         </div>
                     )}
 
                     {workflows.meta && (
-                        <div className="flex items-center justify-between border-t border-[#1e1e2a] px-6 py-2.5 text-[11px] text-[#555570]">
+                        <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50/50 px-6 py-2.5 text-[11px] text-gray-500">
                             <span>Page {workflows.meta.current_page} of {workflows.meta.last_page}</span>
                             <div className="flex gap-2">
                                 {workflows.meta.links?.filter((l: any) => l.url).map((l: any) => (
@@ -218,7 +218,7 @@ export default function WorkflowIndex({ workflows, entity_types, filters }: Prop
                                         onClick={() => router.get(l.url, {}, { preserveState: true })}
                                         className={cn(
                                             'rounded px-2 py-1 transition-colors',
-                                            l.active ? 'bg-[#1e1e2a] text-[#e8e8ed]' : 'text-[#555570] hover:text-[#8b8b9e]',
+                                            l.active ? 'bg-[#2B4C8C] text-white' : 'text-gray-500 hover:text-gray-700',
                                         )}
                                         dangerouslySetInnerHTML={{ __html: l.label }}
                                     />

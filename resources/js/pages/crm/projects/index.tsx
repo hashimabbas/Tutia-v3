@@ -50,25 +50,25 @@ export default function ProjectIndex({ projects, filters }: Props) {
             <Head title="CRM · Projects" />
 
             <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-[#1e1e2a] px-6 py-3">
-                    <h1 className="text-base font-medium text-[#e8e8ed]">Projects</h1>
+                <div className="flex items-center justify-between border-b border-[#e2e6ef] px-6 py-3">
+                    <h1 className="text-base font-medium text-[#1a1a2e]">Projects</h1>
                 </div>
 
-                <div className="flex items-center gap-3 border-b border-[#1e1e2a] px-6 py-2.5">
+                <div className="flex items-center gap-3 border-b border-[#e2e6ef] px-6 py-2.5">
                     <div className="relative flex-1">
-                        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#555570]" />
+                        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b7280]" />
                         <input
                             type="text"
                             value={search}
                             onChange={e => handleSearch(e.target.value)}
                             placeholder="Search projects..."
-                            className="w-full rounded-md border border-[#1e1e2a] bg-[#0f0f14] py-1.5 pl-8 pr-3 text-xs text-[#e8e8ed] placeholder-[#555570] outline-none focus:border-[#3b6cdb]"
+                            className="w-full rounded-md border border-[#e2e6ef] bg-white py-1.5 pl-8 pr-3 text-xs text-[#1a1a2e] placeholder-[#6b7280] outline-none focus:border-[#2B4C8C]"
                         />
                     </div>
                     <select
                         value={filters.status ?? ''}
                         onChange={e => applyFilter('status', e.target.value)}
-                        className="rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#8b8b9e] outline-none focus:border-[#3b6cdb]"
+                        className="rounded-md border border-[#e2e6ef] bg-white px-2.5 py-1.5 text-xs text-[#6b7280] outline-none focus:border-[#2B4C8C]"
                     >
                         <option value="">All statuses</option>
                         <option value="planned">Planned</option>
@@ -83,7 +83,7 @@ export default function ProjectIndex({ projects, filters }: Props) {
                 <div className="flex-1 overflow-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-[#1e1e2a] text-[10px] font-medium uppercase tracking-wider text-[#555570]">
+                            <tr className="border-b border-[#e2e6ef] text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">
                                 <th className="px-6 py-2.5 text-left">Name</th>
                                 <th className="px-4 py-2.5 text-left">Organization</th>
                                 <th className="px-4 py-2.5 text-left">Status</th>
@@ -91,27 +91,27 @@ export default function ProjectIndex({ projects, filters }: Props) {
                                 <th className="px-4 py-2.5 text-left">Target End</th>
                             </tr>
                         </thead>
-                        <tbody className="text-xs text-[#e8e8ed]">
+                        <tbody className="text-xs text-[#1a1a2e]">
                             {projects.data.map(project => (
                                 <tr
                                     key={project.id}
                                     onClick={() => router.visit(`/crm/projects/${project.id}`)}
-                                    className="cursor-pointer border-b border-[#1e1e2a] transition-colors hover:bg-[#0f0f14]"
+                                    className="cursor-pointer border-b border-[#e2e6ef] transition-colors hover:bg-[#f8f9fc]"
                                 >
                                     <td className="px-6 py-3">
                                         <div className="flex items-center gap-2.5">
-                                            <div className="flex h-7 w-7 items-center justify-center rounded bg-[#1a1a24]">
-                                                <FolderKanban className="h-3.5 w-3.5 text-[#555570]" />
+                                            <div className="flex h-7 w-7 items-center justify-center rounded bg-[#f3f4f6]">
+                                                <FolderKanban className="h-3.5 w-3.5 text-[#6b7280]" />
                                             </div>
-                                            <span className="font-medium text-[#e8e8ed]">{project.name}</span>
+                                            <span className="font-medium text-[#1a1a2e]">{project.name}</span>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-3 text-[#8b8b9e]">{project.organization?.name ?? '-'}</td>
+                                    <td className="px-4 py-3 text-[#6b7280]">{project.organization?.name ?? '-'}</td>
                                     <td className="px-4 py-3"><ProjectStatusBadge status={project.status} /></td>
                                     <td className="px-4 py-3 text-right font-medium">
                                         {formatCurrency(project.contract_value + project.change_order_total)}
                                     </td>
-                                    <td className="px-4 py-3 text-[#555570]">
+                                    <td className="px-4 py-3 text-[#6b7280]">
                                         {project.target_end_date ? new Date(project.target_end_date).toLocaleDateString() : '-'}
                                     </td>
                                 </tr>
@@ -122,22 +122,22 @@ export default function ProjectIndex({ projects, filters }: Props) {
                     {projects.data.length === 0 && (
                         <div className="flex h-64 items-center justify-center">
                             <div className="text-center">
-                                <FolderKanban className="mx-auto mb-3 h-8 w-8 text-[#1e1e2a]" />
-                                <p className="text-sm text-[#555570]">No projects yet</p>
-                                <p className="mt-1 text-xs text-[#555570]">Convert a deal to create your first project.</p>
+                                <FolderKanban className="mx-auto mb-3 h-8 w-8 text-[#e2e6ef]" />
+                                <p className="text-sm text-[#6b7280]">No projects yet</p>
+                                <p className="mt-1 text-xs text-[#6b7280]">Convert a deal to create your first project.</p>
                             </div>
                         </div>
                     )}
 
                     {projects.meta && (
-                        <div className="flex items-center justify-between border-t border-[#1e1e2a] px-6 py-2.5 text-[11px] text-[#555570]">
+                        <div className="flex items-center justify-between border-t border-[#e2e6ef] px-6 py-2.5 text-[11px] text-[#6b7280]">
                             <span>Page {projects.meta.current_page} of {projects.meta.last_page}</span>
                             <div className="flex gap-2">
                                 {projects.meta.links?.filter((l: any) => l.url).map((l: any) => (
                                     <button
                                         key={l.label}
                                         onClick={() => router.get(l.url, {}, { preserveState: true })}
-                                        className={`rounded px-2 py-1 transition-colors ${l.active ? 'bg-[#1e1e2a] text-[#e8e8ed]' : 'text-[#555570] hover:text-[#8b8b9e]'}`}
+                                        className={`rounded px-2 py-1 transition-colors ${l.active ? 'bg-[#2B4C8C] text-white' : 'text-[#6b7280] hover:text-[#1a1a2e]'}`}
                                         dangerouslySetInnerHTML={{ __html: l.label }}
                                     />
                                 ))}

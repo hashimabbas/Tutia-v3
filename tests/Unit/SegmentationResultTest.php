@@ -1,7 +1,6 @@
 <?php
 
 use App\Services\Crm\Analytics\Segmentation\SegmentationResult;
-use Illuminate\Support\Collection;
 
 describe('SegmentationResult DTO', function () {
     it('creates a result with all properties', function () {

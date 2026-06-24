@@ -10,13 +10,13 @@ interface Props {
 
 export default function ExecutionSummary({ expression, passed, evaluatedRules, passedRules, traceCount }: Props) {
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-            <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-3">Execution Summary</div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-3">Execution Summary</div>
 
             {expression && (
                 <div className="mb-4">
-                    <div className="text-[10px] text-[#555570] mb-1">Expression</div>
-                    <code className="block rounded bg-[#0a0a0f] px-3 py-2 text-xs text-[#e8e8ed] font-mono break-all">
+                    <div className="text-[10px] text-gray-400 mb-1">Expression</div>
+                    <code className="block rounded bg-gray-50/50 px-3 py-2 text-xs text-gray-900 font-mono break-all">
                         {expression}
                     </code>
                 </div>
@@ -27,33 +27,33 @@ export default function ExecutionSummary({ expression, passed, evaluatedRules, p
                     <span className={cn(
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
                         passed
-                            ? 'bg-emerald-500/10 text-emerald-400'
-                            : 'bg-red-400/10 text-red-400',
+                            ? 'bg-emerald-50 text-emerald-600'
+                            : 'bg-red-50 text-red-600',
                     )}>
-                        <span className="text-[10px]">{passed ? '✓' : '✗'}</span>
+                        <span className="text-[10px]">{passed ? '\u2713' : '\u2717'}</span>
                         {passed ? 'PASSED' : 'FAILED'}
                     </span>
                 </div>
 
-                <div className="flex items-center gap-4 text-[10px] text-[#555570]">
+                <div className="flex items-center gap-4 text-[10px] text-gray-500">
                     <div>
                         Evaluated:{' '}
-                        <span className="font-mono text-[#8b8b9e]">{evaluatedRules}</span>
+                        <span className="font-mono text-gray-600">{evaluatedRules}</span>
                     </div>
                     <div>
                         Passed:{' '}
-                        <span className={cn('font-mono', passedRules > 0 ? 'text-emerald-400' : 'text-[#8b8b9e]')}>
+                        <span className={cn('font-mono', passedRules > 0 ? 'text-emerald-600' : 'text-gray-600')}>
                             {passedRules}
                         </span>
                     </div>
                     <div>
                         Failed:{' '}
-                        <span className={cn('font-mono', evaluatedRules - passedRules > 0 ? 'text-red-400' : 'text-[#8b8b9e]')}>
+                        <span className={cn('font-mono', evaluatedRules - passedRules > 0 ? 'text-red-600' : 'text-gray-600')}>
                             {evaluatedRules - passedRules}
                         </span>
                     </div>
                     <div>
-                        Trace Entries: <span className="font-mono text-[#8b8b9e]">{traceCount}</span>
+                        Trace Entries: <span className="font-mono text-gray-600">{traceCount}</span>
                     </div>
                 </div>
             </div>

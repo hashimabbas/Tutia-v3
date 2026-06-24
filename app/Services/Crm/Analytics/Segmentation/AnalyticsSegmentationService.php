@@ -101,10 +101,10 @@ class AnalyticsSegmentationService
         }
 
         try {
-            $ast = $this->parser->parse($expression);
+            $this->parser->parse($expression);
 
-            return $this->validator->validate($ast, $catalogClass);
-        } catch (\Throwable $e) {
+            return $this->validator->validate($expression, $catalogClass::all());
+        } catch (Throwable $e) {
             return new ValidationResult(valid: false, errors: [$e->getMessage()], warnings: []);
         }
     }

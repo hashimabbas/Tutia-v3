@@ -60,7 +60,21 @@ class ApprovalDetailsResource extends JsonResource
                     'name' => $this->workflowRun->workflow->name,
                 ]),
             ]),
-            'decisions' => ApprovalDecisionResource::collection($this->whenLoaded('decisions')),
+            'decisions' => $this->whenLoaded('decisions', fn () => $this->decisions->map(fn ($d) => [
+                'id' => $d->id,
+                'user_id' => $d->user_id,
+                'decision' => $d->decision,
+                'comment' => $d->comment,
+                'decided_at' => $d->decided_at?->toIso8601String(),
+                'user' => $d->relationLoaded('user') ? [
+                    'id' => $d->user->id,
+                    'name' => $d->user->name,
+                ] : null,
+                'step' => $d->relationLoaded('step') ? [
+                    'id' => $d->step->id,
+                    'step_order' => $d->step->step_order,
+                ] : null,
+            ])->values()->all()),
             'createdAt' => $this->created_at?->toIso8601String(),
         ];
     }

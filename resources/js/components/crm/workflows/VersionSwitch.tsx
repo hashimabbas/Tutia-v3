@@ -10,8 +10,8 @@ export default function VersionSwitch({ versions, value, onChange, disabled }: P
 
     return (
         <div className="flex items-center gap-2">
-            <span className="text-[11px] font-medium text-[#555570]">Conditions Mode:</span>
-            <div className="flex rounded-md border border-[#1e1e2a] overflow-hidden">
+            <span className="text-[11px] font-medium text-gray-500">Conditions Mode:</span>
+            <div className="flex rounded-md border border-gray-200 overflow-hidden">
                 {versions.map(v => (
                     <button
                         key={v.key}
@@ -21,7 +21,7 @@ export default function VersionSwitch({ versions, value, onChange, disabled }: P
                         className={`px-3 py-1 text-[11px] font-medium transition-colors ${
                             value === v.key
                                 ? 'bg-[#2B4C8C] text-white'
-                                : 'bg-[#0f0f14] text-[#555570] hover:text-[#8b8b9e]'
+                                : 'bg-white text-gray-500 hover:text-gray-700'
                         } disabled:opacity-50`}
                     >
                         {v.label}

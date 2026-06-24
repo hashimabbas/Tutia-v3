@@ -12,8 +12,6 @@ interface Props {
 function parseInitialRows(expression: string | null, fields: ExpressionField[]): ExpressionRule[] {
     if (!expression) return []
 
-    // Attempt to parse a simple expression back into rows.
-    // Supports: field op "value" AND field op "value" OR NOT (field op "value")
     const tokens = expression.match(/(?:NOT\s*\([^)]+\)|[A-Za-z_.]+(?:\s*[!=<>]+\s*"[^"]*"|[A-Za-z_.]+\s*[!=<>]+\s*[^\s"]+)|AND|OR)/g)
     if (!tokens) return []
 
@@ -205,13 +203,13 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
     return (
         <div className="space-y-3">
             {rows.length === 0 && (
-                <div className="text-sm text-gray-500 italic">
+                <div className="text-xs text-gray-400">
                     No conditions defined. Add a condition below.
                 </div>
             )}
 
             {rows.map((row, i) => (
-                <div key={row.id} className="border border-gray-200 rounded-lg p-3 bg-white">
+                <div key={row.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50/50">
                     {row.connector && (
                         <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">
                             {row.connector}
@@ -220,7 +218,7 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
 
                     <div className="flex items-start gap-2">
                         <div className="flex-1">
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Field</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Field</label>
                             <select
                                 value={row.field}
                                 onChange={e => {
@@ -231,7 +229,7 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
                                         value: newField?.type === 'boolean' ? true : '',
                                     })
                                 }}
-                                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                             >
                                 {fields.map(f => (
                                     <option key={f.path} value={f.path}>{f.path}</option>
@@ -240,11 +238,11 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
                         </div>
 
                         <div className="flex-1">
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Operator</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Operator</label>
                             <select
                                 value={row.operator}
                                 onChange={e => updateRow(row.id, { operator: e.target.value })}
-                                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                             >
                                 {getOperatorsForField(row.field).map(op => (
                                     <option key={op.key} value={op.key}>{op.label}</option>
@@ -253,12 +251,12 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
                         </div>
 
                         <div className="flex-1">
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Value</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Value</label>
                             {getFieldType(row.field) === 'boolean' ? (
                                 <select
                                     value={String(row.value)}
                                     onChange={e => updateRow(row.id, { value: e.target.value === 'true' })}
-                                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                    className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                                 >
                                     <option value="true">True</option>
                                     <option value="false">False</option>
@@ -273,18 +271,18 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
                                             : e.target.value,
                                     })}
                                     placeholder="Enter value..."
-                                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                    className="w-full rounded border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                                 />
                             )}
                         </div>
 
                         <div className="flex items-center gap-1 pt-5">
-                            <label className="flex items-center gap-1 text-xs text-gray-500 cursor-pointer">
+                            <label className="flex items-center gap-1 text-xs text-gray-400 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     checked={row.negate}
                                     onChange={e => updateRow(row.id, { negate: e.target.checked })}
-                                    className="rounded"
+                                    className="rounded border-gray-300"
                                 />
                                 NOT
                             </label>
@@ -306,16 +304,16 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
                                 title="Toggle AND/OR"
                                 disabled={i >= rows.length - 1}
                             >
-                                {i < rows.length - 1 ? `↕` : ''}
+                                {i < rows.length - 1 ? `\u2195` : ''}
                             </button>
 
                             <button
                                 type="button"
                                 onClick={() => removeRow(row.id)}
-                                className="text-red-400 hover:text-red-600 text-lg leading-none"
+                                className="text-gray-400 hover:text-red-500 text-lg leading-none"
                                 title="Remove condition"
                             >
-                                ×
+                                {'\u00d7'}
                             </button>
                         </div>
                     </div>
@@ -325,15 +323,15 @@ export default function ExpressionBuilder({ workflowId, expression, fields, oper
             <button
                 type="button"
                 onClick={addRow}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-sm text-[#2B4C8C] hover:text-[#3b5d9c] font-medium"
             >
                 + Add Condition
             </button>
 
             {buildPreview() && (
-                <div className="mt-3 p-3 bg-gray-50 rounded border border-gray-200">
+                <div className="mt-3 p-3 bg-gray-50/50 rounded border border-gray-200">
                     <div className="text-xs font-medium text-gray-500 mb-1">Expression Preview</div>
-                    <code className="text-sm text-gray-800 break-all">{buildPreview()}</code>
+                    <code className="text-sm text-gray-700 break-all">{buildPreview()}</code>
                 </div>
             )}
 

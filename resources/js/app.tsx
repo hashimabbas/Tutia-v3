@@ -5,7 +5,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
-import CrmLayout from '@/components/crm/crm-layout';
 import MainLayout from '@/layouts/main-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
@@ -17,11 +16,10 @@ createInertiaApp({
         switch (true) {
             case name.startsWith('auth/'):
                 return AuthLayout;
-            case name.startsWith('crm/'):
-                return CrmLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
             case name === 'dashboard':
+            case name.startsWith('crm/'):
                 return AppLayout;
             default:
                 return MainLayout;

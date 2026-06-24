@@ -79,6 +79,59 @@ class LeadController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $this->authorize('create', CrmLead::class);
+
+        $sources = ['consultation', 'proposal', 'quote', 'contact', 'seller_registration', 'newsletter'];
+        $stages = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'converted', 'lost'];
+
+        return inertia('crm/leads/create', [
+            'sources' => $sources,
+            'stages' => $stages,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $this->authorize('create', CrmLead::class);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'company' => 'nullable|string|max:255',
+            'source' => 'required|string|max:100',
+            'stage' => 'sometimes|string|max:50',
+            'priority' => 'sometimes|string|max:20',
+            'service' => 'nullable|string|max:255',
+            'project_type' => 'nullable|string|max:255',
+            'budget' => 'nullable|string|max:100',
+            'timeline' => 'nullable|string|max:255',
+            'message' => 'nullable|string',
+            'brief' => 'nullable|string',
+            'requirements' => 'nullable|string',
+        ]);
+
+        $validated['stage'] ??= 'new';
+        $validated['priority'] ??= 'medium';
+
+        $lead = CrmLead::create($validated);
+
+        return redirect()->route('crm.leads.show', $lead)->with('success', 'Lead created');
+    }
+
+    public function edit(CrmLead $lead)
+    {
+        $this->authorize('update', $lead);
+
+        return inertia('crm/leads/create', [
+            'lead' => $lead->only(['id', 'name', 'email', 'phone', 'company', 'source', 'stage', 'priority', 'service', 'project_type', 'budget', 'timeline', 'message', 'brief', 'requirements']),
+            'sources' => ['contact', 'website', 'referral', 'linkedin', 'event', 'cold_call', 'email_campaign', 'partner', 'other'],
+            'stages' => ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'converted', 'lost'],
+        ]);
+    }
+
     public function show(CrmLead $lead)
     {
         $this->authorize('view', $lead);

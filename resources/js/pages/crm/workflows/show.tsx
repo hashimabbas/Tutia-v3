@@ -94,11 +94,11 @@ export default function WorkflowShow({ workflow, meta }: Props) {
         <>
             <Head title={`CRM · ${workflow.name}`} />
 
-            <div className="flex h-full flex-col">
-                <div className="border-b border-[#1e1e2a] px-6 py-2.5">
+            <div className="flex h-full flex-col bg-gray-50/30">
+                <div className="border-b border-gray-200 bg-white/90 backdrop-blur-xl px-6 py-2.5 sticky top-0 z-10">
                     <button
                         onClick={() => router.visit(index().url)}
-                        className="flex items-center gap-1.5 text-[11px] text-[#555570] transition-colors hover:text-[#8b8b9e]"
+                        className="flex items-center gap-1.5 text-[11px] text-gray-500 transition-colors hover:text-gray-700"
                     >
                         <ArrowLeft className="h-3.5 w-3.5" />
                         Back to Workflows

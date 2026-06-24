@@ -38,7 +38,7 @@ function generateSummary(trace: TraceEntry[], passed: boolean): string {
 
     if (failed.length === 1) {
         const f = failed[0];
-        return `Workflow stopped because ${f.rule} — expected ${formatValue(f.expected)} but actual value was ${formatValue(f.actual)}.`;
+        return `Workflow stopped because ${f.rule} \u2014 expected ${formatValue(f.expected)} but actual value was ${formatValue(f.actual)}.`;
     }
 
     const first = failed[0];
@@ -51,12 +51,12 @@ export default function FailureExplanation({ trace, passed, evaluatedRules, pass
 
     if (passed) {
         return (
-            <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/[0.02] p-4">
-                <div className="text-[10px] uppercase tracking-wider text-emerald-400 mb-2">Explanation</div>
-                <p className="text-xs text-[#e8e8ed]">
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50/30 p-4">
+                <div className="text-[10px] uppercase tracking-wider text-emerald-600 mb-2">Explanation</div>
+                <p className="text-xs text-gray-900">
                     {generateSummary(trace, passed)}
                 </p>
-                <p className="text-[10px] text-emerald-400/70 mt-1">
+                <p className="text-[10px] text-emerald-600/70 mt-1">
                     {passedRules} of {evaluatedRules} rules matched successfully.
                 </p>
             </div>
@@ -65,26 +65,26 @@ export default function FailureExplanation({ trace, passed, evaluatedRules, pass
 
     return (
         <div className="space-y-2">
-            <div className="rounded-lg border border-red-400/10 bg-red-400/[0.02] p-4">
-                <div className="text-[10px] uppercase tracking-wider text-red-400 mb-2">Explanation</div>
-                <p className="text-xs text-[#e8e8ed]">{generateSummary(trace, passed)}</p>
+            <div className="rounded-xl border border-red-200 bg-red-50/30 p-4">
+                <div className="text-[10px] uppercase tracking-wider text-red-600 mb-2">Explanation</div>
+                <p className="text-xs text-gray-900">{generateSummary(trace, passed)}</p>
             </div>
 
             {failed.length > 0 && (
-                <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                    <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-2">Failed Rules</div>
+                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                    <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Failed Rules</div>
                     <div className="space-y-1.5">
                         {failed.map((f, i) => (
-                            <div key={i} className="flex items-center gap-2 rounded bg-red-400/[0.02] px-3 py-2">
-                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-400/10 text-[10px] text-red-400">✗</span>
+                            <div key={i} className="flex items-center gap-2 rounded bg-red-50/30 px-3 py-2">
+                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-50 text-[10px] text-red-600">{'\u2717'}</span>
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-1.5 font-mono text-xs">
-                                        <span className="text-[#8b8b9e]">{f.field}</span>
-                                        <span className="text-red-400">{f.operator}</span>
-                                        <span className="text-[#e8e8ed]">{formatValue(f.expected)}</span>
+                                        <span className="text-gray-600">{f.field}</span>
+                                        <span className="text-red-600">{f.operator}</span>
+                                        <span className="text-gray-900">{formatValue(f.expected)}</span>
                                     </div>
-                                    <p className="text-[10px] text-[#555570] mt-0.5">
-                                        Expected <span className="font-mono text-[#8b8b9e]">{formatValue(f.expected)}</span> but received <span className="font-mono text-[#8b8b9e]">{formatValue(f.actual)}</span>
+                                    <p className="text-[10px] text-gray-500 mt-0.5">
+                                        Expected <span className="font-mono text-gray-600">{formatValue(f.expected)}</span> but received <span className="font-mono text-gray-600">{formatValue(f.actual)}</span>
                                     </p>
                                 </div>
                             </div>
@@ -94,9 +94,9 @@ export default function FailureExplanation({ trace, passed, evaluatedRules, pass
             )}
 
             {skippedCount > 0 && (
-                <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                    <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-2">Skipped Rules</div>
-                    <p className="text-[10px] text-[#555570]">
+                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                    <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Skipped Rules</div>
+                    <p className="text-[10px] text-gray-500">
                         {skippedCount} rule{skippedCount === 1 ? '' : 's'} were not evaluated due to short-circuit logic. The expression result
                         was determined before these rules could be reached.
                     </p>

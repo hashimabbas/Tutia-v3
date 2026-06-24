@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Crm;
 use App\Http\Controllers\Controller;
 use App\Models\CrmClassification;
 use App\Models\CrmOrganization;
-use App\Services\Crm\CrmHealthService;
-use App\Services\Crm\CrmNextBestActionService;
 use App\Services\Crm\CrmRelationshipService;
+use App\Services\Crm\Health\CrmHealthService;
+use App\Services\Crm\NextBestAction\CrmNextBestActionService;
 use App\Services\Crm\Timeline\CrmTimelineService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -66,7 +66,29 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function show(CrmOrganization $organization)
+    public function create()
+    {
+        $this->authorize('create', CrmOrganization::class);
+
+        return inertia('crm/organizations/create', [
+            'classifications' => CrmClassification::all(),
+            'industries' => CrmOrganization::distinct()->pluck('industry')->filter()->values(),
+        ]);
+    }
+
+    public function edit(CrmOrganization $organization)
+    {
+        $this->authorize('update', $organization);
+
+        return inertia('crm/organizations/create', [
+            'organization' => $organization->only(['id', 'name', 'domain', 'industry', 'size', 'phone', 'website', 'notes']),
+            'classifications' => CrmClassification::all(),
+            'industries' => CrmOrganization::distinct()->pluck('industry')->filter()->values(),
+            'selected_classification_ids' => $organization->classifications->pluck('id')->map(fn ($id) => (string) $id),
+        ]);
+    }
+
+    public function show(Request $request, CrmOrganization $organization)
     {
         $this->authorize('view', $organization);
 
@@ -80,7 +102,7 @@ class OrganizationController extends Controller
         ]);
 
         $healthScore = $this->health->latest($organization);
-        $recommendations = $this->nba->collect($organization);
+        $recommendations = $this->nba->collect($organization, $request->user()->id);
         $relationshipGraph = $this->relationships->getOrganizationGraph($organization);
 
         return inertia('crm/organizations/show', [

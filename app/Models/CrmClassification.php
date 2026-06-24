@@ -11,6 +11,7 @@ class CrmClassification extends Model
 
     public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(CrmOrganization::class, 'crm_organization_classification');
+        return $this->belongsToMany(CrmOrganization::class, 'crm_organization_classification', 'classification_id', 'organization_id')
+            ->withTimestamps();
     }
 }

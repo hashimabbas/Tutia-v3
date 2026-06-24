@@ -10,7 +10,6 @@ use App\Services\Crm\Expressions\DTOs\ValidationResult;
 use App\Services\Crm\Expressions\Nodes\ComparisonNode;
 use App\Services\Crm\Expressions\Nodes\FieldNode;
 use App\Services\Crm\Expressions\Nodes\ValueNode;
-use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->parser = Mockery::mock(ExpressionParserInterface::class);
@@ -98,12 +97,11 @@ describe('AnalyticsSegmentationService::segment', function () {
             ->andReturn($ast);
 
         $this->evaluator->shouldReceive('evaluate')
-            ->zeroOrMoreTimes()
-            ->andReturnUsing(function ($node, $ctx) {
-                $score = $ctx->data['workflow']['score'] ?? 0;
-
-                return new ExpressionResult(passed: $score < 50);
-            });
+            ->andReturn(
+                new ExpressionResult(passed: false),  // Wf A: health_score=85
+                new ExpressionResult(passed: true),   // Wf B: health_score=30
+                new ExpressionResult(passed: false),  // Wf C: health_score=92
+            );
 
         $result = $this->service->segment($this->workflowItems, 'workflows', 'workflow.health_score < 50');
 
@@ -123,12 +121,10 @@ describe('AnalyticsSegmentationService::segment', function () {
             ->andReturn($ast);
 
         $this->evaluator->shouldReceive('evaluate')
-            ->zeroOrMoreTimes()
-            ->andReturnUsing(function ($node, $ctx) {
-                $rate = $ctx->data['approval']['escalationRate'] ?? 0;
-
-                return new ExpressionResult(passed: $rate > 15);
-            });
+            ->andReturn(
+                new ExpressionResult(passed: false),  // Flow A: escalation_rate=5
+                new ExpressionResult(passed: true),   // Flow B: escalation_rate=25
+            );
 
         $result = $this->service->segment($this->approvalItems, 'approvals', 'approval.escalation_rate > 15');
 
@@ -167,6 +163,7 @@ describe('AnalyticsSegmentationService::validateExpression', function () {
             ->andReturn($ast);
 
         $this->validator->shouldReceive('validate')
+            ->with('workflow.health_score < 50', Mockery::type('array'))
             ->andReturn(new ValidationResult(valid: true, errors: [], warnings: []));
 
         $result = $this->service->validateExpression('workflows', 'workflow.health_score < 50');

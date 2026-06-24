@@ -137,26 +137,37 @@ export default function ActivityTimeline({ entityType, entityId }: ActivityTimel
 
     return (
         <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-[#1e1e2a] px-4 py-2.5">
-                <h2 className="text-[11px] font-medium uppercase tracking-wider text-[#555570]">Timeline</h2>
+            <div className="flex items-center justify-between border-b border-[#e2e6ef] px-6 py-3">
+                <div className="flex items-center gap-2.5">
+                    <h2 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6b7280]">
+                        Activity Timeline
+                    </h2>
+                    {events.length > 0 && (
+                        <span className="rounded-md bg-[#e2e6ef] px-1.5 py-0.5 text-[9px] font-medium text-[#6b7280]">{events.length}</span>
+                    )}
+                </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="flex items-center gap-1 rounded border border-[#1e1e2a] bg-[#0f0f14] px-2 py-1 text-[11px] text-[#8b8b9e] transition-colors hover:border-[#2a2a3a] hover:text-[#e8e8ed]"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#e2e6ef] bg-white px-2.5 py-1.5 text-[11px] text-[#6b7280] transition-all hover:border-[#c8cce0] hover:text-[#374151] hover:shadow-sm"
                 >
                     <MessageSquare className="h-3 w-3" />
-                    Add note
+                    Log activity
                 </button>
             </div>
 
             {showForm && (
-                <form onSubmit={handleAddActivity} className="border-b border-[#1e1e2a] bg-[#0f0f14] px-4 py-2.5">
-                    <div className="mb-2 flex gap-1.5">
+                <form onSubmit={handleAddActivity} className="border-b border-[#e2e6ef] bg-[#f0f2f7] px-6 py-3">
+                    <div className="mb-2.5 flex gap-1.5">
                         {['note', 'call', 'email', 'meeting', 'task'].map(t => (
                             <button
                                 key={t}
                                 type="button"
                                 onClick={() => setActivityType(t)}
-                                className={`rounded px-2 py-0.5 text-[10px] capitalize transition-colors ${activityType === t ? 'bg-[#2B4C8C] text-white' : 'bg-[#1a1a24] text-[#555570] hover:bg-[#1e1e2a]'}`}
+                                className={`rounded-lg px-2.5 py-1 text-[10px] font-medium capitalize transition-all ${
+                                    activityType === t
+                                        ? 'bg-[#2B4C8C] text-white shadow-sm'
+                                        : 'border border-[#e2e6ef] bg-white text-[#6b7280] hover:border-[#c8cce0] hover:text-[#374151]'
+                                }`}
                             >
                                 {t}
                             </button>
@@ -168,12 +179,12 @@ export default function ActivityTimeline({ entityType, entityId }: ActivityTimel
                             value={activitySubject}
                             onChange={e => setActivitySubject(e.target.value)}
                             placeholder="What happened?"
-                            className="flex-1 rounded border border-[#1e1e2a] bg-[#0a0a0f] px-2.5 py-1.5 text-xs text-[#e8e8ed] placeholder-[#555570] outline-none focus:border-[#3b6cdb]"
+                            className="flex-1 rounded-lg border border-[#e2e6ef] bg-white px-3 py-1.5 text-xs text-[#1a1a2e] placeholder-[#9ca3af] outline-none transition-all focus:border-[#2B4C8C] focus:ring-[3px] focus:ring-[#2B4C8C]/10"
                         />
                         <button
                             type="submit"
                             disabled={adding}
-                            className="rounded bg-[#2B4C8C] px-2.5 py-1.5 text-[11px] font-medium text-white transition-colors hover:bg-[#3b5d9c] disabled:opacity-50"
+                            className="rounded-lg bg-[#2B4C8C] px-3.5 py-1.5 text-[11px] font-medium text-white shadow-sm transition-all hover:bg-[#2B4C8C]/90 hover:shadow-md disabled:opacity-50"
                         >
                             {adding ? 'Saving...' : 'Save'}
                         </button>
@@ -181,29 +192,38 @@ export default function ActivityTimeline({ entityType, entityId }: ActivityTimel
                 </form>
             )}
 
-            <div className="flex gap-1.5 border-b border-[#1e1e2a] px-4 py-2">
+            <div className="flex gap-1.5 border-b border-[#e2e6ef] bg-[#f8f9fc] px-6 py-2">
                 {filterOptions.map(f => (
                     <button
                         key={f}
                         onClick={() => setFilters(f === 'all' ? ['all'] : [f === 'system' ? 'created' : f])}
-                        className={`rounded px-2 py-0.5 text-[10px] capitalize transition-colors ${filters.includes(f === 'system' ? 'created' : f) || (f === 'all' && filters.includes('all')) ? 'bg-[#1e1e2a] text-[#e8e8ed]' : 'text-[#555570] hover:text-[#8b8b9e]'}`}
+                        className={`rounded-md px-2 py-0.5 text-[10px] capitalize transition-all ${
+                            filters.includes(f === 'system' ? 'created' : f) || (f === 'all' && filters.includes('all'))
+                                ? 'bg-[#e2e6ef] text-[#374151] font-medium'
+                                : 'text-[#6b7280] hover:bg-[#eef1f8] hover:text-[#374151]'
+                        }`}
                     >
                         {f.replace(/_/g, ' ')}
                     </button>
                 ))}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto px-6 py-4">
                 {loading && events.length === 0 ? (
                     <div className="flex h-full items-center justify-center">
-                        <div className="text-[11px] text-[#555570]">Loading...</div>
+                        <div className="flex items-center gap-2 text-[11px] text-[#6b7280]">
+                            <div className="h-3 w-3 animate-spin rounded-full border-2 border-[#e2e6ef] border-t-[#2B4C8C]" />
+                            Loading...
+                        </div>
                     </div>
                 ) : events.length === 0 ? (
                     <div className="flex h-full items-center justify-center">
                         <div className="text-center">
-                            <MessageSquare className="mx-auto mb-2 h-6 w-6 text-[#1e1e2a]" />
-                            <p className="text-xs text-[#555570]">No events yet</p>
-                            <button onClick={() => setShowForm(true)} className="mt-2 text-[11px] text-[#3b6cdb] hover:text-[#5b8cfb]">
+                            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef1f8]">
+                                <MessageSquare className="h-5 w-5 text-[#6b7280]" />
+                            </div>
+                            <p className="text-xs text-[#6b7280]">No activity recorded yet</p>
+                            <button onClick={() => setShowForm(true)} className="mt-2 text-[11px] font-medium text-[#2B4C8C] hover:text-[#2B4C8C]/80">
                                 Log your first activity
                             </button>
                         </div>
@@ -211,27 +231,40 @@ export default function ActivityTimeline({ entityType, entityId }: ActivityTimel
                 ) : (
                     <>
                         {Object.entries(groupByDate(events)).map(([dateLabel, dateEvents]) => (
-                            <div key={dateLabel} className="mb-4">
-                                <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-[#555570]">{dateLabel}</div>
+                            <div key={dateLabel} className="mb-5">
+                                <div className="mb-2.5 flex items-center gap-2">
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#6b7280]">{dateLabel}</span>
+                                    <span className="h-px flex-1 bg-[#e2e6ef]" />
+                                </div>
                                 <div className="relative space-y-0">
-                                    <div className="absolute left-[11px] top-0 h-full w-px bg-[#1e1e2a]" />
+                                    <div className="absolute left-[15px] top-2 h-[calc(100%-16px)] w-px bg-[#e2e6ef]" />
                                     {dateEvents.map(ev => {
                                         const Icon = iconMap[ev.icon] ?? FileText;
                                         return (
-                                            <div key={ev.event_id} className="relative flex gap-3 pb-3">
+                                            <div key={ev.event_id} className="relative flex gap-3 pb-4 pl-1">
                                                 <div className="relative z-10 mt-0.5">
-                                                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1a1a24]" style={{ backgroundColor: ev.color + '20' }}>
-                                                        <Icon className="h-3 w-3" style={{ color: ev.color }} />
+                                                    <div
+                                                        className="flex h-7 w-7 items-center justify-center rounded-full ring-2 ring-white"
+                                                        style={{ backgroundColor: ev.color + '15' }}
+                                                    >
+                                                        <Icon className="h-3.5 w-3.5" style={{ color: ev.color }} />
                                                     </div>
                                                 </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="text-xs font-medium text-[#e8e8ed]">{ev.summary}</div>
-                                                    {ev.description && <div className="mt-0.5 text-[11px] text-[#8b8b9e]">{ev.description}</div>}
-                                                    <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-[#555570]">
+                                                <div className="min-w-0 flex-1 pt-0.5">
+                                                    <div className="text-xs font-medium text-[#1a1a2e]">{ev.summary}</div>
+                                                    {ev.description && (
+                                                        <div className="mt-0.5 text-[11px] leading-relaxed text-[#6b7280]">{ev.description}</div>
+                                                    )}
+                                                    <div className="mt-1 flex items-center gap-1.5 text-[10px] text-[#9ca3af]">
                                                         <span className="capitalize">{ev.event_type.replace(/_/g, ' ')}</span>
                                                         <span>·</span>
                                                         <span>{formatTimeAgo(ev.occurred_at)}</span>
-                                                        {ev.actor.name !== 'System' && <><span>·</span><span>{ev.actor.name}</span></>}
+                                                        {ev.actor.name !== 'System' && (
+                                                            <>
+                                                                <span>·</span>
+                                                                <span>{ev.actor.name}</span>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -246,9 +279,16 @@ export default function ActivityTimeline({ entityType, entityId }: ActivityTimel
                                 <button
                                     onClick={() => loadEvents(false)}
                                     disabled={loading}
-                                    className="rounded border border-[#1e1e2a] bg-[#0f0f14] px-3 py-1.5 text-[11px] text-[#8b8b9e] transition-colors hover:border-[#2a2a3a] disabled:opacity-50"
+                                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#e2e6ef] bg-white px-3.5 py-2 text-[11px] text-[#6b7280] shadow-sm transition-all hover:border-[#c8cce0] hover:text-[#374151] disabled:opacity-50"
                                 >
-                                    {loading ? 'Loading...' : 'Load more'}
+                                    {loading ? (
+                                        <>
+                                            <div className="h-3 w-3 animate-spin rounded-full border-2 border-[#e2e6ef] border-t-[#2B4C8C]" />
+                                            Loading...
+                                        </>
+                                    ) : (
+                                        'Load more'
+                                    )}
                                 </button>
                             </div>
                         )}

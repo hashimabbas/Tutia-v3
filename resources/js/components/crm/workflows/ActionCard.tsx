@@ -73,22 +73,22 @@ export default function ActionCard({ workflowId, action, actionTypes, context, o
     const actionMeta = actionTypes.find(a => a.key === actionType);
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
+        <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
             <div className="flex items-start gap-3">
-                <div className="mt-1 text-[#555570]">
+                <div className="mt-1 text-gray-300">
                     <GripVertical className="h-4 w-4" />
                 </div>
 
                 <div className="flex-1 space-y-3">
                     <div className="flex items-center gap-2">
-                        <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[10px] text-[#555570]">
+                        <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">
                             {action.sort_order}
                         </span>
                         <div className="flex-1">
                             <select
                                 value={actionType}
                                 onChange={e => setActionType(e.target.value)}
-                                className="w-full rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#e8e8ed] outline-none focus:border-[#3b6cdb]"
+                                className="w-full rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs text-gray-900 outline-none focus:border-[#3b6cdb] focus:ring-1 focus:ring-[#3b6cdb]/20"
                             >
                                 <option value="">Select action...</option>
                                 {actionTypes.map(a => <option key={a.key} value={a.key}>{a.label}</option>)}
@@ -97,7 +97,7 @@ export default function ActionCard({ workflowId, action, actionTypes, context, o
                     </div>
 
                     {actionType && (
-                        <div className="rounded-md border border-[#1e1e2a] bg-[#0a0a0f] p-3">
+                        <div className="rounded-md border border-gray-200 bg-white p-3">
                             <ActionConfigRenderer
                                 actionType={actionType}
                                 value={config}
@@ -113,9 +113,9 @@ export default function ActionCard({ workflowId, action, actionTypes, context, o
                                 type="checkbox"
                                 checked={stopOnFail}
                                 onChange={e => setStopOnFail(e.target.checked)}
-                                className="rounded border-[#1e1e2a] bg-[#0f0f14] text-[#2B4C8C] focus:ring-[#3b6cdb]"
+                                className="rounded border-gray-300 bg-white text-[#2B4C8C] focus:ring-[#3b6cdb]"
                             />
-                            <span className="text-[10px] text-[#555570]">Stop on fail</span>
+                            <span className="text-[10px] text-gray-500">Stop on fail</span>
                         </label>
 
                         <div className="flex items-center gap-1">
@@ -128,7 +128,7 @@ export default function ActionCard({ workflowId, action, actionTypes, context, o
                                     {saving ? '...' : 'Save'}
                                 </button>
                             )}
-                            <button onClick={handleDelete} className="rounded p-1.5 text-[#555570] transition-colors hover:bg-[#1a1a24] hover:text-red-400">
+                            <button onClick={handleDelete} className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500">
                                 <Trash2 className="h-3.5 w-3.5" />
                             </button>
                         </div>

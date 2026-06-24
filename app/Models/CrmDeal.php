@@ -64,7 +64,7 @@ class CrmDeal extends Model
 
     public function tags()
     {
-        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables');
+        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables', 'taggable_id', 'tag_id');
     }
 
     public function quotations(): HasMany
@@ -99,6 +99,6 @@ class CrmDeal extends Model
 
     public function healthScore(): ?HealthResult
     {
-        return app(CrmHealthService::class)->calculate($this);
+        return app(CrmHealthService::class)->latest($this);
     }
 }

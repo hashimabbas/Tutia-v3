@@ -25,6 +25,7 @@ Route::post('/crm/workflows/expression/convert', [ExpressionBuilderController::c
 
 // Inertia page routes
 Route::get('/crm/workflows', [WorkflowPageController::class, 'index'])->name('crm.workflows.index');
+Route::get('/crm/workflows/create', [WorkflowPageController::class, 'create'])->name('crm.workflows.create');
 Route::get('/crm/workflows/runs', [WorkflowRunPageController::class, 'index'])->name('crm.workflows.runs.index');
 
 // Workflow runs API — must be before {run} to avoid 'api' matching as a run ID

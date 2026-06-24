@@ -21,7 +21,8 @@ class CrmOrganization extends Model
 
     public function classifications(): BelongsToMany
     {
-        return $this->belongsToMany(CrmClassification::class, 'crm_organization_classification');
+        return $this->belongsToMany(CrmClassification::class, 'crm_organization_classification', 'organization_id', 'classification_id')
+            ->withTimestamps();
     }
 
     public function contacts(): BelongsToMany
@@ -53,7 +54,7 @@ class CrmOrganization extends Model
 
     public function tags()
     {
-        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables');
+        return $this->morphToMany(CrmTag::class, 'taggable', 'crm_taggables', 'taggable_id', 'tag_id');
     }
 
     public function activities(): MorphMany

@@ -10,8 +10,8 @@ use App\Services\Crm\Expressions\Catalogs\ExpressionFieldCatalog;
 use App\Services\Crm\Workflows\Catalogs\WorkflowActionCatalog;
 use App\Services\Crm\Workflows\Catalogs\WorkflowConditionsVersion;
 use App\Services\Crm\Workflows\Catalogs\WorkflowOperatorCatalog;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
@@ -54,6 +54,22 @@ class WorkflowPageController extends Controller
         ]);
     }
 
+    public function create(): RedirectResponse
+    {
+        $this->authorize('create', CrmWorkflow::class);
+
+        $workflow = CrmWorkflow::create([
+            'name' => 'New Workflow',
+            'entity_type' => 'lead',
+            'slug' => Str::slug('New Workflow').'-'.Str::random(6),
+            'is_active' => false,
+            'version' => 1,
+            'created_by' => request()->user()->id,
+        ]);
+
+        return redirect()->route('crm.workflows.show', $workflow);
+    }
+
     public function show(CrmWorkflow $workflow)
     {
         $this->authorize('view', $workflow);
@@ -64,11 +80,11 @@ class WorkflowPageController extends Controller
 
         $workflow->load(['triggers', 'conditions', 'actions']);
 
-        $events = Arr::sort(collect((new ReflectionClass(NotificationEventCatalog::class))->getConstants())
+        $events = collect((new ReflectionClass(NotificationEventCatalog::class))->getConstants())
             ->map(fn (string $key) => [
                 'key' => $key,
                 'label' => Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
-            ])->values());
+            ])->sortBy('label')->values()->all();
 
         $operatorLabels = [
             'eq' => 'Equals',

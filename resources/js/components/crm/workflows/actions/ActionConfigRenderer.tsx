@@ -12,8 +12,8 @@ export default function ActionConfigRenderer({ actionType, value, onChange, cont
 
     if (!Component) {
         return (
-            <p className="text-[10px] text-[#555570]">
-                No configuration form available for <span className="text-[#8b8b9e]">{actionType}</span>
+            <p className="text-[10px] text-gray-500">
+                No configuration form available for <span className="text-gray-600">{actionType}</span>
             </p>
         );
     }

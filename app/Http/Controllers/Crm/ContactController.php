@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Crm;
 use App\Http\Controllers\Controller;
 use App\Models\CrmContact;
 use App\Models\CrmContactInfluenceType;
+use App\Models\CrmContactRole;
+use App\Models\CrmOrganization;
 use App\Services\Crm\CrmDuplicateDetectionService;
-use App\Services\Crm\CrmHealthService;
-use App\Services\Crm\CrmNextBestActionService;
 use App\Services\Crm\CrmRelationshipService;
+use App\Services\Crm\Health\CrmHealthService;
+use App\Services\Crm\NextBestAction\CrmNextBestActionService;
 use App\Services\Crm\Timeline\CrmTimelineService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +29,7 @@ class ContactController extends Controller
     {
         $this->authorize('viewAny', CrmContact::class);
 
-        $query = CrmContact::with(['owner', 'primaryOrganization', 'influenceType']);
+        $query = CrmContact::with(['owner', 'influenceType', 'organizations' => fn ($q) => $q->wherePivot('is_primary', true)]);
 
         if ($request->user()->hasRole('sales_rep')) {
             $query->where('owner_id', $request->user()->id);
@@ -66,7 +68,31 @@ class ContactController extends Controller
         ]);
     }
 
-    public function show(CrmContact $contact)
+    public function create()
+    {
+        $this->authorize('create', CrmContact::class);
+
+        return inertia('crm/contacts/create', [
+            'influence_types' => CrmContactInfluenceType::all(),
+            'organizations' => CrmOrganization::orderBy('name')->get(['id', 'name']),
+        ]);
+    }
+
+    public function edit(CrmContact $contact)
+    {
+        $this->authorize('update', $contact);
+
+        $contact->load('organizations');
+
+        return inertia('crm/contacts/create', [
+            'contact' => $contact->only(['id', 'first_name', 'last_name', 'email', 'phone', 'mobile', 'job_title', 'department', 'linkedin_url', 'influence_type_id']),
+            'influence_types' => CrmContactInfluenceType::all(),
+            'organizations' => CrmOrganization::orderBy('name')->get(['id', 'name']),
+            'selected_organization_ids' => $contact->organizations->pluck('id')->map(fn ($id) => (string) $id),
+        ]);
+    }
+
+    public function show(Request $request, CrmContact $contact)
     {
         $this->authorize('view', $contact);
 
@@ -79,7 +105,7 @@ class ContactController extends Controller
         ]);
 
         $healthScore = $this->health->latest($contact);
-        $recommendations = $this->nba->collect($contact);
+        $recommendations = $this->nba->collect($contact, $request->user()->id);
 
         return inertia('crm/contacts/show', [
             'contact' => $contact,
@@ -119,7 +145,7 @@ class ContactController extends Controller
 
         if (! empty($validated['organization_ids'])) {
             $contact->organizations()->syncWithPivotValues($validated['organization_ids'], [
-                'role' => 'employee',
+                'contact_role_id' => CrmContactRole::where('slug', 'employee')->value('id'),
                 'is_primary' => count($validated['organization_ids']) === 1,
             ]);
         }

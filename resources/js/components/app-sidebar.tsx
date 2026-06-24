@@ -11,6 +11,13 @@ import {
     Settings,
     ChevronDown,
     Target,
+    BarChart3,
+    Brain,
+    TrendingUp,
+    Sparkles,
+    Activity,
+    Play,
+    GitBranch,
 } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from '@/components/app-logo';
@@ -57,6 +64,20 @@ const navSections: NavSection[] = [
             { title: 'Products', href: '/crm/products', icon: Package, badge: 'NEW' },
             { title: 'Forecast', href: '/crm/forecast', icon: Target, badge: 'NEW' },
             { title: 'Pipeline', href: '/crm/pipeline', icon: GitFork, badge: 'NEW' },
+            { title: 'Workflows', href: '/crm/workflows', icon: GitBranch },
+            { title: 'Workflow Runs', href: '/crm/workflows/runs', icon: Play },
+            { title: 'Approvals', href: '/crm/approvals', icon: Sparkles },
+        ],
+    },
+    {
+        title: 'Analytics & Intelligence',
+        items: [
+            { title: 'Analytics Hub', href: '/crm/analytics', icon: BarChart3 },
+            { title: 'Workflows Analytics', href: '/crm/analytics?tab=workflows', icon: Activity },
+            { title: 'Approvals Analytics', href: '/crm/analytics?tab=approvals', icon: Sparkles },
+            { title: 'Intelligence', href: '/crm/analytics?tab=intelligence', icon: Brain },
+            { title: 'Optimization', href: '/crm/analytics?tab=optimization', icon: TrendingUp },
+            { title: 'Predictions', href: '/crm/analytics?tab=predictions', icon: LineChart },
         ],
     },
 ];
@@ -83,12 +104,20 @@ function CollapsibleSection({ section, isCollapsed, currentUrl }: CollapsibleSec
                             asChild
                             isActive={active}
                             tooltip={{ children: item.title }}
-                            className="mb-0.5"
+                            className={cn(
+                                'mb-0.5 rounded-lg transition-all duration-200',
+                                active
+                                    ? 'bg-brand-navy-50 text-brand-navy-600 shadow-sm'
+                                    : 'text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+                            )}
                         >
                             <Link href={item.href} prefetch>
-                                <item.icon className="h-4 w-4" />
+                                <item.icon className={cn(
+                                    'h-4 w-4',
+                                    active && 'text-brand-navy-500',
+                                )} />
                                 {item.badge && active && (
-                                    <span className="ml-auto rounded bg-[#3b6cdb]/20 px-1 py-[1px] text-[8px] font-medium text-[#3b6cdb]">
+                                    <span className="ml-auto rounded bg-brand-navy-500/10 px-1 py-[1px] text-[8px] font-medium text-brand-navy-600">
                                         {item.badge}
                                     </span>
                                 )}
@@ -101,19 +130,19 @@ function CollapsibleSection({ section, isCollapsed, currentUrl }: CollapsibleSec
     }
 
     return (
-        <div className="px-3 py-1">
+        <div className="px-3 py-0.5">
             <button
                 onClick={() => setOpen(!open)}
                 className={cn(
-                    'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider transition-colors',
+                    'flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200',
                     isActive
-                        ? 'text-[#e8e8ed]'
-                        : 'text-[#555570] hover:text-[#8b8b9e]',
+                        ? 'text-brand-navy-500'
+                        : 'text-sidebar-foreground/40 hover:text-sidebar-foreground/70',
                 )}
             >
                 <ChevronDown
                     className={cn(
-                        'h-3 w-3 transition-transform',
+                        'h-3 w-3 transition-transform duration-200',
                         open ? 'rotate-0' : '-rotate-90',
                     )}
                 />
@@ -129,16 +158,24 @@ function CollapsibleSection({ section, isCollapsed, currentUrl }: CollapsibleSec
                                 href={item.href}
                                 prefetch
                                 className={cn(
-                                    'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-xs transition-colors',
+                                    'group relative flex items-center gap-3 rounded-lg px-2 py-2 text-xs transition-all duration-200',
                                     active
-                                        ? 'bg-[#1e1e2a] text-[#e8e8ed] font-medium'
-                                        : 'text-[#555570] hover:bg-[#1a1a24] hover:text-[#8b8b9e]',
+                                        ? 'bg-brand-navy-50 font-medium text-brand-navy-700'
+                                        : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground',
                                 )}
                             >
-                                <item.icon className="h-3.5 w-3.5 flex-shrink-0" />
+                                {active && (
+                                    <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-brand-navy-500" />
+                                )}
+                                <item.icon className={cn(
+                                    'h-4 w-4 flex-shrink-0 transition-colors duration-200',
+                                    active
+                                        ? 'text-brand-navy-500'
+                                        : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/60',
+                                )} />
                                 <span className="truncate">{item.title}</span>
                                 {item.badge && (
-                                    <span className="ml-auto rounded bg-[#3b6cdb]/15 px-1.5 py-[2px] text-[8px] font-medium text-[#3b6cdb]">
+                                    <span className="ml-auto rounded-full bg-brand-navy-500/10 px-2 py-0.5 text-[9px] font-semibold text-brand-navy-600">
                                         {item.badge}
                                     </span>
                                 )}
@@ -157,35 +194,41 @@ export function AppSidebar() {
     const isCollapsed = state === 'collapsed';
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="sidebar" className="border-r border-sidebar-border/60 shadow-sm">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton size="lg" asChild className="rounded-xl">
                             <Link href="/dashboard" prefetch>
-                                <AppLogo />
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-navy-500 text-xs font-bold text-white shadow-sm">
+                                    T
+                                </div>
+                                <div className="flex flex-col leading-tight">
+                                    <span className="text-sm font-semibold text-sidebar-foreground">Tutia</span>
+                                    <span className="text-[10px] text-sidebar-foreground/40">Control Panel</span>
+                                </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarSeparator />
+            <SidebarSeparator className="mx-3 w-auto bg-sidebar-border/50" />
 
-            <SidebarContent>
+            <SidebarContent className="py-2">
                 {navSections.map((section) => (
-                    <div key={section.title}>
+                    <div key={section.title} className="mb-1">
                         <CollapsibleSection
                             section={section}
                             isCollapsed={isCollapsed}
                             currentUrl={url}
                         />
-                        <SidebarSeparator className="my-1" />
+                        <SidebarSeparator className="mx-3 w-auto bg-sidebar-border/30" />
                     </div>
                 ))}
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="border-t border-sidebar-border/50 pb-2 pt-2">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         {isCollapsed ? (
@@ -193,9 +236,10 @@ export function AppSidebar() {
                                 asChild
                                 isActive={url.startsWith('/settings')}
                                 tooltip={{ children: 'Settings' }}
+                                className="rounded-lg transition-all duration-200 hover:bg-sidebar-accent/60"
                             >
                                 <Link href="/settings/profile" prefetch>
-                                    <Settings className="h-4 w-4" />
+                                    <Settings className="h-4 w-4 text-sidebar-foreground/40" />
                                 </Link>
                             </SidebarMenuButton>
                         ) : (
@@ -203,19 +247,29 @@ export function AppSidebar() {
                                 href="/settings/profile"
                                 prefetch
                                 className={cn(
-                                    'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-xs transition-colors mx-3',
+                                    'group relative flex items-center gap-3 rounded-lg px-2 py-2 text-xs transition-all duration-200 mx-3',
                                     url.startsWith('/settings')
-                                        ? 'bg-[#1e1e2a] text-[#e8e8ed] font-medium'
-                                        : 'text-[#555570] hover:bg-[#1a1a24] hover:text-[#8b8b9e]',
+                                        ? 'bg-brand-navy-50 font-medium text-brand-navy-700'
+                                        : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground',
                                 )}
                             >
-                                <Settings className="h-3.5 w-3.5 flex-shrink-0" />
+                                {url.startsWith('/settings') && (
+                                    <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-brand-navy-500" />
+                                )}
+                                <Settings className={cn(
+                                    'h-4 w-4 transition-colors duration-200',
+                                    url.startsWith('/settings')
+                                        ? 'text-brand-navy-500'
+                                        : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/60',
+                                )} />
                                 <span>Settings</span>
                             </Link>
                         )}
                     </SidebarMenuItem>
                 </SidebarMenu>
-                <NavUser />
+                <div className="px-3 pt-1">
+                    <NavUser />
+                </div>
             </SidebarFooter>
         </Sidebar>
     );

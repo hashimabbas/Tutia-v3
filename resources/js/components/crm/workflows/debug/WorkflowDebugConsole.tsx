@@ -39,9 +39,9 @@ export default function WorkflowDebugConsole({
 
     if (!expression && !hasTrace) {
         return (
-            <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-6 text-center">
-                <p className="text-xs text-[#555570]">No expression debug data available for this run.</p>
-                <p className="mt-1 text-[10px] text-[#555570]">
+            <div className="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+                <p className="text-xs text-gray-500">No expression debug data available for this run.</p>
+                <p className="mt-1 text-[10px] text-gray-400">
                     Debug data is only captured for v2 expression-based workflows.
                 </p>
             </div>

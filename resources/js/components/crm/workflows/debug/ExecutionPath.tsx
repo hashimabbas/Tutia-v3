@@ -17,14 +17,14 @@ interface Props {
 
 function formatOperator(op: string): string {
     const map: Record<string, string> = {
-        '=': '=', '!=': '≠', '>': '>', '>=': '≥', '<': '<', '<=': '≤',
+        '=': '=', '!=': '\u2260', '>': '>', '>=': '\u2265', '<': '<', '<=': '\u2264',
         contains: 'contains', starts_with: 'starts with', ends_with: 'ends with', in: 'in', not_in: 'not in',
     };
     return map[op] ?? op;
 }
 
 function formatValue(val: unknown): string {
-    if (val === null || val === undefined) return '—';
+    if (val === null || val === undefined) return '\u2014';
     if (typeof val === 'boolean') return val ? 'true' : 'false';
     return String(val);
 }
@@ -79,16 +79,16 @@ export default function ExecutionPath({ trace, expression }: Props) {
 
     if (steps.length === 0) {
         return (
-            <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-3">Execution Path</div>
-                <p className="text-xs text-center text-[#555570] py-4">No execution path available.</p>
+            <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-3">Execution Path</div>
+                <p className="text-xs text-center text-gray-400 py-4">No execution path available.</p>
             </div>
         );
     }
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-            <div className="text-[10px] uppercase tracking-wider text-[#555570] mb-3">Execution Path</div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-3">Execution Path</div>
             <div className="relative">
                 {steps.map((step, i) => (
                     <div key={i} className="relative flex gap-4 pb-5 last:pb-0">
@@ -96,42 +96,42 @@ export default function ExecutionPath({ trace, expression }: Props) {
                             <span className={cn(
                                 'flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold z-10',
                                 step.type === 'skipped'
-                                    ? 'bg-[#1a1a24] text-[#555570]'
+                                    ? 'bg-gray-100 text-gray-500'
                                     : step.passed
-                                        ? 'bg-emerald-500/10 text-emerald-400'
-                                        : 'bg-red-400/10 text-red-400',
+                                        ? 'bg-emerald-50 text-emerald-600'
+                                        : 'bg-red-50 text-red-600',
                             )}>
-                                {step.type === 'skipped' ? '⏭' : (step.passed ? '✓' : '✗')}
+                                {step.type === 'skipped' ? '\u23ed' : (step.passed ? '\u2713' : '\u2717')}
                             </span>
                             {i < steps.length - 1 && (
-                                <div className="mt-0.5 w-px flex-1 bg-[#1e1e2a]" />
+                                <div className="mt-0.5 w-px flex-1 bg-gray-200" />
                             )}
                         </div>
 
                         <div className="min-w-0 flex-1 pt-1">
                             {step.type === 'skipped' ? (
                                 <div>
-                                    <span className="text-xs font-mono text-[#555570]">{step.rule}</span>
-                                    <p className="text-[10px] text-[#555570] mt-0.5">
-                                        Not evaluated — short-circuit prevented execution
+                                    <span className="text-xs font-mono text-gray-500">{step.rule}</span>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">
+                                        Not evaluated \u2014 short-circuit prevented execution
                                     </p>
                                 </div>
                             ) : (
                                 <div>
                                     <div className="flex items-center gap-1.5 font-mono text-xs">
-                                        <span className="text-[#8b8b9e]">{step.field}</span>
-                                        <span className={cn('font-medium', step.passed ? 'text-emerald-400' : 'text-red-400')}>
+                                        <span className="text-gray-600">{step.field}</span>
+                                        <span className={cn('font-medium', step.passed ? 'text-emerald-600' : 'text-red-600')}>
                                             {formatOperator(trace[0]?.operator || '')}
                                         </span>
-                                        <span className="text-[#e8e8ed]">{formatValue(step.expected)}</span>
+                                        <span className="text-gray-900">{formatValue(step.expected)}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 mt-1 text-[10px] text-[#555570]">
+                                    <div className="flex items-center gap-3 mt-1 text-[10px] text-gray-500">
                                         <div>
-                                            Actual: <span className="font-mono text-[#8b8b9e]">{formatValue(step.actual)}</span>
+                                            Actual: <span className="font-mono text-gray-600">{formatValue(step.actual)}</span>
                                         </div>
                                         <span className={cn(
                                             'text-[10px] font-medium',
-                                            step.passed ? 'text-emerald-400' : 'text-red-400',
+                                            step.passed ? 'text-emerald-600' : 'text-red-600',
                                         )}>
                                             {step.passed ? 'Passed' : 'Failed'}
                                         </span>

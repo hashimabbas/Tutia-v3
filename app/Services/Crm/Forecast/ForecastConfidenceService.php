@@ -36,7 +36,7 @@ class ForecastConfidenceService
         $factors[] = ['name' => 'Deal stage', 'weight' => $stageWeight, 'score' => $stageScore];
 
         // 2. Health score (25%)
-        $healthResult = $this->healthService->calculate($deal);
+        $healthResult = $this->healthService->recalculate($deal);
         $healthWeight = 25;
         $healthScore = $healthResult->score;
         $weightedSum += $healthWeight * $healthScore;

@@ -88,9 +88,9 @@ export default function ConditionSection({
     };
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-medium uppercase tracking-wider text-[#555570]">Conditions</h2>
+                <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">Conditions</h2>
                 <VersionSwitch
                     versions={conditionsVersions}
                     value={version}
@@ -101,7 +101,7 @@ export default function ConditionSection({
             {version === 'v1' && (
                 <div className="space-y-4">
                     {conditions.length === 0 && (
-                        <p className="text-xs text-[#555570]">No conditions yet.</p>
+                        <p className="text-xs text-gray-500">No conditions yet.</p>
                     )}
 
                     {conditions.length > 0 && (

@@ -1,7 +1,7 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check, X, Minus, Clock, AlertTriangle, User, Layers, GitBranch, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ApprovalStep {
@@ -76,33 +76,49 @@ export default function ApprovalShow({ request }: Props) {
     const [decisionValue, setDecisionValue] = useState<'approved' | 'rejected' | 'abstained' | null>(null);
     const [comment, setComment] = useState('');
 
-    const tabs: { key: Tab; label: string }[] = [
-        { key: 'overview', label: 'Overview' },
-        { key: 'steps', label: 'Approval Steps' },
-        { key: 'timeline', label: 'Decisions Timeline' },
-        { key: 'context', label: 'Workflow Context' },
+    const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
+        { key: 'overview', label: 'Overview', icon: <Layers className="h-3.5 w-3.5" /> },
+        { key: 'steps', label: 'Approval Steps', icon: <GitBranch className="h-3.5 w-3.5" /> },
+        { key: 'timeline', label: 'Timeline', icon: <Clock className="h-3.5 w-3.5" /> },
+        { key: 'context', label: 'Workflow Context', icon: <Shield className="h-3.5 w-3.5" /> },
     ];
 
     const statusColors: Record<string, string> = {
-        pending: 'text-yellow-400 bg-yellow-400/10',
-        approved: 'text-green-400 bg-green-400/10',
-        rejected: 'text-red-400 bg-red-400/10',
-        expired: 'text-[#555570] bg-[#1a1a24]',
-        escalated: 'text-orange-400 bg-orange-400/10',
-        cancelled: 'text-[#555570] bg-[#1a1a24]',
+        pending: 'text-amber-700 bg-amber-50 border-amber-200',
+        approved: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        rejected: 'text-red-700 bg-red-50 border-red-200',
+        expired: 'text-gray-500 bg-gray-100 border-gray-200',
+        escalated: 'text-orange-700 bg-orange-50 border-orange-200',
+        cancelled: 'text-gray-500 bg-gray-100 border-gray-200',
+    };
+
+    const statusIcons: Record<string, React.ReactNode> = {
+        pending: <Clock className="h-3 w-3" />,
+        approved: <Check className="h-3 w-3" />,
+        rejected: <X className="h-3 w-3" />,
+        escalated: <AlertTriangle className="h-3 w-3" />,
     };
 
     const decisionStatusColors: Record<string, string> = {
-        pending: 'text-[#555570]',
-        approved: 'text-green-400',
-        rejected: 'text-red-400',
-        abstained: 'text-yellow-400',
+        pending: 'text-gray-400',
+        approved: 'text-emerald-600',
+        rejected: 'text-red-600',
+        abstained: 'text-amber-600',
+    };
+
+    const decisionBgColors: Record<string, string> = {
+        pending: 'bg-gray-50',
+        approved: 'bg-emerald-50',
+        rejected: 'bg-red-50',
+        abstained: 'bg-amber-50',
     };
 
     const formatDuration = (minutes: number | null): string => {
-        if (minutes === null) return '—';
+        if (minutes === null) return '\u2014';
         if (minutes < 60) return `${minutes}m`;
-        return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return m > 0 ? `${h}h ${m}m` : `${h}h`;
     };
 
     const isPending = request.status === 'pending';
@@ -140,88 +156,81 @@ export default function ApprovalShow({ request }: Props) {
         setComment('');
     };
 
+    const formatTimestamp = (ts: string | null): string => {
+        if (!ts) return '\u2014';
+        return new Date(ts).toLocaleString();
+    };
+
+    const MetricBlock = ({ label, value }: { label: string; value: string }) => (
+        <div className="rounded-lg bg-[#f8f9fc] p-3">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">{label}</p>
+            <p className="mt-0.5 text-sm font-medium text-[#1a1a2e]">{value}</p>
+        </div>
+    );
+
     const renderOverview = () => (
         <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-4">
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Status</p>
-                        <span className={cn('mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs capitalize', statusColors[request.status] ?? 'text-[#555570] bg-[#1a1a24]')}>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                    <MetricBlock label="Status" value={
+                        <span className={cn('inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs capitalize', statusColors[request.status] ?? 'text-gray-500 bg-gray-100 border-gray-200')}>
+                            {statusIcons[request.status]}
                             {request.status}
                         </span>
+                    } />
+                    <MetricBlock label="Approval Flow" value={request.flow?.name ?? '\u2014'} />
+                    <div className="rounded-lg bg-[#f8f9fc] p-3">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">Strategy</p>
+                        <p className="mt-0.5 text-sm font-medium text-[#1a1a2e] capitalize">{request.flow?.strategy?.replace(/_/g, ' ') ?? '\u2014'}</p>
                     </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Approval Flow</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.flow?.name ?? '—'}</p>
-                        <p className="text-[10px] text-[#555570]">Strategy: {request.flow?.strategy ?? '—'}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Entity</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.entityType} #{request.entityId}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Requested By</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.requestedBy?.name ?? '—'}</p>
-                    </div>
+                    <MetricBlock label="Entity" value={`${request.entityType} #${request.entityId}`} />
+                    <MetricBlock label="Requested By" value={request.requestedBy?.name ?? '\u2014'} />
                 </div>
-                <div className="space-y-4">
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Requested At</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.requestedAt ? new Date(request.requestedAt).toLocaleString() : '—'}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Completed At</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.completedAt ? new Date(request.completedAt).toLocaleString() : '—'}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Resolution Time</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{formatDuration(request.resolutionTimeMinutes)}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] uppercase tracking-wider text-[#555570]">Escalations</p>
-                        <p className="mt-1 text-sm text-[#e8e8ed]">{request.escalationCount ?? 0}</p>
-                    </div>
+                <div className="space-y-3">
+                    <MetricBlock label="Requested At" value={formatTimestamp(request.requestedAt)} />
+                    <MetricBlock label="Completed At" value={formatTimestamp(request.completedAt)} />
+                    <MetricBlock label="Resolution Time" value={formatDuration(request.resolutionTimeMinutes)} />
+                    <MetricBlock label="Escalations" value={String(request.escalationCount ?? 0)} />
                 </div>
             </div>
 
             {request.notes && (
-                <div className="rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] p-4">
-                    <p className="text-[10px] uppercase tracking-wider text-[#555570]">Notes</p>
-                    <p className="mt-1 text-sm text-[#e8e8ed]">{request.notes}</p>
+                <div className="rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">Notes</p>
+                    <p className="mt-1 text-sm text-[#374151]">{request.notes}</p>
                 </div>
             )}
 
             {request.workflowRun && (
-                <div className="rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] p-4">
-                    <p className="text-[10px] uppercase tracking-wider text-[#555570]">Workflow Run</p>
-                    <p className="mt-1 text-sm text-[#e8e8ed]">{request.workflowRun.workflow?.name ?? '—'} (Run #{request.workflowRun.id})</p>
-                    <p className="text-[10px] text-[#555570]">
+                <div className="rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">Workflow Run</p>
+                    <p className="mt-1 text-sm font-medium text-[#1a1a2e]">{request.workflowRun.workflow?.name ?? '\u2014'} <span className="text-[#8b8b9e]">(Run #{request.workflowRun.id})</span></p>
+                    <p className="mt-0.5 text-xs text-[#8b8b9e]">
                         Status: {request.workflowRun.status}
-                        {request.workflowRun.startedAt && ` · Started: ${new Date(request.workflowRun.startedAt).toLocaleString()}`}
+                        {request.workflowRun.startedAt && ` \u00b7 Started: ${formatTimestamp(request.workflowRun.startedAt)}`}
                     </p>
                 </div>
             )}
 
-            {/* SLA Information */}
             {request.flow?.slaBreachMinutes && (
-                <div className="rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] p-4">
-                    <p className="text-[10px] uppercase tracking-wider text-[#555570]">SLA</p>
-                    <div className="mt-1 grid grid-cols-2 gap-4">
+                <div className="rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">SLA</p>
+                    <div className="mt-3 grid grid-cols-4 gap-4">
                         <div>
-                            <p className="text-[10px] text-[#555570]">Warning After</p>
-                            <p className="text-xs text-[#e8e8ed]">{request.flow.slaWarningMinutes ?? 'N/A'} minutes</p>
+                            <p className="text-[10px] text-[#8b8b9e]">Warning After</p>
+                            <p className="text-xs font-medium text-[#374151]">{request.flow.slaWarningMinutes ?? 'N/A'} min</p>
                         </div>
                         <div>
-                            <p className="text-[10px] text-[#555570]">Breach After</p>
-                            <p className="text-xs text-[#e8e8ed]">{request.flow.slaBreachMinutes} minutes</p>
+                            <p className="text-[10px] text-[#8b8b9e]">Breach After</p>
+                            <p className="text-xs font-medium text-[#374151]">{request.flow.slaBreachMinutes} min</p>
                         </div>
                         <div>
-                            <p className="text-[10px] text-[#555570]">Warning Sent</p>
-                            <p className="text-xs text-[#e8e8ed]">{request.slaWarningSentAt ? new Date(request.slaWarningSentAt).toLocaleString() : '—'}</p>
+                            <p className="text-[10px] text-[#8b8b9e]">Warning Sent</p>
+                            <p className="text-xs font-medium text-[#374151]">{formatTimestamp(request.slaWarningSentAt)}</p>
                         </div>
                         <div>
-                            <p className="text-[10px] text-[#555570]">Escalation Model</p>
-                            <p className="text-xs capitalize text-[#e8e8ed]">{request.flow.escalationModel ?? 'none'}</p>
+                            <p className="text-[10px] text-[#8b8b9e]">Escalation Model</p>
+                            <p className="text-xs font-medium capitalize text-[#374151]">{request.flow.escalationModel ?? 'none'}</p>
                         </div>
                     </div>
                 </div>
@@ -231,7 +240,12 @@ export default function ApprovalShow({ request }: Props) {
 
     const renderSteps = () => {
         if (!request.flow?.steps.length) {
-            return <p className="py-8 text-center text-xs text-[#555570]">No steps defined for this flow.</p>;
+            return (
+                <div className="flex flex-col items-center py-16">
+                    <GitBranch className="mb-3 h-8 w-8 text-gray-300" />
+                    <p className="text-sm text-gray-500">No steps defined for this flow.</p>
+                </div>
+            );
         }
 
         const decisionsByStep = new Map(request.decisions.map(d => [d.step?.id, d]));
@@ -241,26 +255,48 @@ export default function ApprovalShow({ request }: Props) {
                 {request.flow.steps.map((step) => {
                     const decision = decisionsByStep.get(step.id);
                     return (
-                        <div key={step.id} className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
+                        <div key={step.id} className="rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1a1a24] text-[10px] text-[#555570]">
+                                    <span className={cn(
+                                        'flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold',
+                                        decision?.decision === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                                        decision?.decision === 'rejected' ? 'bg-red-100 text-red-700' :
+                                        decision?.decision === 'abstained' ? 'bg-amber-100 text-amber-700' :
+                                        'bg-gray-100 text-gray-500'
+                                    )}>
                                         {step.stepOrder}
                                     </span>
                                     <div>
-                                        <p className="text-xs font-medium text-[#e8e8ed]">
-                                            Approver #{step.approverId}
-                                            {step.required && <span className="ml-1.5 text-[10px] text-red-400">Required</span>}
+                                        <p className="text-xs font-medium text-[#1a1a2e]">
+                                            {step.approverType === 'user' ? 'User' : step.approverType} #{step.approverId}
+                                            {step.required && <span className="ml-1.5 inline-flex items-center rounded-full border border-red-200 bg-red-50 px-1.5 py-0.5 text-[9px] font-medium text-red-600">Required</span>}
                                         </p>
-                                        <p className="text-[10px] text-[#555570]">Type: {step.approverType}</p>
+                                        <p className="mt-0.5 text-[10px] text-[#8b8b9e]">Type: {step.approverType}</p>
                                     </div>
                                 </div>
-                                <span className={cn('text-xs capitalize', decisionStatusColors[decision?.decision ?? 'pending'])}>
-                                    {decision?.decision ?? 'Awaiting'}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    {decision?.user && (
+                                        <span className="text-[10px] text-[#8b8b9e]">{decision.user.name}</span>
+                                    )}
+                                    <span className={cn(
+                                        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] capitalize font-medium',
+                                        decision?.decision === 'approved' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
+                                        decision?.decision === 'rejected' ? 'text-red-700 bg-red-50 border-red-200' :
+                                        decision?.decision === 'abstained' ? 'text-amber-700 bg-amber-50 border-amber-200' :
+                                        'text-gray-400 bg-gray-50 border-gray-200'
+                                    )}>
+                                        {decision?.decision === 'approved' ? <Check className="h-2.5 w-2.5" /> :
+                                         decision?.decision === 'rejected' ? <X className="h-2.5 w-2.5" /> :
+                                         decision?.decision === 'abstained' ? <Minus className="h-2.5 w-2.5" /> : null}
+                                        {decision?.decision ?? 'Awaiting'}
+                                    </span>
+                                </div>
                             </div>
                             {decision?.comment && (
-                                <p className="mt-2 text-[10px] text-[#555570]">"{decision.comment}"</p>
+                                <div className="mt-3 border-t border-[#e2e6ef] pt-3">
+                                    <p className="text-[10px] italic text-[#8b8b9e]">"{decision.comment}"</p>
+                                </div>
                             )}
                         </div>
                     );
@@ -271,7 +307,12 @@ export default function ApprovalShow({ request }: Props) {
 
     const renderTimeline = () => {
         if (!request.decisions.length) {
-            return <p className="py-8 text-center text-xs text-[#555570]">No decisions recorded yet.</p>;
+            return (
+                <div className="flex flex-col items-center py-16">
+                    <Clock className="mb-3 h-8 w-8 text-gray-300" />
+                    <p className="text-sm text-gray-500">No decisions recorded yet.</p>
+                </div>
+            );
         }
 
         const sorted = [...request.decisions].sort((a, b) => {
@@ -280,39 +321,43 @@ export default function ApprovalShow({ request }: Props) {
             return new Date(a.decided_at).getTime() - new Date(b.decided_at).getTime();
         });
 
-        const decisionIcon = (decision: string) => {
-            switch (decision) {
-                case 'approved': return '✓';
-                case 'rejected': return '✗';
-                case 'abstained': return '–';
-                default: return '?';
-            }
-        };
-
         return (
-            <div className="relative space-y-4">
-                <div className="absolute left-[7px] top-2 h-[calc(100%-16px)] w-px bg-[#1e1e2a]" />
+            <div className="relative space-y-6">
+                <div className="absolute left-[11px] top-3 h-[calc(100%-24px)] w-0.5 bg-[#e2e6ef]" />
                 {sorted.map((d) => (
-                    <div key={d.id} className="relative flex items-start gap-4 pl-6">
+                    <div key={d.id} className="relative flex items-start gap-4 pl-10">
                         <span className={cn(
-                            'absolute left-0 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold',
-                            d.decision === 'approved' ? 'bg-green-400/20 text-green-400' :
-                            d.decision === 'rejected' ? 'bg-red-400/20 text-red-400' :
-                            'bg-yellow-400/20 text-yellow-400'
+                            'absolute left-0 flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold shadow-sm ring-4 ring-white',
+                            d.decision === 'approved' ? 'bg-emerald-500 text-white' :
+                            d.decision === 'rejected' ? 'bg-red-500 text-white' :
+                            'bg-amber-500 text-white'
                         )}>
-                            {decisionIcon(d.decision)}
+                            {d.decision === 'approved' ? <Check className="h-3 w-3" /> :
+                             d.decision === 'rejected' ? <X className="h-3 w-3" /> :
+                             <Minus className="h-3 w-3" />}
                         </span>
-                        <div className="flex-1">
+                        <div className="flex-1 rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm">
                             <div className="flex items-center justify-between">
-                                <p className="text-xs text-[#e8e8ed]">
-                                    <span className="font-medium capitalize">{d.decision}</span>
-                                    {d.user?.name && <span className="text-[#555570]"> by {d.user.name}</span>}
-                                </p>
-                                <span className="text-[10px] text-[#555570]">
-                                    {d.decided_at ? new Date(d.decided_at).toLocaleString() : '—'}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className={cn('inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium capitalize',
+                                        d.decision === 'approved' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
+                                        d.decision === 'rejected' ? 'text-red-700 bg-red-50 border-red-200' :
+                                        'text-amber-700 bg-amber-50 border-amber-200'
+                                    )}>
+                                        {d.decision}
+                                    </span>
+                                    {d.user?.name && (
+                                        <span className="flex items-center gap-1 text-[10px] text-[#8b8b9e]">
+                                            <User className="h-3 w-3" />
+                                            {d.user.name}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className="text-[10px] text-[#8b8b9e]">{formatTimestamp(d.decided_at)}</span>
                             </div>
-                            {d.comment && <p className="mt-0.5 text-[10px] text-[#555570]">"{d.comment}"</p>}
+                            {d.comment && (
+                                <p className="mt-2 border-t border-[#e2e6ef] pt-2 text-[11px] italic text-[#6b7280]">"{d.comment}"</p>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -323,12 +368,17 @@ export default function ApprovalShow({ request }: Props) {
     const renderContext = () => {
         const snapshot = request.workflowRun?.contextSnapshot;
         if (!snapshot) {
-            return <p className="py-8 text-center text-xs text-[#555570]">No workflow context available.</p>;
+            return (
+                <div className="flex flex-col items-center py-16">
+                    <Shield className="mb-3 h-8 w-8 text-gray-300" />
+                    <p className="text-sm text-gray-500">No workflow context available.</p>
+                </div>
+            );
         }
 
         return (
-            <div className="rounded-lg border border-[#1e1e2a] bg-[#0a0a0f]">
-                <pre className="overflow-auto p-4 text-xs text-[#8b8b9e]">
+            <div className="overflow-hidden rounded-xl border border-[#e2e6ef] bg-[#f8f9fc] shadow-sm">
+                <pre className="overflow-auto p-4 text-xs text-[#6b7280]">
                     <code>{JSON.stringify(snapshot, null, 2)}</code>
                 </pre>
             </div>
@@ -344,46 +394,48 @@ export default function ApprovalShow({ request }: Props) {
 
     return (
         <>
-            <Head title={`CRM · Approval #${request.id}`} />
+            <Head title={`CRM \u00b7 Approval #${request.id}`} />
 
-            <div className="flex h-full flex-col">
-                <div className="border-b border-[#1e1e2a] px-6 py-2.5">
+            <div className="flex h-full flex-col bg-[#f8f9fc]">
+                <div className="sticky top-0 z-10 border-b border-[#e2e6ef] bg-white/90 px-6 py-2.5 backdrop-blur-xl">
                     <button
                         onClick={() => router.visit('/crm/approvals')}
-                        className="flex items-center gap-1.5 text-[11px] text-[#555570] transition-colors hover:text-[#8b8b9e]"
+                        className="flex items-center gap-1.5 text-[11px] text-[#6b7280] transition-colors hover:text-[#374151]"
                     >
                         <ArrowLeft className="h-3.5 w-3.5" />
                         Back to Approvals
                     </button>
                 </div>
 
-                <div className="border-b border-[#1e1e2a] px-6 py-3">
+                <div className="sticky top-0 z-10 border-b border-[#e2e6ef] bg-white/90 px-6 py-3 backdrop-blur-xl">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-lg font-medium text-[#e8e8ed]">
+                            <h1 className="text-lg font-semibold text-[#1a1a2e]">
                                 Approval #{request.id}
                             </h1>
-                            <p className="text-xs text-[#555570]">{request.flow?.name ?? '—'} · {request.entityType} #{request.entityId}</p>
+                            <p className="text-xs text-[#8b8b9e]">{request.flow?.name ?? '\u2014'} \u00b7 {request.entityType} #{request.entityId}</p>
                         </div>
-                        <span className={cn('rounded-full px-2.5 py-0.5 text-xs capitalize', statusColors[request.status] ?? 'text-[#555570] bg-[#1a1a24]')}>
+                        <span className={cn('inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs capitalize font-medium', statusColors[request.status] ?? 'text-gray-500 bg-gray-100 border-gray-200')}>
+                            {statusIcons[request.status]}
                             {request.status}
                         </span>
                     </div>
                 </div>
 
-                <div className="border-b border-[#1e1e2a] px-6">
-                    <div className="flex gap-6">
+                <div className="sticky top-0 z-10 border-b border-[#e2e6ef] bg-white/90 px-6 backdrop-blur-xl">
+                    <div className="flex gap-1">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
                                 className={cn(
-                                    'border-b-2 py-2.5 text-xs transition-colors',
+                                    'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-xs font-medium transition-all',
                                     activeTab === tab.key
-                                        ? 'border-[#3b6cdb] text-[#e8e8ed]'
-                                        : 'border-transparent text-[#555570] hover:text-[#8b8b9e]'
+                                        ? 'border-[#2B4C8C] text-[#2B4C8C]'
+                                        : 'border-transparent text-[#8b8b9e] hover:text-[#374151]'
                                 )}
                             >
+                                {tab.icon}
                                 {tab.label}
                             </button>
                         ))}
@@ -394,42 +446,48 @@ export default function ApprovalShow({ request }: Props) {
                     <div className="mx-auto max-w-4xl p-6">
                         {tabContent[activeTab]()}
 
-                        {/* Decision Form — only shown when pending + user can act */}
+                        {/* Decision Form */}
                         {canDecide && (
-                            <div className="mt-8 rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-5">
-                                <h3 className="mb-4 text-xs font-medium uppercase tracking-wider text-[#555570]">Your Decision</h3>
+                            <div className="mt-8 rounded-xl border border-[#e2e6ef] bg-white p-5 shadow-sm">
+                                <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#6b7280]">
+                                    <User className="h-3.5 w-3.5" />
+                                    Your Decision
+                                </h3>
 
                                 {!decisionValue ? (
                                     <div className="flex items-center gap-3">
                                         <button
                                             onClick={() => setDecisionValue('approved')}
-                                            className="rounded-md bg-green-500/20 px-4 py-2 text-xs font-medium text-green-400 transition-colors hover:bg-green-500/30"
+                                            className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-medium text-emerald-700 transition-all hover:bg-emerald-100 hover:shadow-sm"
                                         >
+                                            <Check className="h-3.5 w-3.5" />
                                             Approve
                                         </button>
                                         <button
                                             onClick={() => setDecisionValue('rejected')}
-                                            className="rounded-md bg-red-500/20 px-4 py-2 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/30"
+                                            className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs font-medium text-red-700 transition-all hover:bg-red-100 hover:shadow-sm"
                                         >
+                                            <X className="h-3.5 w-3.5" />
                                             Reject
                                         </button>
                                         <button
                                             onClick={() => setDecisionValue('abstained')}
-                                            className="rounded-md bg-yellow-500/20 px-4 py-2 text-xs font-medium text-yellow-400 transition-colors hover:bg-yellow-500/30"
+                                            className="flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-700 transition-all hover:bg-amber-100 hover:shadow-sm"
                                         >
+                                            <Minus className="h-3.5 w-3.5" />
                                             Abstain
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="space-y-3">
-                                        <p className="text-xs text-[#e8e8ed]">
-                                            Decision: <span className={cn('font-medium capitalize', decisionStatusColors[decisionValue])}>{decisionValue}</span>
+                                        <p className="text-xs text-[#374151]">
+                                            Decision: <span className={cn('font-semibold capitalize', decisionStatusColors[decisionValue])}>{decisionValue}</span>
                                         </p>
                                         <textarea
                                             value={comment}
                                             onChange={e => setComment(e.target.value)}
                                             placeholder={decisionValue === 'rejected' ? 'Reason (required)' : 'Comment (optional)'}
-                                            className="w-full rounded-md border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-2 text-xs text-[#e8e8ed] outline-none placeholder:text-[#555570] focus:border-[#3b6cdb]"
+                                            className="w-full rounded-lg border border-[#e2e6ef] bg-white px-3 py-2 text-xs text-[#374151] outline-none placeholder:text-[#8b8b9e] focus:border-[#2B4C8C] focus:ring-1 focus:ring-[#2B4C8C]/20"
                                             rows={3}
                                         />
                                         <div className="flex items-center gap-2">
@@ -437,23 +495,26 @@ export default function ApprovalShow({ request }: Props) {
                                                 onClick={handleDecide}
                                                 disabled={deciding || (decisionValue === 'rejected' && !comment.trim())}
                                                 className={cn(
-                                                    'rounded-md px-4 py-2 text-xs font-medium text-white transition-colors disabled:opacity-50',
-                                                    decisionValue === 'approved' ? 'bg-green-500 hover:bg-green-600' :
-                                                    decisionValue === 'rejected' ? 'bg-red-500 hover:bg-red-600' :
-                                                    'bg-yellow-500 hover:bg-yellow-600'
+                                                    'flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium text-white transition-all disabled:opacity-50',
+                                                    decisionValue === 'approved' ? 'bg-emerald-600 hover:bg-emerald-700' :
+                                                    decisionValue === 'rejected' ? 'bg-red-600 hover:bg-red-700' :
+                                                    'bg-amber-600 hover:bg-amber-700'
                                                 )}
                                             >
-                                                {deciding ? '...' : `Confirm ${decisionValue}`}
+                                                {deciding ? 'Processing...' : `Confirm ${decisionValue}`}
                                             </button>
                                             <button
                                                 onClick={resetDecision}
-                                                className="rounded-md px-3 py-2 text-xs text-[#555570] transition-colors hover:text-[#8b8b9e]"
+                                                className="rounded-lg px-3 py-2 text-xs text-[#6b7280] transition-colors hover:bg-[#f3f4f6]"
                                             >
                                                 Cancel
                                             </button>
                                         </div>
                                         {decisionValue === 'rejected' && !comment.trim() && (
-                                            <p className="text-[10px] text-red-400">A reason is required when rejecting</p>
+                                            <p className="flex items-center gap-1 text-[10px] text-red-600">
+                                                <AlertTriangle className="h-3 w-3" />
+                                                A reason is required when rejecting
+                                            </p>
                                         )}
                                     </div>
                                 )}

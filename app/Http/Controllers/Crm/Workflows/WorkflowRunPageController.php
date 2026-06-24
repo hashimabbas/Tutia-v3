@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crm\Workflows;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WorkflowRunResource;
 use App\Models\CrmWorkflow;
 use App\Models\CrmWorkflowRun;
 use App\Services\Crm\Workflows\Catalogs\WorkflowStatusCatalog;
@@ -89,7 +90,7 @@ class WorkflowRunPageController extends Controller
         $run->load(['workflow', 'actionRuns', 'approvalRequests.decisions', 'approvalRequests.flow']);
 
         return inertia('crm/workflows/runs/show', [
-            'run' => $run,
+            'run' => WorkflowRunResource::make($run)->toArray($request),
         ]);
     }
 }

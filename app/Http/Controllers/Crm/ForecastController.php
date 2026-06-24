@@ -47,11 +47,14 @@ class ForecastController extends Controller
                 'value' => $deal->value,
                 'stage' => $deal->stage,
                 'forecast_category' => $deal->forecast_category,
+                'probability' => $deal->probability,
+                'expected_close_date' => $deal->expected_close_date?->toDateString(),
                 'owner' => $deal->owner?->only(['id', 'name']),
                 'organization' => $deal->organization?->only(['id', 'name']),
                 'confidence' => $confidence->confidence,
                 'suggested_category' => $confidence->suggestedCategory,
                 'mismatch' => $confidence->mismatch,
+                'factors' => $confidence->factors,
             ];
         });
 

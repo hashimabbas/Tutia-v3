@@ -84,7 +84,7 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
     }, []);
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-3">
+        <div className="rounded-xl border border-border/60 bg-white p-4 shadow-xs">
             <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                     <input
@@ -97,17 +97,17 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                             ? 'e.g. workflow.health_score < 50 AND workflow.failure_rate > 15'
                             : 'e.g. approval.escalation_rate > 25'
                         }
-                        className="w-full rounded-md border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-1.5 text-xs text-[#e8e8ed] placeholder-[#555570] font-mono outline-none transition-colors focus:border-[#3b6cdb]"
+                        className="w-full rounded-lg border border-input bg-muted/30 px-3 py-2 text-xs text-foreground placeholder-muted-foreground/60 font-mono outline-none transition-all duration-200 focus:border-brand-navy-300 focus:bg-white focus:ring-1 focus:ring-brand-navy-200"
                     />
                 </div>
                 <button
                     onClick={handleApply}
                     disabled={!expression.trim()}
                     className={cn(
-                        'rounded-md px-3 py-1.5 text-[11px] font-medium transition-colors',
+                        'rounded-lg px-4 py-2 text-[11px] font-medium transition-all duration-200',
                         expression.trim()
-                            ? 'bg-[#3b6cdb] text-white hover:bg-[#2d5bbf]'
-                            : 'bg-[#1a1a24] text-[#555570] cursor-not-allowed',
+                            ? 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:scale-[0.98]'
+                            : 'bg-muted text-muted-foreground cursor-not-allowed',
                     )}
                 >
                     Apply Segment
@@ -115,7 +115,7 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                 {isActive && (
                     <button
                         onClick={handleClear}
-                        className="rounded-md border border-[#1e1e2a] px-3 py-1.5 text-[11px] text-[#555570] hover:text-[#e8e8ed] transition-colors"
+                        className="rounded-lg border border-border/60 px-4 py-2 text-[11px] font-medium text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground active:scale-[0.98]"
                     >
                         Clear
                     </button>
@@ -123,13 +123,13 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
             </div>
 
             {matchInfo && (
-                <div className="mt-2 text-[10px] text-[#8b8b9e]">
+                <div className="mt-2 text-[10px] text-muted-foreground">
                     {matchInfo.count} of {matchInfo.total} matched ({matchInfo.percentage}%)
                 </div>
             )}
 
             {showFields && (
-                <div className="mt-2 rounded-md border border-[#1e1e2a] bg-[#0a0a0f] p-2">
+                <div className="mt-3 rounded-lg border border-border/60 bg-muted/30 p-3">
                     <div className="flex flex-wrap gap-1.5">
                         {fields.map((f) => (
                             <button
@@ -141,15 +141,15 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                                         return `${prefix}${f.path} `;
                                     });
                                 }}
-                                className="rounded px-2 py-0.5 text-[10px] font-mono transition-colors hover:bg-[#1a1a24] text-[#8b8b9e] hover:text-[#e8e8ed]"
+                                className="rounded-md bg-white px-2 py-1 text-[10px] font-mono text-muted-foreground shadow-xs transition-all duration-200 hover:bg-brand-navy-50 hover:text-brand-navy-700 hover:shadow-sm"
                             >
                                 {f.path}
-                                <span className="ml-1 text-[#555570]">({f.type})</span>
-                                {f.hint && <span className="ml-1 text-[#3b6cdb]/60">{f.hint}</span>}
+                                <span className="ml-1 text-muted-foreground/50">({f.type})</span>
+                                {f.hint && <span className="ml-1 text-brand-navy-300">{f.hint}</span>}
                             </button>
                         ))}
                     </div>
-                    <p className="mt-1.5 text-[9px] text-[#555570]">
+                    <p className="mt-2 text-[9px] text-muted-foreground/60">
                         Operators: {OPERATORS.join(', ')} · Supports AND, OR, NOT · Click a field to insert · Press Enter to apply
                     </p>
                 </div>
@@ -160,24 +160,24 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                     <button
                         type="button"
                         onClick={() => setShowExamples(!showExamples)}
-                        className="mt-2 flex items-center gap-1 text-[10px] text-[#555570] hover:text-[#8b8b9e] transition-colors"
+                        className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
                     >
                         <span>{showExamples ? '▼' : '▶'} Example Expressions</span>
-                        <span className="text-[#3b6cdb]/60">({examples.length})</span>
+                        <span className="text-brand-navy-400/60">({examples.length})</span>
                     </button>
 
                     {showExamples && (
-                        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+                        <div className="mt-2 grid grid-cols-2 gap-1.5">
                             {examples.map((ex) => (
                                 <button
                                     key={ex.expression}
                                     type="button"
                                     onClick={() => insertExpression(ex.expression)}
                                     title={ex.description}
-                                    className="rounded border border-[#1e1e2a] bg-[#0a0a0f] px-2 py-1.5 text-left transition-colors hover:border-[#3b6cdb]/40"
+                                    className="rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-left transition-all duration-200 hover:border-brand-navy-200 hover:bg-brand-navy-50/50 hover:shadow-sm"
                                 >
-                                    <p className="text-[10px] font-mono text-[#e8e8ed]">{ex.expression}</p>
-                                    <p className="mt-0.5 text-[9px] text-[#555570]">{ex.label}</p>
+                                    <p className="text-[10px] font-mono text-foreground">{ex.expression}</p>
+                                    <p className="mt-0.5 text-[9px] text-muted-foreground">{ex.label}</p>
                                 </button>
                             ))}
                         </div>

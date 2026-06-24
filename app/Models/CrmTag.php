@@ -10,21 +10,21 @@ class CrmTag extends Model
 
     public function organizations()
     {
-        return $this->morphedByMany(CrmOrganization::class, 'taggable', 'crm_taggables');
+        return $this->morphedByMany(CrmOrganization::class, 'taggable', 'crm_taggables', 'tag_id', 'taggable_id');
     }
 
     public function contacts()
     {
-        return $this->morphedByMany(CrmContact::class, 'taggable', 'crm_taggables');
+        return $this->morphedByMany(CrmContact::class, 'taggable', 'crm_taggables', 'tag_id', 'taggable_id');
     }
 
     public function leads()
     {
-        return $this->morphedByMany(CrmLead::class, 'taggable', 'crm_taggables');
+        return $this->morphedByMany(CrmLead::class, 'taggable', 'crm_taggables', 'tag_id', 'taggable_id');
     }
 
     public function deals()
     {
-        return $this->morphedByMany(CrmDeal::class, 'taggable', 'crm_taggables');
+        return $this->morphedByMany(CrmDeal::class, 'taggable', 'crm_taggables', 'tag_id', 'taggable_id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crm\Approvals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApprovalDetailsResource;
 use App\Models\CrmApprovalFlow;
 use App\Models\CrmApprovalRequest;
 use App\Services\Crm\Approvals\Catalogs\ApprovalStatusCatalog;
@@ -36,7 +37,33 @@ class ApprovalPageController extends Controller
             $query->where('requested_at', '<=', $request->date_to);
         }
 
-        $requests = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $paginator = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        $requests = [
+            'data' => $paginator->through(fn ($r) => [
+                'id' => $r->id,
+                'approvalFlowId' => $r->approval_flow_id,
+                'status' => $r->status,
+                'entityType' => $r->entity_type,
+                'entityId' => $r->entity_id,
+                'requestedAt' => $r->requested_at?->toIso8601String(),
+                'completedAt' => $r->completed_at?->toIso8601String(),
+                'resolutionTimeMinutes' => $r->resolution_time_minutes,
+                'escalationCount' => $r->escalation_count,
+                'flow' => $r->relationLoaded('flow') && $r->flow ? [
+                    'id' => $r->flow->id,
+                    'name' => $r->flow->name,
+                ] : null,
+            ])->values()->all(),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'total' => $paginator->total(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+                'links' => $paginator->linkCollection()->toArray(),
+            ],
+        ];
 
         $flows = CrmApprovalFlow::select('id', 'name')->orderBy('name')->get();
         $statuses = collect(ApprovalStatusCatalog::REQUEST_ALL)->map(fn (string $s) => [
@@ -82,7 +109,7 @@ class ApprovalPageController extends Controller
         ]);
 
         return inertia('crm/approvals/show', [
-            'request' => $approvalRequest,
+            'request' => ApprovalDetailsResource::make($approvalRequest)->toArray($request),
         ]);
     }
 }

@@ -56,25 +56,25 @@ export default function RiskBoard({ project, risks, filters }: Props) {
             <Head title={`CRM · Risks · ${project.name}`} />
 
             <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-[#1e1e2a] px-6 py-2.5">
+                <div className="flex items-center justify-between border-b border-[#e2e6ef] bg-white/90 backdrop-blur-xl px-6 py-2.5 z-10">
                     <div className="flex items-center gap-3">
-                        <Link href={`/crm/projects/${project.id}`} className="flex h-7 w-7 items-center justify-center rounded text-[#555570] transition-colors hover:bg-[#1a1a24] hover:text-[#e8e8ed]">
+                        <Link href={`/crm/projects/${project.id}`} className="flex h-7 w-7 items-center justify-center rounded text-[#6b7280] transition-colors hover:bg-[#f8f9fc] hover:text-[#1a1a2e]">
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                         <div className="flex items-center gap-2 text-xs">
-                            <Link href={`/crm/projects/${project.id}`} className="text-[#555570] hover:text-[#8b8b9e]">{project.name}</Link>
-                            <span className="text-[#555570]">/</span>
-                            <span className="text-[#e8e8ed]">Risks</span>
+                            <Link href={`/crm/projects/${project.id}`} className="text-[#6b7280] hover:text-[#1a1a2e]">{project.name}</Link>
+                            <span className="text-[#6b7280]">/</span>
+                            <span className="text-[#1a1a2e]">Risks</span>
                         </div>
                     </div>
                     <ProjectStatusBadge status={project.status} />
                 </div>
 
-                <div className="flex items-center gap-3 border-b border-[#1e1e2a] px-6 py-2.5">
+                <div className="flex items-center gap-3 border-b border-[#e2e6ef] px-6 py-2.5">
                     <select
                         value={filters.status ?? ''}
                         onChange={e => applyFilter('status', e.target.value)}
-                        className="rounded-md border border-[#1e1e2a] bg-[#0f0f14] px-2.5 py-1.5 text-xs text-[#8b8b9e] outline-none focus:border-[#3b6cdb]"
+                        className="rounded-md border border-[#e2e6ef] bg-white px-2.5 py-1.5 text-xs text-[#6b7280] outline-none focus:border-[#2B4C8C]"
                     >
                         <option value="">All statuses</option>
                         <option value="identified">Identified</option>
@@ -87,8 +87,8 @@ export default function RiskBoard({ project, risks, filters }: Props) {
                     {risks.data.length === 0 ? (
                         <div className="flex h-full items-center justify-center">
                             <div className="text-center">
-                                <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-[#1e1e2a]" />
-                                <p className="text-sm text-[#555570]">No risks logged</p>
+                                <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-[#e2e6ef]" />
+                                <p className="text-sm text-[#6b7280]">No risks logged</p>
                             </div>
                         </div>
                     ) : (
@@ -97,14 +97,14 @@ export default function RiskBoard({ project, risks, filters }: Props) {
                                 <div key={group.severity}>
                                     <div className="mb-2 flex items-center gap-2">
                                         <SeverityBadge severity={group.severity} size="md" />
-                                        <span className="text-[10px] text-[#555570]">{group.items.length}</span>
+                                        <span className="text-[10px] text-[#6b7280]">{group.items.length}</span>
                                     </div>
                                     <div className="space-y-1.5">
                                         {group.items.map(r => (
                                             <RiskIssueCard key={r.id} id={r.id} description={r.description} severity={r.severity} status={r.status} owner={r.owner} projectId={project.id} type="risk" />
                                         ))}
                                         {group.items.length === 0 && (
-                                            <div className="rounded border border-dashed border-[#1e1e2a] p-3 text-center text-[10px] text-[#555570]">
+                                            <div className="rounded border border-dashed border-[#e2e6ef] p-3 text-center text-[10px] text-[#6b7280]">
                                                 No {group.severity} risks
                                             </div>
                                         )}

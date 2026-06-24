@@ -49,19 +49,19 @@ export default function ActionBuilder({ workflowId, actions: initial, actionType
     }, []);
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-medium uppercase tracking-wider text-[#555570]">Actions</h2>
+                <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">Actions</h2>
                 <button
                     onClick={handleAdd}
-                    className="flex items-center gap-1 rounded-md border border-[#1e1e2a] px-2.5 py-1 text-[10px] text-[#555570] transition-colors hover:border-[#2a2a3a] hover:text-[#8b8b9e]"
+                    className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[10px] text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-700"
                 >
                     <Plus className="h-3 w-3" /> Add Action
                 </button>
             </div>
 
             {items.length === 0 && (
-                <p className="text-xs text-[#555570]">No actions yet. Add an action to define what happens when conditions are met.</p>
+                <p className="text-xs text-gray-400">No actions yet. Add an action to define what happens when conditions are met.</p>
             )}
 
             <div className="space-y-3">

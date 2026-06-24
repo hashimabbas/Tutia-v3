@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\CrmContact;
 use App\Models\CrmDeal;
+use App\Models\CrmOrganization;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -73,6 +75,51 @@ class DealController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $this->authorize('create', CrmDeal::class);
+
+        return inertia('crm/deals/create', [
+            'contacts' => CrmContact::with('organizations')->limit(500)->get()->map(fn ($c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'email' => $c->email,
+                'phone' => $c->phone,
+                'job_title' => $c->job_title,
+                'organization_name' => $c->organizations->first(fn ($o) => $o->pivot->is_primary)?->name,
+                'organization_id' => $c->organizations->first(fn ($o) => $o->pivot->is_primary)?->id,
+            ]),
+            'organizations' => CrmOrganization::limit(500)->get()->map(fn ($o) => [
+                'id' => $o->id,
+                'name' => $o->name,
+                'industry' => $o->industry,
+            ]),
+        ]);
+    }
+
+    public function edit(CrmDeal $deal)
+    {
+        $this->authorize('update', $deal);
+
+        return inertia('crm/deals/create', [
+            'deal' => $deal->only(['id', 'title', 'value', 'currency', 'stage', 'probability', 'company', 'contact_name', 'contact_email', 'contact_phone', 'expected_close_date', 'notes', 'organization_id', 'contact_id']),
+            'contacts' => CrmContact::with('organizations')->limit(500)->get()->map(fn ($c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'email' => $c->email,
+                'phone' => $c->phone,
+                'job_title' => $c->job_title,
+                'organization_name' => $c->organizations->first(fn ($o) => $o->pivot->is_primary)?->name,
+                'organization_id' => $c->organizations->first(fn ($o) => $o->pivot->is_primary)?->id,
+            ]),
+            'organizations' => CrmOrganization::limit(500)->get()->map(fn ($o) => [
+                'id' => $o->id,
+                'name' => $o->name,
+                'industry' => $o->industry,
+            ]),
+        ]);
+    }
+
     public function show(CrmDeal $deal)
     {
         $this->authorize('view', $deal);
@@ -95,6 +142,14 @@ class DealController extends Controller
             'expected_close_date' => 'nullable|date',
             'notes' => 'nullable|string',
             'lost_reason' => 'nullable|string|max:255',
+            'title' => 'sometimes|string|max:255',
+            'currency' => 'sometimes|string|size:3',
+            'organization_id' => 'nullable|exists:crm_organizations,id',
+            'contact_id' => 'nullable|exists:crm_contacts,id',
+            'contact_name' => 'nullable|string|max:255',
+            'contact_email' => 'nullable|email|max:255',
+            'contact_phone' => 'nullable|string|max:50',
+            'company' => 'nullable|string|max:255',
         ]);
 
         $deal->update($validated);
@@ -112,11 +167,15 @@ class DealController extends Controller
             'currency' => 'sometimes|string|size:3',
             'stage' => 'sometimes|string|max:50',
             'lead_id' => 'nullable|exists:crm_leads,id',
+            'organization_id' => 'nullable|exists:crm_organizations,id',
+            'contact_id' => 'nullable|exists:crm_contacts,id',
             'contact_name' => 'nullable|string|max:255',
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'company' => 'nullable|string|max:255',
             'expected_close_date' => 'nullable|date',
+            'probability' => 'nullable|integer|min:0|max:100',
+            'notes' => 'nullable|string',
         ]);
 
         $validated['owner_id'] = $request->user()->id;

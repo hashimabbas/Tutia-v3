@@ -130,6 +130,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Leads
         Route::get('/leads', [CrmLeadController::class, 'index'])->name('leads.index');
+        Route::get('/leads/create', [CrmLeadController::class, 'create'])->name('leads.create');
+        Route::get('/leads/{lead}/edit', [CrmLeadController::class, 'edit'])->name('leads.edit');
+        Route::post('/leads', [CrmLeadController::class, 'store'])->name('leads.store');
         Route::get('/leads/{lead}', [CrmLeadController::class, 'show'])->name('leads.show');
         Route::patch('/leads/{lead}', [CrmLeadController::class, 'update'])->name('leads.update');
         Route::delete('/leads/{lead}', [CrmLeadController::class, 'destroy'])->name('leads.destroy');
@@ -137,6 +140,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Deals
         Route::get('/deals', [DealController::class, 'index'])->name('deals.index');
+        Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
+        Route::get('/deals/{deal}/edit', [DealController::class, 'edit'])->name('deals.edit');
         Route::get('/deals/{deal}', [DealController::class, 'show'])->name('deals.show');
         Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
         Route::patch('/deals/{deal}', [DealController::class, 'update'])->name('deals.update');
@@ -149,6 +154,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Organizations
         Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
+        Route::get('/organizations/create', [OrganizationController::class, 'create'])->name('organizations.create');
+        Route::get('/organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
         Route::get('/organizations/{organization}', [OrganizationController::class, 'show'])->name('organizations.show');
         Route::post('/organizations', [OrganizationController::class, 'store'])->name('organizations.store');
         Route::patch('/organizations/{organization}', [OrganizationController::class, 'update'])->name('organizations.update');
@@ -156,6 +163,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Contacts
         Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+        Route::get('/contacts/create', [ContactController::class, 'create'])->name('contacts.create');
+        Route::get('/contacts/{contact}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
         Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contacts.show');
         Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
         Route::patch('/contacts/{contact}', [ContactController::class, 'update'])->name('contacts.update');
@@ -171,6 +180,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // CRM-3: Products Catalog
         Route::get('/products', [ProductCatalogController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [ProductCatalogController::class, 'create'])->name('products.create');
+        Route::get('/products/{product}/edit', [ProductCatalogController::class, 'edit'])->name('products.edit');
+        Route::get('/products/{product}', [ProductCatalogController::class, 'show'])->name('products.show');
+        Route::post('/products', [ProductCatalogController::class, 'store'])->name('products.store');
+        Route::patch('/products/{product}', [ProductCatalogController::class, 'update'])->name('products.update');
+        Route::delete('/products/{product}', [ProductCatalogController::class, 'destroy'])->name('products.destroy');
 
         // CRM-3: Quotations
         Route::get('/deals/{deal}/quotations', [QuotationController::class, 'index'])->name('quotations.index');

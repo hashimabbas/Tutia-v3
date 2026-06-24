@@ -67,19 +67,19 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
     }, []);
 
     return (
-        <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-5">
+        <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-5">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-medium uppercase tracking-wider text-[#555570]">Conditions</h2>
+                <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">Conditions</h2>
                 <button
                     onClick={handleAddGroup}
-                    className="flex items-center gap-1 rounded-md border border-[#1e1e2a] px-2.5 py-1 text-[10px] text-[#555570] transition-colors hover:border-[#2a2a3a] hover:text-[#8b8b9e]"
+                    className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[10px] text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-700"
                 >
                     <Plus className="h-3 w-3" /> Add Group
                 </button>
             </div>
 
             {items.length === 0 && (
-                <p className="text-xs text-[#555570]">No conditions yet. Add a condition group to start.</p>
+                <p className="text-xs text-gray-400">No conditions yet. Add a condition group to start.</p>
             )}
 
             <div className="space-y-4">
@@ -87,15 +87,15 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
                     <div key={group}>
                         {gi > 0 && (
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="h-px flex-1 bg-[#1e1e2a]" />
-                                <span className="text-[10px] font-medium uppercase tracking-wider text-[#8b8b9e]">AND</span>
-                                <div className="h-px flex-1 bg-[#1e1e2a]" />
+                                <div className="h-px flex-1 bg-gray-200" />
+                                <span className="text-[10px] font-medium uppercase tracking-wider text-gray-400">AND</span>
+                                <div className="h-px flex-1 bg-gray-200" />
                             </div>
                         )}
 
                         <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <span className="rounded bg-[#1a1a24] px-2 py-0.5 text-[10px] text-[#555570]">Group {gi + 1}</span>
+                                <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">Group {gi + 1}</span>
                             </div>
 
                             {groups[group].map((condition, ci) => (
@@ -105,9 +105,9 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
                                             'flex items-center gap-2 mb-2',
                                             ci > 0 ? 'mt-2' : '',
                                         )}>
-                                            <div className="h-px flex-1 bg-[#2a2a3a]" />
-                                            <span className="text-[10px] font-medium text-[#555570]">AND</span>
-                                            <div className="h-px flex-1 bg-[#2a2a3a]" />
+                                            <div className="h-px flex-1 bg-gray-200" />
+                                            <span className="text-[10px] font-medium text-gray-400">AND</span>
+                                            <div className="h-px flex-1 bg-gray-200" />
                                         </div>
                                     )}
                                     <ConditionRow
@@ -122,7 +122,7 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
 
                             <button
                                 onClick={() => handleAddCondition(group)}
-                                className="flex items-center gap-1 text-[10px] text-[#555570] transition-colors hover:text-[#8b8b9e]"
+                                className="flex items-center gap-1 text-[10px] text-gray-500 transition-colors hover:text-gray-700"
                             >
                                 <Plus className="h-3 w-3" /> Add condition
                             </button>
