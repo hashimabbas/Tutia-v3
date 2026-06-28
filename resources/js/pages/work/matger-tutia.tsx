@@ -16,10 +16,16 @@ export default function MatgerTutia() {
     return (
         <>
             <Head title={cs.client}>
-                <meta name="description" content={locale === 'ar' ? cs.summaryAr : cs.summary} />
+                <meta
+                    name="description"
+                    content={locale === 'ar' ? cs.summaryAr : cs.summary}
+                />
             </Head>
 
-            <Section background="navy" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+            <Section
+                background="navy"
+                className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
+            >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-gold-500/5 via-transparent to-transparent" />
                 <Container>
                     <div className="mx-auto max-w-4xl">
@@ -27,9 +33,14 @@ export default function MatgerTutia() {
                             {locale === 'ar' ? cs.industryAr : cs.industry}
                         </span>
                         <Heading level="h1" className="mt-4 text-white">
-                            {locale === 'ar' ? 'منصة متجر توتيا' : 'Matger-TUTIA Platform'}
+                            {locale === 'ar'
+                                ? 'منصة متجر توتيا'
+                                : 'Matger-TUTIA Platform'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-2 text-neutral-300">
+                        <Text
+                            variant="body-lg"
+                            className="mt-2 text-neutral-300"
+                        >
                             {locale === 'ar' ? cs.clientAr : cs.client}
                         </Text>
                     </div>
@@ -37,27 +48,37 @@ export default function MatgerTutia() {
             </Section>
 
             {cs.sections.map((section, index) => (
-                <Section key={section.title} background={index % 2 === 0 ? 'white' : 'muted'}>
+                <Section
+                    key={section.title}
+                    background={index % 2 === 0 ? 'white' : 'muted'}
+                >
                     <Container className="mx-auto max-w-3xl">
                         <Heading level="h2">
                             {locale === 'ar' ? section.titleAr : section.title}
                         </Heading>
-                        {section.content.split('\n').map((paragraph, i) => (
-                            paragraph.trim() && (
-                                <Text key={i} variant="body-lg" className="mt-4 text-neutral-600">
-                                    {locale === 'ar' ? section.contentAr.split('\n')[i]?.trim() || paragraph : paragraph}
-                                </Text>
-                            )
-                        ))}
+                        {section.content.split('\n').map(
+                            (paragraph, i) =>
+                                paragraph.trim() && (
+                                    <Text
+                                        key={i}
+                                        variant="body-lg"
+                                        className="mt-4 text-neutral-600"
+                                    >
+                                        {locale === 'ar'
+                                            ? section.contentAr
+                                                  .split('\n')
+                                                  [i]?.trim() || paragraph
+                                            : paragraph}
+                                    </Text>
+                                ),
+                        )}
                     </Container>
                 </Section>
             ))}
 
             <Section background="muted">
                 <Container className="mx-auto max-w-3xl">
-                    <Heading level="h2">
-                        {t('work.technologies')}
-                    </Heading>
+                    <Heading level="h2">{t('work.technologies')}</Heading>
                     <div className="mt-6 flex flex-wrap gap-3">
                         {cs.technologies.map((tech) => (
                             <span
@@ -75,8 +96,15 @@ export default function MatgerTutia() {
                 <Container className="mx-auto max-w-3xl">
                     <div className="relative">
                         <Quote className="mb-4 size-10 text-brand-gold-500/40" />
-                        <Text variant="body-lg" className="text-neutral-200 italic">
-                            &ldquo;{locale === 'ar' ? cs.clientQuoteAr : cs.clientQuote}&rdquo;
+                        <Text
+                            variant="body-lg"
+                            className="text-neutral-200 italic"
+                        >
+                            &ldquo;
+                            {locale === 'ar'
+                                ? cs.clientQuoteAr
+                                : cs.clientQuote}
+                            &rdquo;
                         </Text>
                         <div className="mt-6 flex items-center gap-4">
                             {cs.clientLogo && (
@@ -87,7 +115,10 @@ export default function MatgerTutia() {
                                 />
                             )}
                             <div>
-                                <Text variant="body" className="font-semibold text-white">
+                                <Text
+                                    variant="body"
+                                    className="font-semibold text-white"
+                                >
                                     {locale === 'ar' ? cs.clientAr : cs.client}
                                 </Text>
                             </div>
@@ -102,7 +133,11 @@ export default function MatgerTutia() {
                         {t('work.getResults')}
                     </Heading>
                     <div className="mt-8">
-                        <Button asChild size="lg" className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                        >
                             <Link href="/contact/consultation">
                                 {t('work.getResults')}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
@@ -114,10 +149,16 @@ export default function MatgerTutia() {
 
             <Section>
                 <Container>
-                    <Button asChild variant="link" className="text-brand-navy-500">
+                    <Button
+                        asChild
+                        variant="link"
+                        className="text-brand-navy-500"
+                    >
                         <Link href="/work">
                             <ArrowLeft className="mr-2 size-4 rtl:rotate-180" />
-                            {locale === 'ar' ? 'العودة إلى الأعمال' : 'Back to Work'}
+                            {locale === 'ar'
+                                ? 'العودة إلى الأعمال'
+                                : 'Back to Work'}
                         </Link>
                     </Button>
                 </Container>

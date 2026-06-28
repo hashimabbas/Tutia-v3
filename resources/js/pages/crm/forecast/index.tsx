@@ -123,7 +123,12 @@ function parsePeriod(period: string): { year: number; quarter: number } {
 
 function formatPeriodLabel(period: string): string {
     const { year, quarter } = parsePeriod(period);
-    const qLabels: Record<number, string> = { 1: 'Q1', 2: 'Q2', 3: 'Q3', 4: 'Q4' };
+    const qLabels: Record<number, string> = {
+        1: 'Q1',
+        2: 'Q2',
+        3: 'Q3',
+        4: 'Q4',
+    };
     return `${qLabels[quarter]} ${year}`;
 }
 
@@ -131,8 +136,14 @@ function shiftPeriod(period: string, delta: number): string {
     const { year, quarter } = parsePeriod(period);
     let newQ = quarter + delta;
     let newY = year;
-    while (newQ < 1) { newQ += 4; newY -= 1; }
-    while (newQ > 4) { newQ -= 4; newY += 1; }
+    while (newQ < 1) {
+        newQ += 4;
+        newY -= 1;
+    }
+    while (newQ > 4) {
+        newQ -= 4;
+        newY += 1;
+    }
     return `${newY}-Q${newQ}`;
 }
 
@@ -185,22 +196,36 @@ function ConfidenceFactors({ factors }: { factors: ConfidenceFactor[] }) {
     const maxWeight = factors.reduce((m, f) => m + f.weight, 0) || 1;
     return (
         <div className="space-y-1.5">
-            {factors.map(f => {
+            {factors.map((f) => {
                 const pct = (f.weight / maxWeight) * 100;
                 const scoreColor =
-                    f.score >= 70 ? 'text-emerald-600' :
-                    f.score >= 40 ? 'text-amber-600' :
-                    'text-rose-600';
+                    f.score >= 70
+                        ? 'text-emerald-600'
+                        : f.score >= 40
+                          ? 'text-amber-600'
+                          : 'text-rose-600';
                 return (
-                    <div key={f.name} className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 min-w-0">
+                    <div
+                        key={f.name}
+                        className="flex items-center justify-between gap-2"
+                    >
+                        <div className="flex min-w-0 items-center gap-1.5">
                             <span
                                 className="h-1 w-1 shrink-0 rounded-full"
-                                style={{ backgroundColor: `hsl(${pct * 1.2}, 60%, 50%)` }}
+                                style={{
+                                    backgroundColor: `hsl(${pct * 1.2}, 60%, 50%)`,
+                                }}
                             />
-                            <span className="truncate text-[11px] text-[#6b7280]">{f.name}</span>
+                            <span className="truncate text-[11px] text-[#6b7280]">
+                                {f.name}
+                            </span>
                         </div>
-                        <span className={cn('text-[11px] font-medium tabular-nums', scoreColor)}>
+                        <span
+                            className={cn(
+                                'text-[11px] font-medium tabular-nums',
+                                scoreColor,
+                            )}
+                        >
                             {f.score}/100
                         </span>
                     </div>
@@ -210,21 +235,44 @@ function ConfidenceFactors({ factors }: { factors: ConfidenceFactor[] }) {
     );
 }
 
-function CategoryBadge({ category, suggested }: { category: string | null; suggested?: string }) {
+function CategoryBadge({
+    category,
+    suggested,
+}: {
+    category: string | null;
+    suggested?: string;
+}) {
     const config: Record<string, { label: string; classes: string }> = {
-        commit: { label: 'Commit', classes: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-        best_case: { label: 'Best Case', classes: 'bg-blue-50 text-blue-700 border-blue-200' },
-        pipeline: { label: 'Pipeline', classes: 'bg-amber-50 text-amber-700 border-amber-200' },
+        commit: {
+            label: 'Commit',
+            classes: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        },
+        best_case: {
+            label: 'Best Case',
+            classes: 'bg-blue-50 text-blue-700 border-blue-200',
+        },
+        pipeline: {
+            label: 'Pipeline',
+            classes: 'bg-amber-50 text-amber-700 border-amber-200',
+        },
     };
 
     const isMismatch = suggested && category && category !== suggested;
     const display = category ?? 'Uncategorized';
 
-    const cfg = config[display] ?? { label: 'Uncategorized', classes: 'bg-slate-50 text-slate-600 border-slate-200' };
+    const cfg = config[display] ?? {
+        label: 'Uncategorized',
+        classes: 'bg-slate-50 text-slate-600 border-slate-200',
+    };
 
     return (
         <div className="flex items-center gap-1.5">
-            <span className={cn('rounded-md border px-2 py-0.5 text-[10px] font-medium', cfg.classes)}>
+            <span
+                className={cn(
+                    'rounded-md border px-2 py-0.5 text-[10px] font-medium',
+                    cfg.classes,
+                )}
+            >
                 {cfg.label}
             </span>
             {isMismatch && (
@@ -232,8 +280,14 @@ function CategoryBadge({ category, suggested }: { category: string | null; sugge
                     <TooltipTrigger asChild>
                         <AlertTriangle className="h-3 w-3 text-amber-500" />
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="border-[#e2e6ef] bg-white p-2 text-[11px] text-[#6b7280] shadow-lg">
-                        Suggested: <span className="font-medium text-[#1a1a2e] capitalize">{suggested}</span>
+                    <TooltipContent
+                        side="bottom"
+                        className="border-[#e2e6ef] bg-white p-2 text-[11px] text-[#6b7280] shadow-lg"
+                    >
+                        Suggested:{' '}
+                        <span className="font-medium text-[#1a1a2e] capitalize">
+                            {suggested}
+                        </span>
                     </TooltipContent>
                 </Tooltip>
             )}
@@ -252,13 +306,25 @@ function StageBadge({ stage }: { stage: string }) {
     };
 
     return (
-        <span className={cn('rounded-md border px-2 py-0.5 text-[10px] font-medium capitalize', colors[stage] ?? 'bg-slate-50 text-slate-600 border-slate-200')}>
+        <span
+            className={cn(
+                'rounded-md border px-2 py-0.5 text-[10px] font-medium capitalize',
+                colors[stage] ?? 'border-slate-200 bg-slate-50 text-slate-600',
+            )}
+        >
             {STAGE_LABELS[stage] ?? stage}
         </span>
     );
 }
 
-function SummaryCard({ icon: Icon, label, value, sublabel, progress, color }: {
+function SummaryCard({
+    icon: Icon,
+    label,
+    value,
+    sublabel,
+    progress,
+    color,
+}: {
     icon: any;
     label: string;
     value: number | string;
@@ -269,7 +335,9 @@ function SummaryCard({ icon: Icon, label, value, sublabel, progress, color }: {
     return (
         <div className="group rounded-xl border border-[#e2e6ef] bg-white p-4 shadow-sm transition-all hover:border-[#c8cce0] hover:shadow-md">
             <div className="mb-3 flex items-center justify-between">
-                <span className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider">{label}</span>
+                <span className="text-[11px] font-medium tracking-wider text-[#6b7280] uppercase">
+                    {label}
+                </span>
                 <div
                     className="flex h-7 w-7 items-center justify-center rounded-lg transition-colors group-hover:brightness-95"
                     style={{ backgroundColor: `${color}15` }}
@@ -277,7 +345,7 @@ function SummaryCard({ icon: Icon, label, value, sublabel, progress, color }: {
                     <Icon className="h-3.5 w-3.5" style={{ color }} />
                 </div>
             </div>
-            <div className="mb-1 text-lg font-bold text-[#1a1a2e] tracking-tight">
+            <div className="mb-1 text-lg font-bold tracking-tight text-[#1a1a2e]">
                 {typeof value === 'number' ? formatCurrency(value) : value}
             </div>
             {sublabel && (
@@ -294,14 +362,24 @@ function SummaryCard({ icon: Icon, label, value, sublabel, progress, color }: {
                             }}
                         />
                     </div>
-                    <p className="mt-1 text-[10px] text-[#9ca3af]">{progress.toFixed(1)}% attained</p>
+                    <p className="mt-1 text-[10px] text-[#9ca3af]">
+                        {progress.toFixed(1)}% attained
+                    </p>
                 </div>
             )}
         </div>
     );
 }
 
-export default function ForecastIndex({ period, summary, quota, deals, team_breakdown, health_distribution, is_manager }: ForecastPageProps) {
+export default function ForecastIndex({
+    period,
+    summary,
+    quota,
+    deals,
+    team_breakdown,
+    health_distribution,
+    is_manager,
+}: ForecastPageProps) {
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [sortBy, setSortBy] = useState<string>('confidence');
@@ -311,11 +389,19 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
 
     const navigatePeriod = (delta: number) => {
         const newPeriod = shiftPeriod(period, delta);
-        router.get(`/crm/forecast?period=${newPeriod}`, {}, { preserveScroll: true, preserveState: true });
+        router.get(
+            `/crm/forecast?period=${newPeriod}`,
+            {},
+            { preserveScroll: true, preserveState: true },
+        );
     };
 
     const setPeriod = (p: string) => {
-        router.get(`/crm/forecast?period=${p}`, {}, { preserveScroll: true, preserveState: true });
+        router.get(
+            `/crm/forecast?period=${p}`,
+            {},
+            { preserveScroll: true, preserveState: true },
+        );
     };
 
     const totalDeals = deals.length;
@@ -326,28 +412,38 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
 
         if (search) {
             const q = search.toLowerCase();
-            result = result.filter(d =>
-                d.title.toLowerCase().includes(q) ||
-                d.organization?.name.toLowerCase().includes(q) ||
-                d.owner?.name.toLowerCase().includes(q),
+            result = result.filter(
+                (d) =>
+                    d.title.toLowerCase().includes(q) ||
+                    d.organization?.name.toLowerCase().includes(q) ||
+                    d.owner?.name.toLowerCase().includes(q),
             );
         }
 
         if (categoryFilter !== 'all') {
             if (categoryFilter === 'uncategorized') {
-                result = result.filter(d => !d.forecast_category);
+                result = result.filter((d) => !d.forecast_category);
             } else {
-                result = result.filter(d => d.forecast_category === categoryFilter);
+                result = result.filter(
+                    (d) => d.forecast_category === categoryFilter,
+                );
             }
         }
 
         result.sort((a, b) => {
             let cmp = 0;
             switch (sortBy) {
-                case 'confidence': cmp = a.confidence - b.confidence; break;
-                case 'value': cmp = a.value - b.value; break;
-                case 'title': cmp = a.title.localeCompare(b.title); break;
-                default: cmp = a.confidence - b.confidence;
+                case 'confidence':
+                    cmp = a.confidence - b.confidence;
+                    break;
+                case 'value':
+                    cmp = a.value - b.value;
+                    break;
+                case 'title':
+                    cmp = a.title.localeCompare(b.title);
+                    break;
+                default:
+                    cmp = a.confidence - b.confidence;
             }
             return sortDir === 'desc' ? -cmp : cmp;
         });
@@ -357,7 +453,7 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
 
     const toggleSort = (field: string) => {
         if (sortBy === field) {
-            setSortDir(prev => prev === 'desc' ? 'asc' : 'desc');
+            setSortDir((prev) => (prev === 'desc' ? 'asc' : 'desc'));
         } else {
             setSortBy(field);
             setSortDir('desc');
@@ -369,7 +465,8 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
     };
 
     const totalTeamValues = useMemo(() => {
-        if (!team_breakdown.length) return { commit: 0, best_case: 0, pipeline: 0, total: 0 };
+        if (!team_breakdown.length)
+            return { commit: 0, best_case: 0, pipeline: 0, total: 0 };
         return team_breakdown.reduce(
             (acc, m) => ({
                 commit: acc.commit + m.commit,
@@ -381,7 +478,10 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
         );
     }, [team_breakdown]);
 
-    const healthTotal = health_distribution.healthy + health_distribution.at_risk + health_distribution.critical;
+    const healthTotal =
+        health_distribution.healthy +
+        health_distribution.at_risk +
+        health_distribution.critical;
 
     return (
         <>
@@ -400,13 +500,17 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                             </Link>
                             <div>
                                 <div className="flex items-center gap-3">
-                                    <h1 className="text-lg font-semibold text-[#1a1a2e] tracking-tight">Forecast</h1>
+                                    <h1 className="text-lg font-semibold tracking-tight text-[#1a1a2e]">
+                                        Forecast
+                                    </h1>
                                     <span className="rounded-lg bg-[#2B4C8C]/10 px-2 py-0.5 text-[10px] font-medium text-[#2B4C8C]">
                                         {formatPeriodLabel(period)}
                                     </span>
                                 </div>
                                 <p className="text-xs text-[#6b7280]">
-                                    {totalDeals} active deal{totalDeals !== 1 ? 's' : ''} in pipeline · {formatCurrency(summary.weighted)} weighted
+                                    {totalDeals} active deal
+                                    {totalDeals !== 1 ? 's' : ''} in pipeline ·{' '}
+                                    {formatCurrency(summary.weighted)} weighted
                                 </p>
                             </div>
                         </div>
@@ -420,13 +524,20 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                 >
                                     <ChevronLeft className="h-3.5 w-3.5" />
                                 </button>
-                                <Select value={period} onValueChange={setPeriod}>
+                                <Select
+                                    value={period}
+                                    onValueChange={setPeriod}
+                                >
                                     <SelectTrigger className="h-7 border-0 bg-transparent px-2 text-xs font-medium text-[#1a1a2e] shadow-none focus:ring-0 [&>svg]:hidden">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60">
-                                        {periodOptions.map(p => (
-                                            <SelectItem key={p} value={p} className="text-xs">
+                                        {periodOptions.map((p) => (
+                                            <SelectItem
+                                                key={p}
+                                                value={p}
+                                                className="text-xs"
+                                            >
                                                 {formatPeriodLabel(p)}
                                             </SelectItem>
                                         ))}
@@ -451,7 +562,10 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                         <RefreshCw className="h-3.5 w-3.5" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent side="bottom" className="border-[#e2e6ef] bg-white text-[11px] text-[#6b7280] shadow-lg">
+                                <TooltipContent
+                                    side="bottom"
+                                    className="border-[#e2e6ef] bg-white text-[11px] text-[#6b7280] shadow-lg"
+                                >
                                     Refresh forecast
                                 </TooltipContent>
                             </Tooltip>
@@ -467,8 +581,14 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                 icon={Target}
                                 label="Quota"
                                 value={formatCurrency(quota)}
-                                sublabel={quota > 0 ? `${formatCurrency(summary.weighted)} weighted` : 'No quota set'}
-                                progress={quota > 0 ? quotaAttainment : undefined}
+                                sublabel={
+                                    quota > 0
+                                        ? `${formatCurrency(summary.weighted)} weighted`
+                                        : 'No quota set'
+                                }
+                                progress={
+                                    quota > 0 ? quotaAttainment : undefined
+                                }
                                 color="#2B4C8C"
                             />
                             <SummaryCard
@@ -510,7 +630,7 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                 value={summary.weighted}
                                 sublabel={
                                     quota > 0
-                                        ? `${(quotaAttainment - 100) > 0 ? '+' : ''}${(quotaAttainment - 100).toFixed(1)}% vs quota`
+                                        ? `${quotaAttainment - 100 > 0 ? '+' : ''}${(quotaAttainment - 100).toFixed(1)}% vs quota`
                                         : undefined
                                 }
                                 color="#8b5cf6"
@@ -525,7 +645,9 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                     {/* Table Header */}
                                     <div className="flex items-center justify-between border-b border-[#e2e6ef] px-5 py-3">
                                         <div className="flex items-center gap-3">
-                                            <h2 className="text-sm font-semibold text-[#1a1a2e]">Deals</h2>
+                                            <h2 className="text-sm font-semibold text-[#1a1a2e]">
+                                                Deals
+                                            </h2>
                                             <span className="rounded-lg bg-[#f0f2f7] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">
                                                 {filteredDeals.length}
                                             </span>
@@ -535,21 +657,55 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                                 <input
                                                     type="text"
                                                     value={search}
-                                                    onChange={(e) => setSearch(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setSearch(
+                                                            e.target.value,
+                                                        )
+                                                    }
                                                     placeholder="Search deals..."
-                                                    className="h-8 w-40 rounded-lg border border-[#e2e6ef] bg-[#f8f9fc] pl-3 pr-3 text-[11px] text-[#1a1a2e] placeholder-[#9ca3af] outline-none transition-all focus:border-[#2B4C8C] focus:ring-[3px] focus:ring-[#2B4C8C]/10"
+                                                    className="h-8 w-40 rounded-lg border border-[#e2e6ef] bg-[#f8f9fc] pr-3 pl-3 text-[11px] text-[#1a1a2e] placeholder-[#9ca3af] transition-all outline-none focus:border-[#2B4C8C] focus:ring-[3px] focus:ring-[#2B4C8C]/10"
                                                 />
                                             </div>
-                                            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                                            <Select
+                                                value={categoryFilter}
+                                                onValueChange={
+                                                    setCategoryFilter
+                                                }
+                                            >
                                                 <SelectTrigger className="h-8 w-32 border-[#e2e6ef] text-[11px] text-[#6b7280] shadow-none">
                                                     <SelectValue placeholder="Category" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="all" className="text-xs">All Categories</SelectItem>
-                                                    <SelectItem value="commit" className="text-xs">Commit</SelectItem>
-                                                    <SelectItem value="best_case" className="text-xs">Best Case</SelectItem>
-                                                    <SelectItem value="pipeline" className="text-xs">Pipeline</SelectItem>
-                                                    <SelectItem value="uncategorized" className="text-xs">Uncategorized</SelectItem>
+                                                    <SelectItem
+                                                        value="all"
+                                                        className="text-xs"
+                                                    >
+                                                        All Categories
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        value="commit"
+                                                        className="text-xs"
+                                                    >
+                                                        Commit
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        value="best_case"
+                                                        className="text-xs"
+                                                    >
+                                                        Best Case
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        value="pipeline"
+                                                        className="text-xs"
+                                                    >
+                                                        Pipeline
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        value="uncategorized"
+                                                        className="text-xs"
+                                                    >
+                                                        Uncategorized
+                                                    </SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -561,26 +717,79 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f0f2f7]">
                                                 <BarChart3 className="h-6 w-6 text-[#9ca3af]" />
                                             </div>
-                                            <p className="text-sm font-medium text-[#6b7280]">No deals match your filters</p>
-                                            <p className="text-xs text-[#9ca3af]">Try adjusting your search or category filter</p>
+                                            <p className="text-sm font-medium text-[#6b7280]">
+                                                No deals match your filters
+                                            </p>
+                                            <p className="text-xs text-[#9ca3af]">
+                                                Try adjusting your search or
+                                                category filter
+                                            </p>
                                         </div>
                                     ) : (
                                         <div className="overflow-x-auto">
                                             <table className="w-full">
                                                 <thead>
                                                     <tr className="border-b border-[#f0f2f7]">
-                                                        <Th sortable active={sortBy === 'title'} dir={sortDir} onClick={() => toggleSort('title')}>Deal</Th>
-                                                        <Th sortable active={sortBy === 'value'} dir={sortDir} onClick={() => toggleSort('value')} className="text-right">Value</Th>
+                                                        <Th
+                                                            sortable
+                                                            active={
+                                                                sortBy ===
+                                                                'title'
+                                                            }
+                                                            dir={sortDir}
+                                                            onClick={() =>
+                                                                toggleSort(
+                                                                    'title',
+                                                                )
+                                                            }
+                                                        >
+                                                            Deal
+                                                        </Th>
+                                                        <Th
+                                                            sortable
+                                                            active={
+                                                                sortBy ===
+                                                                'value'
+                                                            }
+                                                            dir={sortDir}
+                                                            onClick={() =>
+                                                                toggleSort(
+                                                                    'value',
+                                                                )
+                                                            }
+                                                            className="text-right"
+                                                        >
+                                                            Value
+                                                        </Th>
                                                         <Th>Stage</Th>
-                                                        <Th sortable active={sortBy === 'confidence'} dir={sortDir} onClick={() => toggleSort('confidence')}>Confidence</Th>
+                                                        <Th
+                                                            sortable
+                                                            active={
+                                                                sortBy ===
+                                                                'confidence'
+                                                            }
+                                                            dir={sortDir}
+                                                            onClick={() =>
+                                                                toggleSort(
+                                                                    'confidence',
+                                                                )
+                                                            }
+                                                        >
+                                                            Confidence
+                                                        </Th>
                                                         <Th>Forecast</Th>
                                                         <Th>Owner</Th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {filteredDeals.map((deal) => (
-                                                        <DealRow key={deal.id} deal={deal} />
-                                                    ))}
+                                                    {filteredDeals.map(
+                                                        (deal) => (
+                                                            <DealRow
+                                                                key={deal.id}
+                                                                deal={deal}
+                                                            />
+                                                        ),
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -589,34 +798,62 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                             </div>
 
                             {/* Right: Sidebar */}
-                            <div className="w-full space-y-5 xl:w-80 shrink-0">
+                            <div className="w-full shrink-0 space-y-5 xl:w-80">
                                 {/* Team Breakdown */}
                                 {is_manager && team_breakdown.length > 0 && (
                                     <div className="rounded-xl border border-[#e2e6ef] bg-white p-5 shadow-sm">
                                         <div className="mb-4 flex items-center gap-2">
                                             <Users className="h-4 w-4 text-[#6b7280]" />
-                                            <h3 className="text-sm font-semibold text-[#1a1a2e]">Team Breakdown</h3>
+                                            <h3 className="text-sm font-semibold text-[#1a1a2e]">
+                                                Team Breakdown
+                                            </h3>
                                         </div>
                                         <div className="space-y-3">
                                             {team_breakdown.map((member) => {
-                                                const maxTotal = totalTeamValues.total || 1;
-                                                const pct = (member.total / maxTotal) * 100;
+                                                const maxTotal =
+                                                    totalTeamValues.total || 1;
+                                                const pct =
+                                                    (member.total / maxTotal) *
+                                                    100;
                                                 return (
                                                     <div key={member.name}>
                                                         <div className="mb-1.5 flex items-center justify-between">
-                                                            <span className="text-xs font-medium text-[#1a1a2e]">{member.name}</span>
-                                                            <span className="text-[11px] font-medium text-[#6b7280]">{formatCurrency(member.total)}</span>
+                                                            <span className="text-xs font-medium text-[#1a1a2e]">
+                                                                {member.name}
+                                                            </span>
+                                                            <span className="text-[11px] font-medium text-[#6b7280]">
+                                                                {formatCurrency(
+                                                                    member.total,
+                                                                )}
+                                                            </span>
                                                         </div>
                                                         <div className="h-2 w-full overflow-hidden rounded-full bg-[#f0f2f7]">
                                                             <div
                                                                 className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-400 transition-all"
-                                                                style={{ width: `${Math.min(pct, 100)}%` }}
+                                                                style={{
+                                                                    width: `${Math.min(pct, 100)}%`,
+                                                                }}
                                                             />
                                                         </div>
                                                         <div className="mt-1 flex items-center gap-3 text-[10px] text-[#9ca3af]">
-                                                            <span>Commit: {formatCurrency(member.commit)}</span>
-                                                            <span>Best: {formatCurrency(member.best_case)}</span>
-                                                            <span>Pipe: {formatCurrency(member.pipeline)}</span>
+                                                            <span>
+                                                                Commit:{' '}
+                                                                {formatCurrency(
+                                                                    member.commit,
+                                                                )}
+                                                            </span>
+                                                            <span>
+                                                                Best:{' '}
+                                                                {formatCurrency(
+                                                                    member.best_case,
+                                                                )}
+                                                            </span>
+                                                            <span>
+                                                                Pipe:{' '}
+                                                                {formatCurrency(
+                                                                    member.pipeline,
+                                                                )}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 );
@@ -630,35 +867,67 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                     <div className="rounded-xl border border-[#e2e6ef] bg-white p-5 shadow-sm">
                                         <div className="mb-4 flex items-center gap-2">
                                             <Activity className="h-4 w-4 text-[#6b7280]" />
-                                            <h3 className="text-sm font-semibold text-[#1a1a2e]">Health Distribution</h3>
+                                            <h3 className="text-sm font-semibold text-[#1a1a2e]">
+                                                Health Distribution
+                                            </h3>
                                         </div>
 
                                         {/* Stacked bar */}
                                         <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-[#f0f2f7]">
-                                            {health_distribution.healthy > 0 && (
+                                            {health_distribution.healthy >
+                                                0 && (
                                                 <div
                                                     className="inline-block h-full rounded-l-full bg-emerald-400 align-top transition-all"
-                                                    style={{ width: `${(health_distribution.healthy / healthTotal) * 100}%` }}
+                                                    style={{
+                                                        width: `${(health_distribution.healthy / healthTotal) * 100}%`,
+                                                    }}
                                                 />
                                             )}
-                                            {health_distribution.at_risk > 0 && (
+                                            {health_distribution.at_risk >
+                                                0 && (
                                                 <div
                                                     className="inline-block h-full bg-amber-400 align-top transition-all"
-                                                    style={{ width: `${(health_distribution.at_risk / healthTotal) * 100}%` }}
+                                                    style={{
+                                                        width: `${(health_distribution.at_risk / healthTotal) * 100}%`,
+                                                    }}
                                                 />
                                             )}
-                                            {health_distribution.critical > 0 && (
+                                            {health_distribution.critical >
+                                                0 && (
                                                 <div
                                                     className="inline-block h-full rounded-r-full bg-rose-400 align-top transition-all"
-                                                    style={{ width: `${(health_distribution.critical / healthTotal) * 100}%` }}
+                                                    style={{
+                                                        width: `${(health_distribution.critical / healthTotal) * 100}%`,
+                                                    }}
                                                 />
                                             )}
                                         </div>
 
                                         <div className="space-y-2">
-                                            <HealthRow color="bg-emerald-400" label="Healthy" count={health_distribution.healthy} total={healthTotal} />
-                                            <HealthRow color="bg-amber-400" label="At Risk" count={health_distribution.at_risk} total={healthTotal} />
-                                            <HealthRow color="bg-rose-400" label="Critical" count={health_distribution.critical} total={healthTotal} />
+                                            <HealthRow
+                                                color="bg-emerald-400"
+                                                label="Healthy"
+                                                count={
+                                                    health_distribution.healthy
+                                                }
+                                                total={healthTotal}
+                                            />
+                                            <HealthRow
+                                                color="bg-amber-400"
+                                                label="At Risk"
+                                                count={
+                                                    health_distribution.at_risk
+                                                }
+                                                total={healthTotal}
+                                            />
+                                            <HealthRow
+                                                color="bg-rose-400"
+                                                label="Critical"
+                                                count={
+                                                    health_distribution.critical
+                                                }
+                                                total={healthTotal}
+                                            />
                                         </div>
                                     </div>
                                 )}
@@ -667,18 +936,43 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
                                 <div className="rounded-xl border border-[#e2e6ef] bg-white p-5 shadow-sm">
                                     <div className="mb-4 flex items-center gap-2">
                                         <Gauge className="h-4 w-4 text-[#6b7280]" />
-                                        <h3 className="text-sm font-semibold text-[#1a1a2e]">Forecast Summary</h3>
+                                        <h3 className="text-sm font-semibold text-[#1a1a2e]">
+                                            Forecast Summary
+                                        </h3>
                                     </div>
                                     <div className="space-y-2.5">
-                                        <SummaryRow label="Commit" value={summary.commit} color="text-emerald-600" />
-                                        <SummaryRow label="Best Case" value={summary.best_case} color="text-blue-600" />
-                                        <SummaryRow label="Pipeline" value={summary.pipeline} color="text-amber-600" />
-                                        <SummaryRow label="Uncategorized" value={summary.uncategorized} color="text-slate-500" />
+                                        <SummaryRow
+                                            label="Commit"
+                                            value={summary.commit}
+                                            color="text-emerald-600"
+                                        />
+                                        <SummaryRow
+                                            label="Best Case"
+                                            value={summary.best_case}
+                                            color="text-blue-600"
+                                        />
+                                        <SummaryRow
+                                            label="Pipeline"
+                                            value={summary.pipeline}
+                                            color="text-amber-600"
+                                        />
+                                        <SummaryRow
+                                            label="Uncategorized"
+                                            value={summary.uncategorized}
+                                            color="text-slate-500"
+                                        />
                                         <div className="border-t border-[#e2e6ef] pt-2.5">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-xs font-semibold text-[#1a1a2e]">Total Pipeline</span>
+                                                <span className="text-xs font-semibold text-[#1a1a2e]">
+                                                    Total Pipeline
+                                                </span>
                                                 <span className="text-sm font-bold text-[#1a1a2e]">
-                                                    {formatCurrency(summary.commit + summary.best_case + summary.pipeline + summary.uncategorized)}
+                                                    {formatCurrency(
+                                                        summary.commit +
+                                                            summary.best_case +
+                                                            summary.pipeline +
+                                                            summary.uncategorized,
+                                                    )}
                                                 </span>
                                             </div>
                                         </div>
@@ -713,7 +1007,14 @@ export default function ForecastIndex({ period, summary, quota, deals, team_brea
 
 /* ── Internal Sub-Components ── */
 
-function Th({ children, sortable, active, dir, onClick, className }: {
+function Th({
+    children,
+    sortable,
+    active,
+    dir,
+    onClick,
+    className,
+}: {
     children: React.ReactNode;
     sortable?: boolean;
     active?: boolean;
@@ -725,15 +1026,23 @@ function Th({ children, sortable, active, dir, onClick, className }: {
         <th
             onClick={sortable ? onClick : undefined}
             className={cn(
-                'px-4 py-3 text-[11px] font-medium uppercase tracking-wider text-[#6b7280]',
-                sortable && 'cursor-pointer select-none transition-colors hover:text-[#1a1a2e]',
+                'px-4 py-3 text-[11px] font-medium tracking-wider text-[#6b7280] uppercase',
+                sortable &&
+                    'cursor-pointer transition-colors select-none hover:text-[#1a1a2e]',
                 className,
             )}
         >
-            <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end')}>
+            <div
+                className={cn(
+                    'flex items-center gap-1',
+                    className?.includes('text-right') && 'justify-end',
+                )}
+            >
                 {children}
                 {sortable && active && (
-                    <span className="text-[#2B4C8C]">{dir === 'desc' ? '↓' : '↑'}</span>
+                    <span className="text-[#2B4C8C]">
+                        {dir === 'desc' ? '↓' : '↑'}
+                    </span>
                 )}
             </div>
         </th>
@@ -750,11 +1059,19 @@ function DealRow({ deal }: { deal: Deal }) {
                     </span>
                     <div className="flex items-center gap-2">
                         {deal.organization && (
-                            <span className="text-[10px] text-[#9ca3af]">{deal.organization.name}</span>
+                            <span className="text-[10px] text-[#9ca3af]">
+                                {deal.organization.name}
+                            </span>
                         )}
                         {deal.expected_close_date && (
                             <span className="text-[10px] text-[#d1d5db]">
-                                · Closes {new Date(deal.expected_close_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                · Closes{' '}
+                                {new Date(
+                                    deal.expected_close_date,
+                                ).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                })}
                             </span>
                         )}
                     </div>
@@ -776,8 +1093,13 @@ function DealRow({ deal }: { deal: Deal }) {
                             <TooltipTrigger asChild>
                                 <HelpCircle className="h-3 w-3 shrink-0 cursor-help text-[#9ca3af] transition-colors hover:text-[#6b7280]" />
                             </TooltipTrigger>
-                            <TooltipContent side="bottom" className="w-56 border-[#e2e6ef] bg-white p-3 shadow-lg">
-                                <div className="mb-2 text-[11px] font-medium text-[#1a1a2e]">Confidence Factors</div>
+                            <TooltipContent
+                                side="bottom"
+                                className="w-56 border-[#e2e6ef] bg-white p-3 shadow-lg"
+                            >
+                                <div className="mb-2 text-[11px] font-medium text-[#1a1a2e]">
+                                    Confidence Factors
+                                </div>
                                 <ConfidenceFactors factors={deal.factors} />
                             </TooltipContent>
                         </Tooltip>
@@ -785,7 +1107,10 @@ function DealRow({ deal }: { deal: Deal }) {
                 </div>
             </td>
             <td className="px-4 py-3">
-                <CategoryBadge category={deal.forecast_category} suggested={deal.suggested_category} />
+                <CategoryBadge
+                    category={deal.forecast_category}
+                    suggested={deal.suggested_category}
+                />
             </td>
             <td className="px-4 py-3">
                 {deal.owner ? (
@@ -793,7 +1118,9 @@ function DealRow({ deal }: { deal: Deal }) {
                         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2B4C8C]/10 text-[9px] font-medium text-[#2B4C8C]">
                             {deal.owner.name.charAt(0).toUpperCase()}
                         </div>
-                        <span className="text-xs text-[#6b7280]">{deal.owner.name}</span>
+                        <span className="text-xs text-[#6b7280]">
+                            {deal.owner.name}
+                        </span>
                     </div>
                 ) : (
                     <span className="text-xs text-[#d1d5db]">Unassigned</span>
@@ -803,7 +1130,17 @@ function DealRow({ deal }: { deal: Deal }) {
     );
 }
 
-function HealthRow({ color, label, count, total }: { color: string; label: string; count: number; total: number }) {
+function HealthRow({
+    color,
+    label,
+    count,
+    total,
+}: {
+    color: string;
+    label: string;
+    count: number;
+    total: number;
+}) {
     const pct = total > 0 ? (count / total) * 100 : 0;
     return (
         <div className="flex items-center justify-between">
@@ -812,18 +1149,32 @@ function HealthRow({ color, label, count, total }: { color: string; label: strin
                 <span className="text-xs text-[#6b7280]">{label}</span>
             </div>
             <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-[#1a1a2e]">{count}</span>
-                <span className="text-[10px] text-[#9ca3af]">({pct.toFixed(0)}%)</span>
+                <span className="text-xs font-medium text-[#1a1a2e]">
+                    {count}
+                </span>
+                <span className="text-[10px] text-[#9ca3af]">
+                    ({pct.toFixed(0)}%)
+                </span>
             </div>
         </div>
     );
 }
 
-function SummaryRow({ label, value, color }: { label: string; value: number; color: string }) {
+function SummaryRow({
+    label,
+    value,
+    color,
+}: {
+    label: string;
+    value: number;
+    color: string;
+}) {
     return (
         <div className="flex items-center justify-between">
             <span className="text-xs text-[#6b7280]">{label}</span>
-            <span className={cn('text-xs font-semibold', color)}>{formatCurrency(value)}</span>
+            <span className={cn('text-xs font-semibold', color)}>
+                {formatCurrency(value)}
+            </span>
         </div>
     );
 }

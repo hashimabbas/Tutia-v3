@@ -13,6 +13,25 @@ export type NavItem = {
     isActive?: boolean;
 };
 
+export type SidebarNavItem = {
+    title: string;
+    href: string;
+    icon: LucideIcon;
+    badge?: string;
+    badgeColor?: string;
+    children?: SidebarNavItem[];
+};
+
+export type WorkspaceNav = {
+    id: string;
+    label: string;
+    icon: LucideIcon;
+    sections: {
+        label: string;
+        items: SidebarNavItem[];
+    }[];
+};
+
 export type MegaMenuItem = {
     title: string;
     titleAr: string;

@@ -27,7 +27,11 @@ export function Section({
     return (
         <section
             id={id}
-            className={cn('section-padding', backgroundMap[background], className)}
+            className={cn(
+                'section-padding',
+                backgroundMap[background],
+                className,
+            )}
         >
             <Container className={containerClassName}>{children}</Container>
         </section>

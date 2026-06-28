@@ -1,7 +1,12 @@
 import type { ComponentType } from 'react';
 
 export interface ActionContext {
-    approvalFlows?: Array<{ id: number; name: string; strategy: string; steps_count: number }>;
+    approvalFlows?: Array<{
+        id: number;
+        name: string;
+        strategy: string;
+        steps_count: number;
+    }>;
 }
 
 export interface ActionConfigProps {
@@ -14,6 +19,9 @@ type ActionConfigComponent = ComponentType<ActionConfigProps>;
 
 export const actionConfigRegistry: Record<string, ActionConfigComponent> = {};
 
-export function registerActionConfig(type: string, component: ActionConfigComponent): void {
+export function registerActionConfig(
+    type: string,
+    component: ActionConfigComponent,
+): void {
     actionConfigRegistry[type] = component;
 }

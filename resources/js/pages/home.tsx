@@ -19,9 +19,7 @@ export default function Home() {
                 title="TUTIA — Technology & Digital Transformation Partner"
                 description="Empowering Sudanese businesses with enterprise-grade digital solutions since 2017. E-commerce, ERP, Connectivity, and more."
                 canonicalUrl="https://tutiasd.com"
-                breadcrumbs={[
-                    { name: 'Home', nameAr: 'الرئيسية', url: '/' },
-                ]}
+                breadcrumbs={[{ name: 'Home', nameAr: 'الرئيسية', url: '/' }]}
             />
 
             <HeroSection />

@@ -10,12 +10,38 @@ use App\Models\CrmProjectRisk;
 use App\Services\Crm\Projects\Health\DeliveryHealthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CrmProjectRiskController extends Controller
 {
     public function __construct(
         private readonly DeliveryHealthService $health,
     ) {}
+
+    public function indexAll(Request $request): Response
+    {
+        $this->authorize('viewAny', CrmProjectRisk::class);
+
+        $query = CrmProjectRisk::with('project.organization', 'owner');
+
+        if ($request->filled('severity')) {
+            $query->where('severity', $request->severity);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $sortField = $request->sort ?? 'created_at';
+        $sortDir = $request->dir ?? 'desc';
+        $query->orderBy($sortField, $sortDir);
+
+        return Inertia::render('crm/risks/index', [
+            'risks' => $query->paginate(25)->withQueryString(),
+            'filters' => (object) $request->only(['severity', 'status', 'sort', 'dir']),
+        ]);
+    }
 
     public function index(Request $request, CrmProject $project)
     {

@@ -9,7 +9,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         industry: 'E-Commerce',
         industryAr: 'التجارة الإلكترونية',
         summary:
-            'Building Sudan\'s first multi-vendor e-commerce marketplace, connecting merchants with buyers through a mobile-first platform.',
+            "Building Sudan's first multi-vendor e-commerce marketplace, connecting merchants with buyers through a mobile-first platform.",
         summaryAr:
             'بناء أول سوق إلكتروني متعدد البائعين في السودان، يربط التجار بالمشترين عبر منصة متنقلة أولاً.',
         resultMetric: '500+',
@@ -21,7 +21,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Overview',
                 titleAr: 'نظرة عامة',
                 content:
-                    'Matger-TUTIA is Sudan\'s own e-commerce marketplace, developed and operated by TUTIA as a flagship product. The platform enables Sudanese merchants to list products across categories including electronics, fashion, cosmetics, furniture, and more, while providing buyers with a seamless mobile shopping experience. Available on both Android and iOS, the marketplace represents TUTIA\'s commitment to building real technology products that serve the Sudanese market.',
+                    "Matger-TUTIA is Sudan's own e-commerce marketplace, developed and operated by TUTIA as a flagship product. The platform enables Sudanese merchants to list products across categories including electronics, fashion, cosmetics, furniture, and more, while providing buyers with a seamless mobile shopping experience. Available on both Android and iOS, the marketplace represents TUTIA's commitment to building real technology products that serve the Sudanese market.",
                 contentAr:
                     'متجر توتيا هو سوق إلكتروني سوداني، تم تطويره وتشغيله بواسطة توتيا كمنتج رئيسي. تمكن المنصة التجار السودانيين من عرض منتجاتهم في فئات تشمل الإلكترونيات، الموضة، مستحضرات التجميل، الأثاث، وغيرها، مع توفير تجربة تسوق متنقلة سلسة للمشترين. المتجر متاح على كل من أندرويد و iOS، ويمثل التزام توتيا ببناء منتجات تقنية حقيقية تخدم السوق السوداني.',
             },
@@ -69,7 +69,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Outcomes',
                 titleAr: 'النتائج',
                 content:
-                    'Matger-TUTIA successfully launched and achieved over 500 app downloads across Android and iOS. The platform onboarded merchants across multiple product categories, creating Sudan\'s first multi-vendor digital marketplace. The project demonstrated TUTIA\'s capability to design, develop, and deploy a production-grade mobile platform end-to-end. Ongoing development continues to add features based on merchant and buyer feedback, including enhanced search, promotional tools, and expanded payment options.',
+                    "Matger-TUTIA successfully launched and achieved over 500 app downloads across Android and iOS. The platform onboarded merchants across multiple product categories, creating Sudan's first multi-vendor digital marketplace. The project demonstrated TUTIA's capability to design, develop, and deploy a production-grade mobile platform end-to-end. Ongoing development continues to add features based on merchant and buyer feedback, including enhanced search, promotional tools, and expanded payment options.",
                 contentAr:
                     'تم إطلاق متجر توتيا بنجاح وحقق أكثر من 500 تحميل للتطبيق عبر أندرويد و iOS. استقطبت المنصة تجاراً عبر فئات منتجات متعددة، مما خلق أول سوق إلكتروني متعدد البائعين في السودان. أثبت المشروع قدرة توتيا على تصميم وتطوير ونشر منصة جوالة بجودة إنتاجية من البداية إلى النهاية. يستمر التطوير بإضافة ميزات بناءً على ملاحظات التجار والمشترين، بما في ذلك البحث المحسن، أدوات الترويج، وخيارات الدفع الموسعة.',
             },
@@ -108,7 +108,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Overview',
                 titleAr: 'نظرة عامة',
                 content:
-                    'TUTIA partnered with a leading Sudanese enterprise to implement a comprehensive ERP system that would unify their financial, operational, and customer management processes. The organization was managing growth across multiple departments using disconnected systems and manual workflows, creating inefficiencies and data inconsistencies. TUTIA\'s team conducted a thorough assessment and delivered a tailored ERP solution that transformed their daily operations.',
+                    "TUTIA partnered with a leading Sudanese enterprise to implement a comprehensive ERP system that would unify their financial, operational, and customer management processes. The organization was managing growth across multiple departments using disconnected systems and manual workflows, creating inefficiencies and data inconsistencies. TUTIA's team conducted a thorough assessment and delivered a tailored ERP solution that transformed their daily operations.",
                 contentAr:
                     'تعاونت توتيا مع مؤسسة سودانية رائدة لتطبيق نظام تخطيط موارد مؤسسية شامل يوحد عملياتها المالية والتشغيلية وإدارة العملاء. كانت المؤسسة تدير النمو عبر أقسام متعددة باستخدام أنظمة غير متصلة وسير عمل يدوي، مما خلق عدم كفاءة وتناقضات في البيانات. أجرى فريق توتيا تقييماً شاملاً وقدم حلاً مخصصاً لتخطيط الموارد حوّل عملياتهم اليومية.',
             },
@@ -116,7 +116,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Challenge',
                 titleAr: 'التحدي',
                 content:
-                    'The client operated with separate systems for accounting, inventory management, human resources, and customer relationship management. Data had to be manually reconciled between departments, leading to errors and delays in reporting. Management lacked real-time visibility into key business metrics, making strategic decision-making difficult. The existing infrastructure could not scale with the organization\'s growth trajectory.',
+                    "The client operated with separate systems for accounting, inventory management, human resources, and customer relationship management. Data had to be manually reconciled between departments, leading to errors and delays in reporting. Management lacked real-time visibility into key business metrics, making strategic decision-making difficult. The existing infrastructure could not scale with the organization's growth trajectory.",
                 contentAr:
                     'كان العميل يعمل بأنظمة منفصلة للمحاسبة وإدارة المخزون والموارد البشرية وإدارة علاقات العملاء. كانت البيانات تحتاج إلى تسوية يدوية بين الإدارات، مما أدى إلى أخطاء وتأخير في التقارير. كانت الإدارة تفتقر إلى الرؤية الفورية لمؤشرات الأداء الرئيسية، مما جعل اتخاذ القرارات الاستراتيجية صعباً. لم تكن البنية التحتية الحالية قادرة على التوسع مع مسار نمو المؤسسة.',
             },
@@ -132,7 +132,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Solution',
                 titleAr: 'الحل',
                 content:
-                    'TUTIA deployed a modular ERP system tailored to the client\'s specific workflows. The financial management module automated accounting, budgeting, and reporting. The inventory module provided real-time stock tracking across multiple locations. The HR module streamlined payroll, attendance, and employee records. The CRM module unified customer data and sales pipeline management. Custom dashboards were created for executive leadership with key performance indicators.',
+                    "TUTIA deployed a modular ERP system tailored to the client's specific workflows. The financial management module automated accounting, budgeting, and reporting. The inventory module provided real-time stock tracking across multiple locations. The HR module streamlined payroll, attendance, and employee records. The CRM module unified customer data and sales pipeline management. Custom dashboards were created for executive leadership with key performance indicators.",
                 contentAr:
                     'قامت توتيا بنشر نظام تخطيط موارد مؤسسية معياري مصمم خصيصاً لسير عمل العميل. قامت وحدة الإدارة المالية بأتمتة المحاسبة والميزانية والتقارير. وفرت وحدة المخزون تتبعاً فورياً للمخزون عبر مواقع متعددة. قامت وحدة الموارد البشرية بتبسيط كشوف الرواتب والحضور وسجلات الموظفين. وحدت وحدة إدارة العملاء بيانات العملاء وإدارة مسار المبيعات. تم إنشاء لوحات معلومات مخصصة للإدارة التنفيذية مع مؤشرات الأداء الرئيسية.',
             },
@@ -140,7 +140,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Technologies',
                 titleAr: 'التقنيات',
                 content:
-                    'The solution was built on a robust ERP platform with modules for financial management, inventory control, HR management, and CRM. Custom reporting dashboards were developed to meet the client\'s specific requirements. The system was deployed on reliable server infrastructure with regular backup and disaster recovery procedures.',
+                    "The solution was built on a robust ERP platform with modules for financial management, inventory control, HR management, and CRM. Custom reporting dashboards were developed to meet the client's specific requirements. The system was deployed on reliable server infrastructure with regular backup and disaster recovery procedures.",
                 contentAr:
                     'تم بناء الحل على منصة تخطيط موارد مؤسسية قوية مع وحدات للإدارة المالية والتحكم في المخزون وإدارة الموارد البشرية وإدارة العملاء. تم تطوير لوحات تقارير مخصصة لتلبية متطلبات العميل الخاصة. تم نشر النظام على بنية تحتية خادمة موثوقة مع إجراءات نسخ احتياطي واستعادة منتظمة.',
             },
@@ -219,7 +219,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Solution',
                 titleAr: 'الحل',
                 content:
-                    'TUTIA\'s team conducted detailed site surveys using professional RF assessment tools to map coverage gaps and identify optimal equipment placement. The solution combined mobile signal repeaters for cellular coverage with enterprise-grade Wi-Fi access points for data connectivity. Equipment was strategically positioned to maximize coverage while minimizing interference. The network was configured with centralized management for monitoring and maintenance.',
+                    "TUTIA's team conducted detailed site surveys using professional RF assessment tools to map coverage gaps and identify optimal equipment placement. The solution combined mobile signal repeaters for cellular coverage with enterprise-grade Wi-Fi access points for data connectivity. Equipment was strategically positioned to maximize coverage while minimizing interference. The network was configured with centralized management for monitoring and maintenance.",
                 contentAr:
                     'أجرى فريق توتيا مسوحات مواقع مفصلة باستخدام أدوات تقييم ترددات لاسلكية احترافية لرسم خرائط فجوات التغطية وتحديد المواقع المثلى للمعدات. جمع الحل بين معززات إشارة الجوال للتغطية الخلوية ونقاط وصول واي فاي من الدرجة المؤسسية لاتصال البيانات. تم وضع المعدات بشكل استراتيجي لتعظيم التغطية مع تقليل التداخل. تم تكوين الشبكة بإدارة مركزية للمراقبة والصيانة.',
             },
@@ -235,7 +235,7 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Implementation',
                 titleAr: 'التنفيذ',
                 content:
-                    'The project began with comprehensive site surveys across all facilities to document existing conditions and identify requirements. Equipment was procured and deployed based on survey findings, with careful attention to minimizing disruption to ongoing operations. Each installation was tested thoroughly before sign-off. The client\'s team received training on basic monitoring and troubleshooting. A maintenance schedule was established for regular system checks and updates.',
+                    "The project began with comprehensive site surveys across all facilities to document existing conditions and identify requirements. Equipment was procured and deployed based on survey findings, with careful attention to minimizing disruption to ongoing operations. Each installation was tested thoroughly before sign-off. The client's team received training on basic monitoring and troubleshooting. A maintenance schedule was established for regular system checks and updates.",
                 contentAr:
                     'بدأ المشروع بمسوحات مواقع شاملة عبر جميع المرافق لتوثيق الظروف الحالية وتحديد المتطلبات. تم شراء المعدات ونشرها بناءً على نتائج المسح، مع اهتمام دقيق بتقليل التعطيل للعمليات الجارية. تم اختبار كل تركيب بدقة قبل الاعتماد. تلقى فريق العميل تدريباً على المراقبة الأساسية واستكشاف الأخطاء. تم إنشاء جدول صيانة للفحوصات والتحديثات الدورية للنظام.',
             },
@@ -243,20 +243,29 @@ export const CASE_STUDIES: CaseStudy[] = [
                 title: 'Outcomes',
                 titleAr: 'النتائج',
                 content:
-                    'The connectivity project successfully delivered consistent mobile and Wi-Fi coverage across all client facilities. Signal strength and reliability improved significantly, enabling uninterrupted communication and productivity. The centralized management system allowed the client\'s IT team to monitor network performance and address issues proactively. The scalable design allows for easy expansion as the organization grows.',
+                    "The connectivity project successfully delivered consistent mobile and Wi-Fi coverage across all client facilities. Signal strength and reliability improved significantly, enabling uninterrupted communication and productivity. The centralized management system allowed the client's IT team to monitor network performance and address issues proactively. The scalable design allows for easy expansion as the organization grows.",
                 contentAr:
                     'قدم مشروع الاتصال بنجاح تغطية جوالة ولاسلكية متسقة عبر جميع مرافق العميل. تحسنت قوة الإشارة والموثوقية بشكل كبير، مما مكن الاتصال والإنتاجية دون انقطاع. سمح نظام الإدارة المركزية لفريق تقنية المعلومات لدى العميل بمراقبة أداء الشبكة ومعالجة المشاكل بشكل استباقي. التصميم القابل للتوسع يتيح التوسع بسهولة مع نمو المنظمة.',
             },
         ],
         technologies: [
             { name: 'RF Site Survey Tools', nameAr: 'أدوات مسح الترددات' },
-            { name: 'Mobile Signal Repeaters', nameAr: 'معززات الإشارة الجوالة' },
-            { name: 'Enterprise Wi-Fi Access Points', nameAr: 'نقاط وصول واي فاي مؤسسية' },
-            { name: 'Network Management Software', nameAr: 'برامج إدارة الشبكة' },
+            {
+                name: 'Mobile Signal Repeaters',
+                nameAr: 'معززات الإشارة الجوالة',
+            },
+            {
+                name: 'Enterprise Wi-Fi Access Points',
+                nameAr: 'نقاط وصول واي فاي مؤسسية',
+            },
+            {
+                name: 'Network Management Software',
+                nameAr: 'برامج إدارة الشبكة',
+            },
             { name: 'Structured Cabling', nameAr: 'الكابلات المهيكلة' },
         ],
         clientQuote:
-            'TUTIA upheld their promise of hard work, dedication, discipline and quality. This company leaves no stone unturned when it comes to their services. Their team understands the client\'s needs and puts every possible effort in successfully performing the given task.',
+            "TUTIA upheld their promise of hard work, dedication, discipline and quality. This company leaves no stone unturned when it comes to their services. Their team understands the client's needs and puts every possible effort in successfully performing the given task.",
         clientQuoteAr:
             'وفت توتيا بوعدها بالعمل الجاد والتفاني والانضباط والجودة. هذه الشركة لا تترك حجراً دون قلب عندما يتعلق الأمر بخدماتها. فريقهم يفهم احتياجات العميل ويبذل كل جهد ممكن في أداء المهمة بنجاح.',
         clientLogo: '/images/customers/adeela.png',

@@ -166,8 +166,7 @@ export const INDUSTRIES: Industry[] = [
         nameAr: 'السفر والسياحة',
         description:
             'Ticketing systems, booking automation, and travel agency solutions.',
-        descriptionAr:
-            'أنظمة حجوزات وأتمتة حجز وحلول لوكالات السفر.',
+        descriptionAr: 'أنظمة حجوزات وأتمتة حجز وحلول لوكالات السفر.',
         icon: 'Plane',
     },
     {
@@ -186,8 +185,7 @@ export const INDUSTRIES: Industry[] = [
         nameAr: 'البنوك والمالية',
         description:
             'Payment gateways, ERP systems, and secure financial technology solutions.',
-        descriptionAr:
-            'بوابات دفع وأنظمة تخطيط موارد وحلول تقنية مالية آمنة.',
+        descriptionAr: 'بوابات دفع وأنظمة تخطيط موارد وحلول تقنية مالية آمنة.',
         icon: 'Building',
     },
     {
@@ -196,8 +194,7 @@ export const INDUSTRIES: Industry[] = [
         nameAr: 'القطاع الحكومي',
         description:
             'ICT consulting, digital transformation, and infrastructure for public sector.',
-        descriptionAr:
-            'استشارات تقنية وتحول رقمي وبنية تحتية للقطاع العام.',
+        descriptionAr: 'استشارات تقنية وتحول رقمي وبنية تحتية للقطاع العام.',
         icon: 'Landmark',
     },
 ];
@@ -218,7 +215,7 @@ export const DIFFERENTIATORS: Differentiator[] = [
         title: 'Proven Platform',
         titleAr: 'منصة مثبتة',
         description:
-            'Matger-TUTIA is a live, functioning marketplace with real merchants and real users. We don\'t just advise on technology — we build it.',
+            "Matger-TUTIA is a live, functioning marketplace with real merchants and real users. We don't just advise on technology — we build it.",
         descriptionAr:
             'متجر توتيا هو سوق إلكتروني حي يعمل بتجار حقيقيين ومستخدمين حقيقيين. لا نقدم استشارات تقنية فقط — بل نبنيها.',
         icon: 'Smartphone',
@@ -251,7 +248,7 @@ export const CASE_STUDY_PREVIEWS: CaseStudyPreview[] = [
         title: 'Matger-TUTIA Platform',
         titleAr: 'منصة متجر توتيا',
         summary:
-            'Building Sudan\'s first multi-vendor e-commerce marketplace from concept to launch.',
+            "Building Sudan's first multi-vendor e-commerce marketplace from concept to launch.",
         summaryAr:
             'بناء أول سوق إلكتروني متعدد البائعين في السودان من الفكرة إلى الإطلاق.',
         resultMetric: '500+',
@@ -266,8 +263,7 @@ export const CASE_STUDY_PREVIEWS: CaseStudyPreview[] = [
         titleAr: 'تطبيق نظام تخطيط الموارد',
         summary:
             'Streamlining financial and operational processes for a Sudanese enterprise.',
-        summaryAr:
-            'تبسيط العمليات المالية والتشغيلية لمؤسسة سودانية.',
+        summaryAr: 'تبسيط العمليات المالية والتشغيلية لمؤسسة سودانية.',
         resultMetric: '40%',
         resultMetricAr: '40%',
         resultLabel: 'Efficiency Gain',
@@ -291,12 +287,32 @@ export const CASE_STUDY_PREVIEWS: CaseStudyPreview[] = [
 ];
 
 export const METRICS_EXTENDED = [
-    { value: 9, suffix: '+', label: 'Years in Business', labelAr: 'سنوات في العمل' },
-    { value: 100, suffix: '+', label: 'Projects Completed', labelAr: 'مشروع مكتمل' },
+    {
+        value: 9,
+        suffix: '+',
+        label: 'Years in Business',
+        labelAr: 'سنوات في العمل',
+    },
+    {
+        value: 100,
+        suffix: '+',
+        label: 'Projects Completed',
+        labelAr: 'مشروع مكتمل',
+    },
     { value: 50, suffix: '+', label: 'Clients Served', labelAr: 'عميل خدمتهم' },
-    { value: 11, suffix: '', label: 'Service Categories', labelAr: 'فئة خدمية' },
+    {
+        value: 11,
+        suffix: '',
+        label: 'Service Categories',
+        labelAr: 'فئة خدمية',
+    },
     { value: 2, suffix: '+', label: 'Mobile Apps', labelAr: 'تطبيق جوال' },
-    { value: 500, suffix: '+', label: 'Platform Downloads', labelAr: 'تحميل المنصة' },
+    {
+        value: 500,
+        suffix: '+',
+        label: 'Platform Downloads',
+        labelAr: 'تحميل المنصة',
+    },
 ];
 
 export const CAPABILITY_ICON_MAP: Record<string, LucideIcon> = {

@@ -34,12 +34,17 @@ class CrmController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:50',
             'company' => 'nullable|string|max:255',
-            'brief' => 'required|string|max:5000',
+            'description' => 'required|string|max:5000',
             'time_slot' => 'required|string|max:50',
         ]);
 
         CrmLead::create([
-            ...$validated,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'company' => $validated['company'] ?? null,
+            'brief' => $validated['description'],
+            'time_slot' => $validated['time_slot'],
             'source' => 'consultation',
             'stage' => 'new',
         ]);

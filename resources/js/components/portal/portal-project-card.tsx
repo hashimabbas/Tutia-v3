@@ -10,10 +10,19 @@ interface ProjectCardProps {
     milestones?: Array<{ status: string }>;
 }
 
-export function PortalProjectCard({ id, name, status, health_tier, total_value, milestones }: ProjectCardProps) {
-    const completedCount = milestones?.filter(m => m.status === 'completed').length ?? 0;
+export function PortalProjectCard({
+    id,
+    name,
+    status,
+    health_tier,
+    total_value,
+    milestones,
+}: ProjectCardProps) {
+    const completedCount =
+        milestones?.filter((m) => m.status === 'completed').length ?? 0;
     const totalCount = milestones?.length ?? 0;
-    const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    const progress =
+        totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
     return (
         <Link
@@ -22,8 +31,12 @@ export function PortalProjectCard({ id, name, status, health_tier, total_value, 
         >
             <div className="mb-3 flex items-start justify-between">
                 <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-sm font-medium text-[#e8e8ed]">{name}</h3>
-                    <span className="mt-0.5 inline-block rounded-full bg-[#1a1a24] px-2 py-0.5 text-[10px] text-[#8b8b9e]">{status}</span>
+                    <h3 className="truncate text-sm font-medium text-[#e8e8ed]">
+                        {name}
+                    </h3>
+                    <span className="mt-0.5 inline-block rounded-full bg-[#1a1a24] px-2 py-0.5 text-[10px] text-[#8b8b9e]">
+                        {status}
+                    </span>
                 </div>
                 {health_tier && <PortalHealthBadge tier={health_tier} />}
             </div>
@@ -45,7 +58,9 @@ export function PortalProjectCard({ id, name, status, health_tier, total_value, 
                 {total_value !== undefined && total_value > 0 && (
                     <div className="flex items-center justify-between text-[11px]">
                         <span className="text-[#8b8b9e]">Value</span>
-                        <span className="text-[#e8e8ed]">${total_value.toLocaleString()}</span>
+                        <span className="text-[#e8e8ed]">
+                            ${total_value.toLocaleString()}
+                        </span>
                     </div>
                 )}
             </div>

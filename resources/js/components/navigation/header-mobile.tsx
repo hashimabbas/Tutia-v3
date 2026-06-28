@@ -56,9 +56,16 @@ export function HeaderMobile() {
                             {NAV_ITEMS.map((item) => {
                                 if (item.hasMegaMenu) {
                                     return (
-                                        <div key={item.href} className="space-y-1">
+                                        <div
+                                            key={item.href}
+                                            className="space-y-1"
+                                        >
                                             <button
-                                                onClick={() => setServicesOpen(!servicesOpen)}
+                                                onClick={() =>
+                                                    setServicesOpen(
+                                                        !servicesOpen,
+                                                    )
+                                                }
                                                 className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
                                             >
                                                 {t('nav.services')}
@@ -68,7 +75,12 @@ export function HeaderMobile() {
                                                     viewBox="0 0 24 24"
                                                     stroke="currentColor"
                                                 >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M19 9l-7 7-7-7"
+                                                    />
                                                 </svg>
                                             </button>
                                             {servicesOpen && (
@@ -80,23 +92,40 @@ export function HeaderMobile() {
                                                     >
                                                         {t('services.title')}
                                                     </Link>
-                                                    {SERVICE_CATEGORIES.map((cat) => (
-                                                        <div key={cat.title} className="space-y-1">
-                                                            <span className="block px-3 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                                                                {t(cat.title)}
-                                                            </span>
-                                                            {cat.items.map((svc) => (
-                                                                <Link
-                                                                    key={svc.href}
-                                                                    href={svc.href}
-                                                                    className="block rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                                                                    onClick={handleNav}
-                                                                >
-                                                                    {t(svc.title)}
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    ))}
+                                                    {SERVICE_CATEGORIES.map(
+                                                        (cat) => (
+                                                            <div
+                                                                key={cat.title}
+                                                                className="space-y-1"
+                                                            >
+                                                                <span className="block px-3 py-1 text-xs font-semibold tracking-wider text-neutral-500 uppercase">
+                                                                    {t(
+                                                                        cat.title,
+                                                                    )}
+                                                                </span>
+                                                                {cat.items.map(
+                                                                    (svc) => (
+                                                                        <Link
+                                                                            key={
+                                                                                svc.href
+                                                                            }
+                                                                            href={
+                                                                                svc.href
+                                                                            }
+                                                                            className="block rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                                                                            onClick={
+                                                                                handleNav
+                                                                            }
+                                                                        >
+                                                                            {t(
+                                                                                svc.title,
+                                                                            )}
+                                                                        </Link>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        ),
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -123,10 +152,16 @@ export function HeaderMobile() {
                             <SocialLinks />
                         </div>
                         <div className="mt-3 space-y-1 text-sm text-neutral-500">
-                            <a href={`tel:${COMPANY_INFO.phone[0]}`} className="block">
+                            <a
+                                href={`tel:${COMPANY_INFO.phone[0]}`}
+                                className="block"
+                            >
                                 {COMPANY_INFO.phone[0]}
                             </a>
-                            <a href={`mailto:${COMPANY_INFO.email}`} className="block">
+                            <a
+                                href={`mailto:${COMPANY_INFO.email}`}
+                                className="block"
+                            >
                                 {COMPANY_INFO.email}
                             </a>
                         </div>

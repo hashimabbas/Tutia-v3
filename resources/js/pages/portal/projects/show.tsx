@@ -1,5 +1,11 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle2, AlertTriangle, FileText, DollarSign } from 'lucide-react';
+import {
+    ArrowLeft,
+    CheckCircle2,
+    AlertTriangle,
+    FileText,
+    DollarSign,
+} from 'lucide-react';
 import PortalShell from '@/components/portal/portal-shell';
 import { PortalHealthBadge } from '@/components/portal/portal-health-badge';
 import { PortalStatusBadge } from '@/components/portal/portal-status-badge';
@@ -50,14 +56,22 @@ interface ProjectShowProps {
     project: ProjectData;
 }
 
-function ApproveButton({ coId, projectId }: { coId: number; projectId: number }) {
+function ApproveButton({
+    coId,
+    projectId,
+}: {
+    coId: number;
+    projectId: number;
+}) {
     const handleApprove = () => {
         if (confirm('Approve this change order?')) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/portal/projects/${projectId}/change-orders/${coId}/approve`;
             form.style.display = 'none';
-            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const token = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content');
             if (token) {
                 const input = document.createElement('input');
                 input.type = 'hidden';
@@ -80,7 +94,13 @@ function ApproveButton({ coId, projectId }: { coId: number; projectId: number })
     );
 }
 
-function RejectButton({ coId, projectId }: { coId: number; projectId: number }) {
+function RejectButton({
+    coId,
+    projectId,
+}: {
+    coId: number;
+    projectId: number;
+}) {
     const handleReject = () => {
         const reason = prompt('Reason for rejection:');
         if (reason && reason.trim()) {
@@ -88,7 +108,9 @@ function RejectButton({ coId, projectId }: { coId: number; projectId: number }) 
             form.method = 'POST';
             form.action = `/portal/projects/${projectId}/change-orders/${coId}/reject`;
             form.style.display = 'none';
-            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const token = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content');
             if (token) {
                 const input = document.createElement('input');
                 input.type = 'hidden';
@@ -127,9 +149,14 @@ const severityColor: Record<string, string> = {
 };
 
 export default function PortalProjectShow({ project }: ProjectShowProps) {
-    const completedMilestones = project.milestones.filter(m => m.status === 'completed').length;
+    const completedMilestones = project.milestones.filter(
+        (m) => m.status === 'completed',
+    ).length;
     const totalMilestones = project.milestones.length;
-    const progress = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+    const progress =
+        totalMilestones > 0
+            ? Math.round((completedMilestones / totalMilestones) * 100)
+            : 0;
 
     return (
         <PortalShell title={project.name}>
@@ -138,7 +165,10 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
             <div className="flex h-full flex-col">
                 {/* Back link */}
                 <div className="border-b border-[#1e1e2a] px-4 py-2">
-                    <Link href="/portal/dashboard" className="inline-flex items-center gap-1 text-[11px] text-[#8b8b9e] transition-colors hover:text-[#e8e8ed]">
+                    <Link
+                        href="/portal/dashboard"
+                        className="inline-flex items-center gap-1 text-[11px] text-[#8b8b9e] transition-colors hover:text-[#e8e8ed]"
+                    >
                         <ArrowLeft className="h-3 w-3" />
                         Back to Dashboard
                     </Link>
@@ -148,27 +178,46 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                     {/* LEFT PANEL — Summary */}
                     <div className="space-y-3 lg:w-72 lg:shrink-0">
                         <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Project Summary</h3>
+                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                Project Summary
+                            </h3>
                             <div className="space-y-2.5">
                                 <div className="flex items-center justify-between text-[11px]">
-                                    <span className="text-[#8b8b9e]">Status</span>
-                                    <PortalStatusBadge status={project.status} />
+                                    <span className="text-[#8b8b9e]">
+                                        Status
+                                    </span>
+                                    <PortalStatusBadge
+                                        status={project.status}
+                                    />
                                 </div>
                                 <div className="flex items-center justify-between text-[11px]">
-                                    <span className="text-[#8b8b9e]">Health</span>
-                                    <PortalHealthBadge tier={project.health_tier} />
+                                    <span className="text-[#8b8b9e]">
+                                        Health
+                                    </span>
+                                    <PortalHealthBadge
+                                        tier={project.health_tier}
+                                    />
                                 </div>
                                 <div className="flex items-center justify-between text-[11px]">
-                                    <span className="text-[#8b8b9e]">Value</span>
-                                    <span className="font-medium text-[#e8e8ed]">${project.total_value.toLocaleString()}</span>
+                                    <span className="text-[#8b8b9e]">
+                                        Value
+                                    </span>
+                                    <span className="font-medium text-[#e8e8ed]">
+                                        ${project.total_value.toLocaleString()}
+                                    </span>
                                 </div>
                             </div>
 
                             {totalMilestones > 0 && (
                                 <div className="mt-4">
                                     <div className="mb-1 flex items-center justify-between text-[11px]">
-                                        <span className="text-[#8b8b9e]">Progress</span>
-                                        <span className="text-[#e8e8ed]">{completedMilestones}/{totalMilestones}</span>
+                                        <span className="text-[#8b8b9e]">
+                                            Progress
+                                        </span>
+                                        <span className="text-[#e8e8ed]">
+                                            {completedMilestones}/
+                                            {totalMilestones}
+                                        </span>
                                     </div>
                                     <div className="h-2 w-full overflow-hidden rounded-full bg-[#1a1a24]">
                                         <div
@@ -176,7 +225,9 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                                             style={{ width: `${progress}%` }}
                                         />
                                     </div>
-                                    <p className="mt-1 text-[10px] text-[#555570]">{progress}% complete</p>
+                                    <p className="mt-1 text-[10px] text-[#555570]">
+                                        {progress}% complete
+                                    </p>
                                 </div>
                             )}
                         </div>
@@ -184,14 +235,31 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                         {/* Visible Risks */}
                         {project.risks.length > 0 && (
                             <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                                <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Risks ({project.risks.length})</h3>
+                                <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                    Risks ({project.risks.length})
+                                </h3>
                                 <div className="space-y-2">
-                                    {project.risks.map(r => (
-                                        <div key={r.id} className="flex items-start gap-2">
-                                            <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" style={{ color: severityColor[r.severity] ?? '#eab308' }} />
+                                    {project.risks.map((r) => (
+                                        <div
+                                            key={r.id}
+                                            className="flex items-start gap-2"
+                                        >
+                                            <AlertTriangle
+                                                className="mt-0.5 h-3 w-3 shrink-0"
+                                                style={{
+                                                    color:
+                                                        severityColor[
+                                                            r.severity
+                                                        ] ?? '#eab308',
+                                                }}
+                                            />
                                             <div className="min-w-0">
-                                                <p className="truncate text-[11px] text-[#e8e8ed]">{r.description}</p>
-                                                <span className="text-[10px] capitalize text-[#555570]">{r.severity}</span>
+                                                <p className="truncate text-[11px] text-[#e8e8ed]">
+                                                    {r.description}
+                                                </p>
+                                                <span className="text-[10px] text-[#555570] capitalize">
+                                                    {r.severity}
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
@@ -202,14 +270,31 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                         {/* Visible Issues */}
                         {project.issues.length > 0 && (
                             <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                                <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Issues ({project.issues.length})</h3>
+                                <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                    Issues ({project.issues.length})
+                                </h3>
                                 <div className="space-y-2">
-                                    {project.issues.map(i => (
-                                        <div key={i.id} className="flex items-start gap-2">
-                                            <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" style={{ color: severityColor[i.severity] ?? '#f87171' }} />
+                                    {project.issues.map((i) => (
+                                        <div
+                                            key={i.id}
+                                            className="flex items-start gap-2"
+                                        >
+                                            <AlertTriangle
+                                                className="mt-0.5 h-3 w-3 shrink-0"
+                                                style={{
+                                                    color:
+                                                        severityColor[
+                                                            i.severity
+                                                        ] ?? '#f87171',
+                                                }}
+                                            />
                                             <div className="min-w-0">
-                                                <p className="truncate text-[11px] text-[#e8e8ed]">{i.description}</p>
-                                                <span className="text-[10px] capitalize text-[#555570]">{i.severity}</span>
+                                                <p className="truncate text-[11px] text-[#e8e8ed]">
+                                                    {i.description}
+                                                </p>
+                                                <span className="text-[10px] text-[#555570] capitalize">
+                                                    {i.severity}
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
@@ -222,28 +307,48 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                     <div className="flex-1 space-y-4">
                         {/* Milestones */}
                         <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Milestones</h3>
+                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                Milestones
+                            </h3>
                             {project.milestones.length === 0 ? (
-                                <PortalEmptyState title="No milestones" description="Milestones will appear here once defined." />
+                                <PortalEmptyState
+                                    title="No milestones"
+                                    description="Milestones will appear here once defined."
+                                />
                             ) : (
                                 <div className="space-y-2">
-                                    {project.milestones.map(m => (
-                                        <div key={m.id} className="flex items-center gap-3 rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-2">
-                                            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
-                                                m.status === 'completed' ? 'bg-[#22c55e]/10' : 'bg-[#1a1a24]'
-                                            }`}>
+                                    {project.milestones.map((m) => (
+                                        <div
+                                            key={m.id}
+                                            className="flex items-center gap-3 rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-2"
+                                        >
+                                            <div
+                                                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+                                                    m.status === 'completed'
+                                                        ? 'bg-[#22c55e]/10'
+                                                        : 'bg-[#1a1a24]'
+                                                }`}
+                                            >
                                                 {m.status === 'completed' ? (
                                                     <CheckCircle2 className="h-3.5 w-3.5 text-[#22c55e]" />
                                                 ) : (
                                                     <div className="h-2 w-2 rounded-full bg-[#555570]" />
                                                 )}
                                             </div>
-                                            <span className={`flex-1 text-[12px] ${
-                                                m.status === 'completed' ? 'text-[#8b8b9e] line-through' : 'text-[#e8e8ed]'
-                                            }`}>
+                                            <span
+                                                className={`flex-1 text-[12px] ${
+                                                    m.status === 'completed'
+                                                        ? 'text-[#8b8b9e] line-through'
+                                                        : 'text-[#e8e8ed]'
+                                                }`}
+                                            >
                                                 {m.name}
                                             </span>
-                                            <span className="text-[10px] capitalize text-[#555570]">{m.status === 'completed' ? 'Done' : m.status}</span>
+                                            <span className="text-[10px] text-[#555570] capitalize">
+                                                {m.status === 'completed'
+                                                    ? 'Done'
+                                                    : m.status}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
@@ -252,26 +357,47 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
 
                         {/* Change Orders */}
                         <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Change Orders</h3>
+                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                Change Orders
+                            </h3>
                             {project.change_orders.length === 0 ? (
-                                <PortalEmptyState title="No change orders" description="All change requests will appear here." />
+                                <PortalEmptyState
+                                    title="No change orders"
+                                    description="All change requests will appear here."
+                                />
                             ) : (
                                 <div className="space-y-2">
-                                    {project.change_orders.map(co => (
-                                        <div key={co.id} className="flex items-center gap-3 rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-2">
+                                    {project.change_orders.map((co) => (
+                                        <div
+                                            key={co.id}
+                                            className="flex items-center gap-3 rounded-lg border border-[#1e1e2a] bg-[#0a0a0f] px-3 py-2"
+                                        >
                                             <FileText className="h-4 w-4 shrink-0 text-[#3b6cdb]" />
                                             <div className="min-w-0 flex-1">
-                                                <p className="truncate text-[12px] text-[#e8e8ed]">{co.title}</p>
+                                                <p className="truncate text-[12px] text-[#e8e8ed]">
+                                                    {co.title}
+                                                </p>
                                                 <div className="flex items-center gap-2 text-[10px] text-[#555570]">
-                                                    <span>${co.amount.toLocaleString()}</span>
+                                                    <span>
+                                                        $
+                                                        {co.amount.toLocaleString()}
+                                                    </span>
                                                     <span>·</span>
-                                                    <span className="capitalize">{co.status}</span>
+                                                    <span className="capitalize">
+                                                        {co.status}
+                                                    </span>
                                                 </div>
                                             </div>
                                             {co.status === 'pending' && (
                                                 <div className="flex shrink-0 gap-1">
-                                                    <ApproveButton coId={co.id} projectId={project.id} />
-                                                    <RejectButton coId={co.id} projectId={project.id} />
+                                                    <ApproveButton
+                                                        coId={co.id}
+                                                        projectId={project.id}
+                                                    />
+                                                    <RejectButton
+                                                        coId={co.id}
+                                                        projectId={project.id}
+                                                    />
                                                 </div>
                                             )}
                                         </div>
@@ -284,7 +410,9 @@ export default function PortalProjectShow({ project }: ProjectShowProps) {
                     {/* RIGHT PANEL — Timeline & Actions */}
                     <div className="space-y-3 lg:w-80 lg:shrink-0">
                         <div className="rounded-lg border border-[#1e1e2a] bg-[#0f0f14] p-4">
-                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">Recent Activity</h3>
+                            <h3 className="mb-3 text-xs font-semibold text-[#e8e8ed]">
+                                Recent Activity
+                            </h3>
                             <PortalTimeline projectId={project.id} />
                         </div>
                     </div>

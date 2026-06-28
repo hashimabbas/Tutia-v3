@@ -9,22 +9,28 @@ const BENEFITS = [
         icon: TrendingUp,
         title: 'Growth',
         titleAr: 'النمو',
-        description: 'We invest in our people with continuous learning opportunities, mentorship, and clear career progression paths.',
-        descriptionAr: 'نستثمر في فريقنا من خلال فرص التعلم المستمر والإرشاد ومسارات التطور الوظيفي الواضحة.',
+        description:
+            'We invest in our people with continuous learning opportunities, mentorship, and clear career progression paths.',
+        descriptionAr:
+            'نستثمر في فريقنا من خلال فرص التعلم المستمر والإرشاد ومسارات التطور الوظيفي الواضحة.',
     },
     {
         icon: Target,
         title: 'Impact',
         titleAr: 'التأثير',
-        description: 'Work on meaningful projects that shape Sudan\'s digital future and make a real difference in people\'s lives.',
-        descriptionAr: 'اعمل على مشاريع هادفة تشكل المستقبل الرقمي في السودان وتحدث فرقاً حقيقياً في حياة الناس.',
+        description:
+            "Work on meaningful projects that shape Sudan's digital future and make a real difference in people's lives.",
+        descriptionAr:
+            'اعمل على مشاريع هادفة تشكل المستقبل الرقمي في السودان وتحدث فرقاً حقيقياً في حياة الناس.',
     },
     {
         icon: Users,
         title: 'Community',
         titleAr: 'المجتمع',
-        description: 'Join a supportive, collaborative team where every voice is heard and every contribution is valued.',
-        descriptionAr: 'انضم إلى فريق داعم ومتعاون حيث كل صوت مسموع وكل مساهمة مقدرة.',
+        description:
+            'Join a supportive, collaborative team where every voice is heard and every contribution is valued.',
+        descriptionAr:
+            'انضم إلى فريق داعم ومتعاون حيث كل صوت مسموع وكل مساهمة مقدرة.',
     },
 ];
 
@@ -33,21 +39,35 @@ export default function Culture() {
 
     return (
         <>
-            <Head title={locale === 'ar' ? 'ثقافتنا - توتيا' : 'Our Culture - TUTIA'}>
+            <Head
+                title={
+                    locale === 'ar' ? 'ثقافتنا - توتيا' : 'Our Culture - TUTIA'
+                }
+            >
                 <meta
                     name="description"
-                    content={locale === 'ar' ? 'ثقافة العمل في شركة توتيا' : 'Work culture at TUTIA'}
+                    content={
+                        locale === 'ar'
+                            ? 'ثقافة العمل في شركة توتيا'
+                            : 'Work culture at TUTIA'
+                    }
                 />
             </Head>
 
-            <Section background="navy" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+            <Section
+                background="navy"
+                className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
+            >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-gold-500/5 via-transparent to-transparent" />
                 <Container>
                     <div className="mx-auto max-w-3xl text-center">
                         <Heading level="h1" className="text-white">
                             {locale === 'ar' ? 'ثقافتنا' : 'Our Culture'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-300">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-300"
+                        >
                             {locale === 'ar'
                                 ? 'كيف نعمل ونبتكر وننمو معاً'
                                 : 'How we work, innovate, and grow together'}
@@ -78,9 +98,14 @@ export default function Culture() {
                 <Container>
                     <div className="mx-auto max-w-3xl text-center">
                         <Heading level="h2">
-                            {locale === 'ar' ? 'لماذا تنضم إلى توتيا' : 'Why Join TUTIA'}
+                            {locale === 'ar'
+                                ? 'لماذا تنضم إلى توتيا'
+                                : 'Why Join TUTIA'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-600">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-600"
+                        >
                             {locale === 'ar'
                                 ? 'فرص تنموية في بيئة عمل ملهمة'
                                 : 'Growth opportunities in an inspiring work environment'}
@@ -99,10 +124,17 @@ export default function Culture() {
                                         <Icon className="size-7 text-brand-gold-500" />
                                     </div>
                                     <Heading level="h3" className="mt-6">
-                                        {locale === 'ar' ? benefit.titleAr : benefit.title}
+                                        {locale === 'ar'
+                                            ? benefit.titleAr
+                                            : benefit.title}
                                     </Heading>
-                                    <Text variant="body" className="mt-3 text-neutral-600">
-                                        {locale === 'ar' ? benefit.descriptionAr : benefit.description}
+                                    <Text
+                                        variant="body"
+                                        className="mt-3 text-neutral-600"
+                                    >
+                                        {locale === 'ar'
+                                            ? benefit.descriptionAr
+                                            : benefit.description}
                                     </Text>
                                 </div>
                             );
@@ -119,12 +151,18 @@ export default function Culture() {
                     <Text variant="body-lg" className="mt-4 text-neutral-600">
                         {locale === 'ar'
                             ? 'كن جزءاً من رحلة توتيا لتحويل المشهد التقني في السودان'
-                            : 'Be part of TUTIA\'s journey to transform Sudan\'s technology landscape'}
+                            : "Be part of TUTIA's journey to transform Sudan's technology landscape"}
                     </Text>
                     <div className="mt-8">
-                        <Button asChild size="lg" className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                        >
                             <Link href="/contact">
-                                {locale === 'ar' ? 'انضم إلينا' : 'Join Our Team'}
+                                {locale === 'ar'
+                                    ? 'انضم إلينا'
+                                    : 'Join Our Team'}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
                             </Link>
                         </Button>

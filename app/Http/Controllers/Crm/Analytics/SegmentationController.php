@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Crm\Analytics;
 
 use App\Http\Controllers\Controller;
-use App\Services\Crm\Analytics\ApprovalAnalyticsExamplesCatalog;
 use App\Services\Crm\Analytics\ApprovalAnalyticsService;
+use App\Services\Crm\Analytics\Catalogs\ApprovalAnalyticsExamplesCatalog;
+use App\Services\Crm\Analytics\Catalogs\WorkflowAnalyticsExamplesCatalog;
 use App\Services\Crm\Analytics\HealthScoreService;
 use App\Services\Crm\Analytics\Segmentation\AnalyticsSegmentationService;
-use App\Services\Crm\Analytics\WorkflowAnalyticsExamplesCatalog;
 use App\Services\Crm\Analytics\WorkflowAnalyticsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { CASE_STUDY_PREVIEWS } from '@/lib/home-content';
 import { useI18n } from '@/lib/i18n';
 
-
 export function CaseStudiesSection() {
     const { t, locale } = useI18n();
 
@@ -15,7 +14,11 @@ export function CaseStudiesSection() {
                 <Heading level="h2" className="mb-4">
                     {t('home.caseStudies.title')}
                 </Heading>
-                <Text variant="body-lg" muted className="mb-16 max-w-2xl mx-auto">
+                <Text
+                    variant="body-lg"
+                    muted
+                    className="mx-auto mb-16 max-w-2xl"
+                >
                     {t('home.caseStudies.subtitle')}
                 </Text>
             </Container>
@@ -32,18 +35,25 @@ export function CaseStudiesSection() {
                                 {locale === 'ar' ? item.titleAr : item.title}
                             </Heading>
                             <Text variant="body" muted className="mb-6">
-                                {locale === 'ar' ? item.summaryAr : item.summary}
+                                {locale === 'ar'
+                                    ? item.summaryAr
+                                    : item.summary}
                             </Text>
                             <div className="mb-6">
                                 <span className="text-3xl font-bold text-brand-gold-500 md:text-4xl">
-                                    {locale === 'ar' ? item.resultMetricAr : item.resultMetric}
+                                    {locale === 'ar'
+                                        ? item.resultMetricAr
+                                        : item.resultMetric}
                                 </span>
                                 <Text variant="body-sm" muted className="mt-1">
-                                    {locale === 'ar' ? item.resultLabelAr : item.resultLabel}
+                                    {locale === 'ar'
+                                        ? item.resultLabelAr
+                                        : item.resultLabel}
                                 </Text>
                             </div>
                             <div className="flex items-center gap-2 text-sm font-medium text-brand-navy-500">
-                                {t('home.caseStudies.viewLabel') || 'View Case Study'}
+                                {t('home.caseStudies.viewLabel') ||
+                                    'View Case Study'}
                                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
                             </div>
                         </Link>

@@ -1,5 +1,14 @@
 import { Head, Link } from '@inertiajs/react';
-import { Smartphone, Search, CreditCard, Package, Bell, Heart, Star, ArrowRight } from 'lucide-react';
+import {
+    Smartphone,
+    Search,
+    CreditCard,
+    Package,
+    Bell,
+    Heart,
+    Star,
+    ArrowRight,
+} from 'lucide-react';
 import { Section, Container, Heading, Text } from '@/components/design-system';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
@@ -54,19 +63,40 @@ export default function Apps() {
 
     return (
         <>
-            <Head title={locale === 'ar' ? 'تطبيقات متجر توتيا الجوالة' : 'Matger-TUTIA Mobile Apps'}>
-                <meta name="description" content={locale === 'ar' ? 'حمّل تطبيق متجر توتيا على هاتفك المحمول' : 'Download the Matger-TUTIA app on your mobile device'} />
+            <Head
+                title={
+                    locale === 'ar'
+                        ? 'تطبيقات متجر توتيا الجوالة'
+                        : 'Matger-TUTIA Mobile Apps'
+                }
+            >
+                <meta
+                    name="description"
+                    content={
+                        locale === 'ar'
+                            ? 'حمّل تطبيق متجر توتيا على هاتفك المحمول'
+                            : 'Download the Matger-TUTIA app on your mobile device'
+                    }
+                />
             </Head>
 
-            <Section background="navy" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+            <Section
+                background="navy"
+                className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
+            >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-gold-500/5 via-transparent to-transparent" />
                 <Container>
                     <div className="mx-auto max-w-3xl text-center">
                         <Smartphone className="mx-auto mb-6 size-12 text-brand-gold-400" />
                         <Heading level="h1" className="text-white">
-                            {locale === 'ar' ? 'تطبيقات متجر توتيا الجوالة' : 'Matger-TUTIA Mobile Apps'}
+                            {locale === 'ar'
+                                ? 'تطبيقات متجر توتيا الجوالة'
+                                : 'Matger-TUTIA Mobile Apps'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-300">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-300"
+                        >
                             {locale === 'ar'
                                 ? 'تسوق بسهولة من أي مكان في السودان عبر تطبيقنا'
                                 : 'Shop easily from anywhere in Sudan with our app'}
@@ -85,14 +115,20 @@ export default function Apps() {
                             const Icon = f.icon;
 
                             return (
-                                <div key={i} className="rounded-xl border border-neutral-200 bg-white p-6">
+                                <div
+                                    key={i}
+                                    className="rounded-xl border border-neutral-200 bg-white p-6"
+                                >
                                     <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-brand-navy-50">
                                         <Icon className="size-6 text-brand-navy-500" />
                                     </div>
                                     <Heading level="h3">
                                         {locale === 'ar' ? f.ar : f.en}
                                     </Heading>
-                                    <Text variant="body" className="mt-2 text-neutral-600">
+                                    <Text
+                                        variant="body"
+                                        className="mt-2 text-neutral-600"
+                                    >
                                         {locale === 'ar' ? f.descAr : f.descEn}
                                     </Text>
                                 </div>
@@ -106,7 +142,9 @@ export default function Apps() {
                 <Container className="mx-auto max-w-3xl text-center">
                     <Smartphone className="mx-auto mb-6 size-12 text-brand-navy-500" />
                     <Heading level="h2">
-                        {locale === 'ar' ? 'حمّل التطبيق الآن' : 'Download the App Now'}
+                        {locale === 'ar'
+                            ? 'حمّل التطبيق الآن'
+                            : 'Download the App Now'}
                     </Heading>
                     <Text variant="body-lg" className="mt-4 text-neutral-600">
                         {locale === 'ar'
@@ -114,13 +152,29 @@ export default function Apps() {
                             : 'Available on Android and iOS'}
                     </Text>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                        <Button asChild size="lg" className="bg-brand-navy-800 text-white hover:bg-brand-navy-900">
-                            <a href="#" target="_blank" rel="noopener noreferrer">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-navy-800 text-white hover:bg-brand-navy-900"
+                        >
+                            <a
+                                href="#"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {locale === 'ar' ? 'جوجل بلاي' : 'Google Play'}
                             </a>
                         </Button>
-                        <Button asChild size="lg" className="bg-brand-navy-800 text-white hover:bg-brand-navy-900">
-                            <a href="#" target="_blank" rel="noopener noreferrer">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-navy-800 text-white hover:bg-brand-navy-900"
+                        >
+                            <a
+                                href="#"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {locale === 'ar' ? 'آب ستور' : 'App Store'}
                             </a>
                         </Button>
@@ -133,7 +187,9 @@ export default function Apps() {
                     <Button asChild variant="outline" size="lg">
                         <Link href="/platform">
                             <ArrowRight className="mr-2 size-4 rtl:rotate-180" />
-                            {locale === 'ar' ? 'العودة إلى المنصة' : 'Back to Platform'}
+                            {locale === 'ar'
+                                ? 'العودة إلى المنصة'
+                                : 'Back to Platform'}
                         </Link>
                     </Button>
                 </Container>

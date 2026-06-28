@@ -6,11 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\CrmDeal;
 use App\Models\CrmQuotation;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class QuotationController extends Controller
 {
+    public function indexAll(Request $request): Response
+    {
+        $query = CrmQuotation::with(['deal.organization', 'createdBy']);
+
+        if ($search = $request->get('search')) {
+            $query->whereHas('deal', fn ($q) => $q->where('title', 'like', "%{$search}%"));
+        }
+
+        return Inertia::render('crm/quotations/index', [
+            'quotations' => $query->latest()->paginate(15),
+            'filters' => (object) $request->only('search'),
+        ]);
+    }
+
     public function index(CrmDeal $deal): Response
     {
         $deal->load(['quotations' => fn ($q) => $q->latest('version'), 'organization']);

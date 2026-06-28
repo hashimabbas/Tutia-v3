@@ -22,6 +22,7 @@ Route::get('/crm/workflows/expression/fields', [ExpressionBuilderController::cla
 Route::get('/crm/workflows/expression/operators', [ExpressionBuilderController::class, 'operators'])->name('crm.workflows.expression.operators');
 Route::post('/crm/workflows/expression/validate', [ExpressionBuilderController::class, 'validateExpression'])->name('crm.workflows.expression.validate');
 Route::post('/crm/workflows/expression/convert', [ExpressionBuilderController::class, 'convert'])->name('crm.workflows.expression.convert');
+Route::post('/crm/workflows/expression/convert-legacy', [ExpressionBuilderController::class, 'convertLegacy'])->name('crm.workflows.expression.convert-legacy');
 
 // Inertia page routes
 Route::get('/crm/workflows', [WorkflowPageController::class, 'index'])->name('crm.workflows.index');

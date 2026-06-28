@@ -30,7 +30,11 @@ const WORKFLOW_FIELDS = [
 ];
 
 const APPROVAL_FIELDS = [
-    { path: 'approval.status', type: 'string', hint: 'pending, approved, rejected' },
+    {
+        path: 'approval.status',
+        type: 'string',
+        hint: 'pending, approved, rejected',
+    },
     { path: 'approval.total', type: 'numeric' },
     { path: 'approval.approved', type: 'numeric' },
     { path: 'approval.rejected', type: 'numeric' },
@@ -44,7 +48,13 @@ const APPROVAL_FIELDS = [
 
 const OPERATORS = ['=', '!=', '>', '>=', '<', '<='];
 
-export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchInfo }: Props) {
+export default function SegmentFilter({
+    tab,
+    onFilter,
+    onClear,
+    isActive,
+    matchInfo,
+}: Props) {
     const [expression, setExpression] = useState('');
     const [showFields, setShowFields] = useState(false);
     const [showExamples, setShowExamples] = useState(false);
@@ -73,11 +83,14 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
         onClear();
     }, [onClear]);
 
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleApply();
-        }
-    }, [handleApply]);
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                handleApply();
+            }
+        },
+        [handleApply],
+    );
 
     const insertExpression = useCallback((expr: string) => {
         setExpression(expr);
@@ -93,11 +106,12 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                         onChange={(e) => setExpression(e.target.value)}
                         onKeyDown={handleKeyDown}
                         onFocus={() => setShowFields(true)}
-                        placeholder={tab === 'workflows'
-                            ? 'e.g. workflow.health_score < 50 AND workflow.failure_rate > 15'
-                            : 'e.g. approval.escalation_rate > 25'
+                        placeholder={
+                            tab === 'workflows'
+                                ? 'e.g. workflow.health_score < 50 AND workflow.failure_rate > 15'
+                                : 'e.g. approval.escalation_rate > 25'
                         }
-                        className="w-full rounded-lg border border-input bg-muted/30 px-3 py-2 text-xs text-foreground placeholder-muted-foreground/60 font-mono outline-none transition-all duration-200 focus:border-brand-navy-300 focus:bg-white focus:ring-1 focus:ring-brand-navy-200"
+                        className="w-full rounded-lg border border-input bg-muted/30 px-3 py-2 font-mono text-xs text-foreground placeholder-muted-foreground/60 transition-all duration-200 outline-none focus:border-brand-navy-300 focus:bg-white focus:ring-1 focus:ring-brand-navy-200"
                     />
                 </div>
                 <button
@@ -107,7 +121,7 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                         'rounded-lg px-4 py-2 text-[11px] font-medium transition-all duration-200',
                         expression.trim()
                             ? 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:scale-[0.98]'
-                            : 'bg-muted text-muted-foreground cursor-not-allowed',
+                            : 'cursor-not-allowed bg-muted text-muted-foreground',
                     )}
                 >
                     Apply Segment
@@ -124,7 +138,8 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
 
             {matchInfo && (
                 <div className="mt-2 text-[10px] text-muted-foreground">
-                    {matchInfo.count} of {matchInfo.total} matched ({matchInfo.percentage}%)
+                    {matchInfo.count} of {matchInfo.total} matched (
+                    {matchInfo.percentage}%)
                 </div>
             )}
 
@@ -137,20 +152,30 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                                 type="button"
                                 onClick={() => {
                                     setExpression((prev) => {
-                                        const prefix = prev && !prev.endsWith(' ') ? `${prev} ` : prev;
+                                        const prefix =
+                                            prev && !prev.endsWith(' ')
+                                                ? `${prev} `
+                                                : prev;
                                         return `${prefix}${f.path} `;
                                     });
                                 }}
-                                className="rounded-md bg-white px-2 py-1 text-[10px] font-mono text-muted-foreground shadow-xs transition-all duration-200 hover:bg-brand-navy-50 hover:text-brand-navy-700 hover:shadow-sm"
+                                className="rounded-md bg-white px-2 py-1 font-mono text-[10px] text-muted-foreground shadow-xs transition-all duration-200 hover:bg-brand-navy-50 hover:text-brand-navy-700 hover:shadow-sm"
                             >
                                 {f.path}
-                                <span className="ml-1 text-muted-foreground/50">({f.type})</span>
-                                {f.hint && <span className="ml-1 text-brand-navy-300">{f.hint}</span>}
+                                <span className="ml-1 text-muted-foreground/50">
+                                    ({f.type})
+                                </span>
+                                {f.hint && (
+                                    <span className="ml-1 text-brand-navy-300">
+                                        {f.hint}
+                                    </span>
+                                )}
                             </button>
                         ))}
                     </div>
                     <p className="mt-2 text-[9px] text-muted-foreground/60">
-                        Operators: {OPERATORS.join(', ')} · Supports AND, OR, NOT · Click a field to insert · Press Enter to apply
+                        Operators: {OPERATORS.join(', ')} · Supports AND, OR,
+                        NOT · Click a field to insert · Press Enter to apply
                     </p>
                 </div>
             )}
@@ -162,8 +187,12 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                         onClick={() => setShowExamples(!showExamples)}
                         className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
                     >
-                        <span>{showExamples ? '▼' : '▶'} Example Expressions</span>
-                        <span className="text-brand-navy-400/60">({examples.length})</span>
+                        <span>
+                            {showExamples ? '▼' : '▶'} Example Expressions
+                        </span>
+                        <span className="text-brand-navy-400/60">
+                            ({examples.length})
+                        </span>
                     </button>
 
                     {showExamples && (
@@ -172,12 +201,18 @@ export default function SegmentFilter({ tab, onFilter, onClear, isActive, matchI
                                 <button
                                     key={ex.expression}
                                     type="button"
-                                    onClick={() => insertExpression(ex.expression)}
+                                    onClick={() =>
+                                        insertExpression(ex.expression)
+                                    }
                                     title={ex.description}
                                     className="rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-left transition-all duration-200 hover:border-brand-navy-200 hover:bg-brand-navy-50/50 hover:shadow-sm"
                                 >
-                                    <p className="text-[10px] font-mono text-foreground">{ex.expression}</p>
-                                    <p className="mt-0.5 text-[9px] text-muted-foreground">{ex.label}</p>
+                                    <p className="font-mono text-[10px] text-foreground">
+                                        {ex.expression}
+                                    </p>
+                                    <p className="mt-0.5 text-[9px] text-muted-foreground">
+                                        {ex.label}
+                                    </p>
                                 </button>
                             ))}
                         </div>

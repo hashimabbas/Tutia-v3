@@ -5,8 +5,14 @@ import { Button } from '@/components/ui/button';
 import { COMPANY_INFO } from '@/lib/constants';
 import { useI18n } from '@/lib/i18n';
 
-
-const serviceOptions = ['E-Commerce', 'ERP', 'Web Development', 'Connectivity', 'VPN', 'Other'];
+const serviceOptions = [
+    'E-Commerce',
+    'ERP',
+    'Web Development',
+    'Connectivity',
+    'VPN',
+    'Other',
+];
 
 export function CrmSection() {
     const { t, locale } = useI18n();
@@ -61,12 +67,21 @@ export function CrmSection() {
                                 <input
                                     type="text"
                                     value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
-                                    placeholder={locale === 'ar' ? 'اسمك' : 'Your Name'}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
+                                    placeholder={
+                                        locale === 'ar' ? 'اسمك' : 'Your Name'
+                                    }
                                     className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-gold-500 focus:ring-1 focus:ring-brand-gold-500"
                                 />
                                 {errors.name && (
-                                    <Text variant="caption" className="mt-1 text-red-500">{errors.name}</Text>
+                                    <Text
+                                        variant="caption"
+                                        className="mt-1 text-red-500"
+                                    >
+                                        {errors.name}
+                                    </Text>
                                 )}
                             </div>
 
@@ -77,12 +92,23 @@ export function CrmSection() {
                                 <input
                                     type="email"
                                     value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    placeholder={locale === 'ar' ? 'بريدك الإلكتروني' : 'Your Email'}
+                                    onChange={(e) =>
+                                        setData('email', e.target.value)
+                                    }
+                                    placeholder={
+                                        locale === 'ar'
+                                            ? 'بريدك الإلكتروني'
+                                            : 'Your Email'
+                                    }
                                     className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-gold-500 focus:ring-1 focus:ring-brand-gold-500"
                                 />
                                 {errors.email && (
-                                    <Text variant="caption" className="mt-1 text-red-500">{errors.email}</Text>
+                                    <Text
+                                        variant="caption"
+                                        className="mt-1 text-red-500"
+                                    >
+                                        {errors.email}
+                                    </Text>
                                 )}
                             </div>
 
@@ -93,12 +119,21 @@ export function CrmSection() {
                                 <input
                                     type="tel"
                                     value={data.phone}
-                                    onChange={(e) => setData('phone', e.target.value)}
-                                    placeholder={locale === 'ar' ? 'هاتفك' : 'Your Phone'}
+                                    onChange={(e) =>
+                                        setData('phone', e.target.value)
+                                    }
+                                    placeholder={
+                                        locale === 'ar' ? 'هاتفك' : 'Your Phone'
+                                    }
                                     className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-gold-500 focus:ring-1 focus:ring-brand-gold-500"
                                 />
                                 {errors.phone && (
-                                    <Text variant="caption" className="mt-1 text-red-500">{errors.phone}</Text>
+                                    <Text
+                                        variant="caption"
+                                        className="mt-1 text-red-500"
+                                    >
+                                        {errors.phone}
+                                    </Text>
                                 )}
                             </div>
 
@@ -108,10 +143,16 @@ export function CrmSection() {
                                 </label>
                                 <select
                                     value={data.service}
-                                    onChange={(e) => setData('service', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('service', e.target.value)
+                                    }
                                     className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-gold-500 focus:ring-1 focus:ring-brand-gold-500"
                                 >
-                                    <option value="">{locale === 'ar' ? 'اختر خدمة' : 'Select a service'}</option>
+                                    <option value="">
+                                        {locale === 'ar'
+                                            ? 'اختر خدمة'
+                                            : 'Select a service'}
+                                    </option>
                                     {serviceOptions.map((option) => (
                                         <option key={option} value={option}>
                                             {option}
@@ -119,7 +160,12 @@ export function CrmSection() {
                                     ))}
                                 </select>
                                 {errors.service && (
-                                    <Text variant="caption" className="mt-1 text-red-500">{errors.service}</Text>
+                                    <Text
+                                        variant="caption"
+                                        className="mt-1 text-red-500"
+                                    >
+                                        {errors.service}
+                                    </Text>
                                 )}
                             </div>
 
@@ -130,12 +176,23 @@ export function CrmSection() {
                                 <textarea
                                     rows={4}
                                     value={data.message}
-                                    onChange={(e) => setData('message', e.target.value)}
-                                    placeholder={locale === 'ar' ? 'حدثنا عن مشروعك...' : 'Tell us about your project...'}
+                                    onChange={(e) =>
+                                        setData('message', e.target.value)
+                                    }
+                                    placeholder={
+                                        locale === 'ar'
+                                            ? 'حدثنا عن مشروعك...'
+                                            : 'Tell us about your project...'
+                                    }
                                     className="flex w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-gold-500 focus:ring-1 focus:ring-brand-gold-500"
                                 />
                                 {errors.message && (
-                                    <Text variant="caption" className="mt-1 text-red-500">{errors.message}</Text>
+                                    <Text
+                                        variant="caption"
+                                        className="mt-1 text-red-500"
+                                    >
+                                        {errors.message}
+                                    </Text>
                                 )}
                             </div>
 

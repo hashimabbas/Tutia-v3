@@ -12,7 +12,10 @@ export function MegaMenu() {
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node)
+            ) {
                 setIsOpen(false);
             }
         }
@@ -21,7 +24,8 @@ export function MegaMenu() {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, [isOpen]);
 
     return (
@@ -49,14 +53,14 @@ export function MegaMenu() {
 
             {isOpen && (
                 <div
-                    className="absolute left-1/2 top-full z-50 mt-1 w-screen max-w-3xl -translate-x-1/2"
+                    className="absolute top-full left-1/2 z-50 mt-1 w-screen max-w-3xl -translate-x-1/2"
                     onMouseLeave={() => setIsOpen(false)}
                 >
                     <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
                         <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
                             {SERVICE_CATEGORIES.map((category) => (
                                 <div key={category.title}>
-                                    <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-navy-500 dark:text-brand-navy-300">
+                                    <h3 className="mb-3 text-xs font-semibold tracking-widest text-brand-navy-500 uppercase dark:text-brand-navy-300">
                                         {t(category.title)}
                                     </h3>
                                     <ul className="space-y-2">
@@ -65,7 +69,9 @@ export function MegaMenu() {
                                                 <Link
                                                     href={item.href}
                                                     className="group flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                                                    onClick={() => setIsOpen(false)}
+                                                    onClick={() =>
+                                                        setIsOpen(false)
+                                                    }
                                                 >
                                                     {item.icon && (
                                                         <item.icon className="mt-0.5 size-4 shrink-0 text-brand-navy-400" />

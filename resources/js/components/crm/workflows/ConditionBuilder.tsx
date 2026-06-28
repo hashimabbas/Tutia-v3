@@ -23,7 +23,11 @@ interface Props {
     operators: OperatorMeta[];
 }
 
-export default function ConditionBuilder({ workflowId, conditions: initial, operators }: Props) {
+export default function ConditionBuilder({
+    workflowId,
+    conditions: initial,
+    operators,
+}: Props) {
     const [items, setItems] = useState(initial);
 
     const groups = items.reduce<Record<number, Condition[]>>((acc, c) => {
@@ -36,40 +40,67 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
     const handleAddCondition = async (groupOrder: number) => {
         const res = await fetch(`/crm/workflows/${workflowId}/conditions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ field: '', operator: 'eq', value: null, group_order: groupOrder }),
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                field: '',
+                operator: 'eq',
+                value: null,
+                group_order: groupOrder,
+            }),
         });
-        if (!res.ok) { toast.error('Failed to add condition'); return; }
+        if (!res.ok) {
+            toast.error('Failed to add condition');
+            return;
+        }
         const data = await res.json();
-        setItems(prev => [...prev, data.condition]);
+        setItems((prev) => [...prev, data.condition]);
         toast.success('Condition added');
     };
 
     const handleAddGroup = async () => {
-        const nextGroup = groupOrders.length > 0 ? Math.max(...groupOrders) + 1 : 0;
+        const nextGroup =
+            groupOrders.length > 0 ? Math.max(...groupOrders) + 1 : 0;
         const res = await fetch(`/crm/workflows/${workflowId}/conditions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ field: '', operator: 'eq', value: null, group_order: nextGroup }),
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                field: '',
+                operator: 'eq',
+                value: null,
+                group_order: nextGroup,
+            }),
         });
-        if (!res.ok) { toast.error('Failed to add group'); return; }
+        if (!res.ok) {
+            toast.error('Failed to add group');
+            return;
+        }
         const data = await res.json();
-        setItems(prev => [...prev, data.condition]);
+        setItems((prev) => [...prev, data.condition]);
         toast.success('Group added');
     };
 
     const handleDelete = useCallback((conditionId: number) => {
-        setItems(prev => prev.filter(c => c.id !== conditionId));
+        setItems((prev) => prev.filter((c) => c.id !== conditionId));
     }, []);
 
     const handleUpdate = useCallback((updated: Condition) => {
-        setItems(prev => prev.map(c => c.id === updated.id ? updated : c));
+        setItems((prev) =>
+            prev.map((c) => (c.id === updated.id ? updated : c)),
+        );
     }, []);
 
     return (
         <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-5">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">Conditions</h2>
+            <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Conditions
+                </h2>
                 <button
                     onClick={handleAddGroup}
                     className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[10px] text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-700"
@@ -79,34 +110,44 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
             </div>
 
             {items.length === 0 && (
-                <p className="text-xs text-gray-400">No conditions yet. Add a condition group to start.</p>
+                <p className="text-xs text-gray-400">
+                    No conditions yet. Add a condition group to start.
+                </p>
             )}
 
             <div className="space-y-4">
                 {groupOrders.map((group, gi) => (
                     <div key={group}>
                         {gi > 0 && (
-                            <div className="flex items-center gap-2 mb-3">
+                            <div className="mb-3 flex items-center gap-2">
                                 <div className="h-px flex-1 bg-gray-200" />
-                                <span className="text-[10px] font-medium uppercase tracking-wider text-gray-400">AND</span>
+                                <span className="text-[10px] font-medium tracking-wider text-gray-400 uppercase">
+                                    AND
+                                </span>
                                 <div className="h-px flex-1 bg-gray-200" />
                             </div>
                         )}
 
                         <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">Group {gi + 1}</span>
+                                <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">
+                                    Group {gi + 1}
+                                </span>
                             </div>
 
                             {groups[group].map((condition, ci) => (
                                 <div key={condition.id}>
                                     {ci > 0 && (
-                                        <div className={cn(
-                                            'flex items-center gap-2 mb-2',
-                                            ci > 0 ? 'mt-2' : '',
-                                        )}>
+                                        <div
+                                            className={cn(
+                                                'mb-2 flex items-center gap-2',
+                                                ci > 0 ? 'mt-2' : '',
+                                            )}
+                                        >
                                             <div className="h-px flex-1 bg-gray-200" />
-                                            <span className="text-[10px] font-medium text-gray-400">AND</span>
+                                            <span className="text-[10px] font-medium text-gray-400">
+                                                AND
+                                            </span>
                                             <div className="h-px flex-1 bg-gray-200" />
                                         </div>
                                     )}
@@ -114,7 +155,9 @@ export default function ConditionBuilder({ workflowId, conditions: initial, oper
                                         workflowId={workflowId}
                                         condition={condition}
                                         operators={operators}
-                                        onDeleted={() => handleDelete(condition.id)}
+                                        onDeleted={() =>
+                                            handleDelete(condition.id)
+                                        }
                                         onUpdated={handleUpdate}
                                     />
                                 </div>

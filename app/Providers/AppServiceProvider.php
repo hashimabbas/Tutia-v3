@@ -47,10 +47,14 @@ use App\Services\Crm\CrmNextBestActionService;
 use App\Services\Crm\CrmRelationshipService;
 use App\Services\Crm\Expressions\Contracts\ExpressionEvaluatorInterface;
 use App\Services\Crm\Expressions\Contracts\ExpressionParserInterface;
+use App\Services\Crm\Expressions\Contracts\ExpressionValidatorInterface;
 use App\Services\Crm\Expressions\Evaluation\ExpressionEvaluator;
 use App\Services\Crm\Expressions\Parser\ExpressionParser;
+use App\Services\Crm\Expressions\Validation\ExpressionValidator;
 use App\Services\Crm\Health\HealthScorerInterface;
 use App\Services\Crm\Health\RuleBasedScorer;
+use App\Services\Crm\Optimization\Automation\Registries\AutomationScoreRegistryInterface;
+use App\Services\Crm\Optimization\Automation\Registries\WorkflowAutomationScoreRegistry;
 use App\Services\Crm\Projects\Health\DeliveryHealthScorerInterface;
 use App\Services\Crm\Projects\Health\DeliveryHealthService;
 use App\Services\Crm\Projects\Health\RuleBasedDeliveryHealthScorer;
@@ -127,11 +131,15 @@ class AppServiceProvider extends ServiceProvider
         // CRM-7 Phase 4A–4D — Expression Engine bindings
         $this->app->singleton(ExpressionParserInterface::class, ExpressionParser::class);
         $this->app->singleton(ExpressionEvaluatorInterface::class, ExpressionEvaluator::class);
+        $this->app->singleton(ExpressionValidatorInterface::class, ExpressionValidator::class);
 
         // CRM-7 Phase 4E — Expression Workflow Integration (v1/v2 bridge)
         $this->app->singleton(LegacyConditionEvaluator::class);
         $this->app->singleton(ExpressionWorkflowEvaluator::class);
         $this->app->singleton(WorkflowConditionEvaluatorInterface::class, WorkflowConditionEvaluator::class);
+
+        // CRM-8 Optimization — Automation Score Registry
+        $this->app->singleton(AutomationScoreRegistryInterface::class, WorkflowAutomationScoreRegistry::class);
 
         // CRM-6 Workflow contracts — concrete implementations built in Phase 2
         $this->app->singleton(WorkflowTriggerInterface::class, WorkflowTrigger::class);

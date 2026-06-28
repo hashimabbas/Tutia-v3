@@ -1,4 +1,16 @@
-import { ShoppingCart, CreditCard, MessageSquareText, Building2, Ticket, Headset, Globe, Smartphone, Wifi, Shield, BrainCircuit } from 'lucide-react';
+import {
+    ShoppingCart,
+    CreditCard,
+    MessageSquareText,
+    Building2,
+    Ticket,
+    Headset,
+    Globe,
+    Smartphone,
+    Wifi,
+    Shield,
+    BrainCircuit,
+} from 'lucide-react';
 import type { MegaMenuCategory } from '@/types';
 
 export const SERVICE_CATEGORIES: MegaMenuCategory[] = [
@@ -118,7 +130,19 @@ export const SERVICE_CATEGORIES: MegaMenuCategory[] = [
 
 export const PLATFORM_SUB_ITEMS = [
     { href: '/platform', label: 'platform.overview', labelAr: 'نظرة عامة' },
-    { href: '/platform/sellers', label: 'platform.forSellers', labelAr: 'للبائعين' },
-    { href: '/platform/buyers', label: 'platform.forBuyers', labelAr: 'للمشترين' },
-    { href: '/platform/apps', label: 'platform.mobileApps', labelAr: 'التطبيقات الجوالة' },
+    {
+        href: '/platform/sellers',
+        label: 'platform.forSellers',
+        labelAr: 'للبائعين',
+    },
+    {
+        href: '/platform/buyers',
+        label: 'platform.forBuyers',
+        labelAr: 'للمشترين',
+    },
+    {
+        href: '/platform/apps',
+        label: 'platform.mobileApps',
+        labelAr: 'التطبيقات الجوالة',
+    },
 ];

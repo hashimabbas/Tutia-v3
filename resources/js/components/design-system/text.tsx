@@ -30,7 +30,9 @@ export function Text({
             className={cn(
                 variantMap[variant],
                 muted && 'text-neutral-500',
-                !muted && variant === 'body' && 'text-neutral-700 dark:text-neutral-300',
+                !muted &&
+                    variant === 'body' &&
+                    'text-neutral-700 dark:text-neutral-300',
                 className,
             )}
         >

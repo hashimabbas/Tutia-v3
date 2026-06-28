@@ -1,5 +1,16 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, Plus, Building2, Mail, Phone, Target, Send, User, ChevronDown, Check } from 'lucide-react';
+import {
+    ArrowLeft,
+    Plus,
+    Building2,
+    Mail,
+    Phone,
+    Target,
+    Send,
+    User,
+    ChevronDown,
+    Check,
+} from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -119,8 +130,12 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
             setSaving(false);
             const first = Object.keys(errs)[0];
             if (first) {
-                document.querySelector(`[data-field="${first}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                document.querySelector(`[data-field="${first}"] input`)?.focus();
+                document
+                    .querySelector(`[data-field="${first}"]`)
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                document
+                    .querySelector(`[data-field="${first}"] input`)
+                    ?.focus();
             }
         };
 
@@ -136,7 +151,9 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
 
     return (
         <>
-            <Head title={isEditing ? `CRM · Edit ${lead.name}` : 'CRM · New Lead'} />
+            <Head
+                title={isEditing ? `CRM · Edit ${lead.name}` : 'CRM · New Lead'}
+            />
 
             <div className="flex h-full flex-col bg-[#f8f9fc]">
                 {/* Header */}
@@ -144,25 +161,49 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                     <div className="flex items-center justify-between px-6 py-4">
                         <div className="flex items-center gap-4">
                             <Link
-                                href={isEditing ? `/crm/leads/${lead.id}` : '/crm/leads'}
+                                href={
+                                    isEditing
+                                        ? `/crm/leads/${lead.id}`
+                                        : '/crm/leads'
+                                }
                                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e2e6ef] bg-white text-[#6b7280] shadow-sm transition-all hover:border-[#c8cce0] hover:text-[#1a1a2e] hover:shadow-md"
                             >
                                 <ArrowLeft className="h-4 w-4" />
                             </Link>
                             <div>
-                                <h1 className="text-lg font-semibold text-[#1a1a2e] tracking-tight">{isEditing ? 'Edit Lead' : 'New Lead'}</h1>
-                                <p className="text-xs text-[#6b7280]">{isEditing ? 'Update lead details' : 'Add a new lead to the CRM pipeline'}</p>
+                                <h1 className="text-lg font-semibold tracking-tight text-[#1a1a2e]">
+                                    {isEditing ? 'Edit Lead' : 'New Lead'}
+                                </h1>
+                                <p className="text-xs text-[#6b7280]">
+                                    {isEditing
+                                        ? 'Update lead details'
+                                        : 'Add a new lead to the CRM pipeline'}
+                                </p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <span className="hidden text-[11px] text-[#6b7280] md:block">
-                                <kbd className="rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">⌘</kbd>
-                                <kbd className="ml-0.5 rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">↵</kbd>
-                                {' '}to save
+                                <kbd className="rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">
+                                    ⌘
+                                </kbd>
+                                <kbd className="ml-0.5 rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">
+                                    ↵
+                                </kbd>{' '}
+                                to save
                             </span>
-                            <Link href={isEditing ? `/crm/leads/${lead.id}` : '/crm/leads'}>
-                                <Button variant="outline" size="sm" className="h-9 border-[#e2e6ef] text-[#6b7280] hover:bg-[#f0f2f7] hover:text-[#1a1a2e]">
+                            <Link
+                                href={
+                                    isEditing
+                                        ? `/crm/leads/${lead.id}`
+                                        : '/crm/leads'
+                                }
+                            >
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-9 border-[#e2e6ef] text-[#6b7280] hover:bg-[#f0f2f7] hover:text-[#1a1a2e]"
+                                >
                                     Cancel
                                 </Button>
                             </Link>
@@ -183,7 +224,9 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                 ) : (
                                     <>
                                         <Send className="h-3.5 w-3.5" />
-                                        {isEditing ? 'Update Lead' : 'Create Lead'}
+                                        {isEditing
+                                            ? 'Update Lead'
+                                            : 'Create Lead'}
                                     </>
                                 )}
                             </Button>
@@ -193,11 +236,15 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                     {/* Section tabs */}
                     <div className="flex items-center gap-0 border-t border-[#e2e6ef] px-6">
                         {SECTIONS.map((section, idx) => {
-                            const completed = SECTIONS.slice(0, idx).every((s) => {
-                                if (s === 'contact') return form.name && form.email;
-                                if (s === 'classification') return form.source;
-                                return true;
-                            });
+                            const completed = SECTIONS.slice(0, idx).every(
+                                (s) => {
+                                    if (s === 'contact')
+                                        return form.name && form.email;
+                                    if (s === 'classification')
+                                        return form.source;
+                                    return true;
+                                },
+                            );
                             const isActive = idx <= SECTIONS.length;
                             return (
                                 <div
@@ -233,7 +280,11 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                 {/* Form */}
                 <div className="flex-1 overflow-y-auto">
                     <div className="mx-auto w-full max-w-4xl px-6 py-8">
-                        <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                        <form
+                            ref={formRef}
+                            onSubmit={handleSubmit}
+                            className="space-y-6"
+                        >
                             {/* Contact Information */}
                             <section className="rounded-2xl border border-[#e2e6ef] bg-white p-6 shadow-sm">
                                 <div className="mb-6 flex items-center gap-3">
@@ -241,23 +292,43 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                         <User className="h-4 w-4 text-[#2B4C8C]" />
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">Contact Information</h2>
-                                        <p className="text-[11px] text-[#6b7280]">Basic details about the lead</p>
+                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">
+                                            Contact Information
+                                        </h2>
+                                        <p className="text-[11px] text-[#6b7280]">
+                                            Basic details about the lead
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                    <div className="md:col-span-2" data-field="name">
-                                        <Label htmlFor="name" className="mb-1.5 text-xs font-medium text-[#374151]">
-                                            Full Name <span className="text-rose-500">*</span>
+                                    <div
+                                        className="md:col-span-2"
+                                        data-field="name"
+                                    >
+                                        <Label
+                                            htmlFor="name"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
+                                            Full Name{' '}
+                                            <span className="text-rose-500">
+                                                *
+                                            </span>
                                         </Label>
                                         <div className="relative">
-                                            <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+                                            <User className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
                                             <Input
                                                 id="name"
                                                 value={form.name}
-                                                onChange={(e) => handleChange('name', e.target.value)}
-                                                onFocus={() => setFocused('name')}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        'name',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onFocus={() =>
+                                                    setFocused('name')
+                                                }
                                                 onBlur={() => setFocused(null)}
                                                 placeholder="e.g. Ahmed Al-Saud"
                                                 className={cn(
@@ -265,8 +336,8 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                                     errors.name
                                                         ? 'border-rose-300 ring-rose-200/50'
                                                         : focused === 'name'
-                                                            ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
-                                                            : '',
+                                                          ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                          : '',
                                                 )}
                                             />
                                         </div>
@@ -278,17 +349,30 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                     </div>
 
                                     <div data-field="email">
-                                        <Label htmlFor="email" className="mb-1.5 text-xs font-medium text-[#374151]">
-                                            Email <span className="text-rose-500">*</span>
+                                        <Label
+                                            htmlFor="email"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
+                                            Email{' '}
+                                            <span className="text-rose-500">
+                                                *
+                                            </span>
                                         </Label>
                                         <div className="relative">
-                                            <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+                                            <Mail className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
                                             <Input
                                                 id="email"
                                                 type="email"
                                                 value={form.email}
-                                                onChange={(e) => handleChange('email', e.target.value)}
-                                                onFocus={() => setFocused('email')}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        'email',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onFocus={() =>
+                                                    setFocused('email')
+                                                }
                                                 onBlur={() => setFocused(null)}
                                                 placeholder="ahmed@example.com"
                                                 className={cn(
@@ -296,8 +380,8 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                                     errors.email
                                                         ? 'border-rose-300 ring-rose-200/50'
                                                         : focused === 'email'
-                                                            ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
-                                                            : '',
+                                                          ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                          : '',
                                                 )}
                                             />
                                         </div>
@@ -309,42 +393,69 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                     </div>
 
                                     <div data-field="phone">
-                                        <Label htmlFor="phone" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="phone"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Phone
                                         </Label>
                                         <div className="relative">
-                                            <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+                                            <Phone className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
                                             <Input
                                                 id="phone"
                                                 value={form.phone}
-                                                onChange={(e) => handleChange('phone', e.target.value)}
-                                                onFocus={() => setFocused('phone')}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        'phone',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onFocus={() =>
+                                                    setFocused('phone')
+                                                }
                                                 onBlur={() => setFocused(null)}
                                                 placeholder="+966 50 000 0000"
                                                 className={cn(
                                                     'h-10 pl-10 text-sm transition-all',
-                                                    focused === 'phone' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                    focused === 'phone'
+                                                        ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                        : '',
                                                 )}
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="md:col-span-2" data-field="company">
-                                        <Label htmlFor="company" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                    <div
+                                        className="md:col-span-2"
+                                        data-field="company"
+                                    >
+                                        <Label
+                                            htmlFor="company"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Company
                                         </Label>
                                         <div className="relative">
-                                            <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+                                            <Building2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
                                             <Input
                                                 id="company"
                                                 value={form.company}
-                                                onChange={(e) => handleChange('company', e.target.value)}
-                                                onFocus={() => setFocused('company')}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        'company',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onFocus={() =>
+                                                    setFocused('company')
+                                                }
                                                 onBlur={() => setFocused(null)}
                                                 placeholder="Company name"
                                                 className={cn(
                                                     'h-10 pl-10 text-sm transition-all',
-                                                    focused === 'company' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                    focused === 'company'
+                                                        ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                        : '',
                                                 )}
                                             />
                                         </div>
@@ -359,27 +470,51 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                         <ChevronDown className="h-4 w-4 text-amber-600" />
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">Classification</h2>
-                                        <p className="text-[11px] text-[#6b7280]">Source, stage, and priority</p>
+                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">
+                                            Classification
+                                        </h2>
+                                        <p className="text-[11px] text-[#6b7280]">
+                                            Source, stage, and priority
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                                     <div data-field="source">
                                         <Label className="mb-1.5 text-xs font-medium text-[#374151]">
-                                            Source <span className="text-rose-500">*</span>
+                                            Source{' '}
+                                            <span className="text-rose-500">
+                                                *
+                                            </span>
                                         </Label>
                                         <Select
                                             value={form.source}
-                                            onValueChange={(v) => handleChange('source', v)}
+                                            onValueChange={(v) =>
+                                                handleChange('source', v)
+                                            }
                                         >
-                                            <SelectTrigger className={cn('h-10 text-sm', errors.source && 'border-rose-300')}>
+                                            <SelectTrigger
+                                                className={cn(
+                                                    'h-10 text-sm',
+                                                    errors.source &&
+                                                        'border-rose-300',
+                                                )}
+                                            >
                                                 <SelectValue placeholder="Select source" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {sources.map((s) => (
-                                                    <SelectItem key={s} value={s}>
-                                                        {s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                                                    <SelectItem
+                                                        key={s}
+                                                        value={s}
+                                                    >
+                                                        {s
+                                                            .replace(/_/g, ' ')
+                                                            .replace(
+                                                                /\b\w/g,
+                                                                (c) =>
+                                                                    c.toUpperCase(),
+                                                            )}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -392,18 +527,38 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                     </div>
 
                                     <div data-field="stage">
-                                        <Label className="mb-1.5 text-xs font-medium text-[#374151]">Stage</Label>
+                                        <Label className="mb-1.5 text-xs font-medium text-[#374151]">
+                                            Stage
+                                        </Label>
                                         <div className="relative">
-                                            <Select value={form.stage} onValueChange={(v) => handleChange('stage', v)}>
+                                            <Select
+                                                value={form.stage}
+                                                onValueChange={(v) =>
+                                                    handleChange('stage', v)
+                                                }
+                                            >
                                                 <SelectTrigger className="h-10 text-sm">
                                                     <SelectValue placeholder="Select stage" />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {stages.map((s) => (
-                                                        <SelectItem key={s} value={s}>
+                                                        <SelectItem
+                                                            key={s}
+                                                            value={s}
+                                                        >
                                                             <div className="flex items-center gap-2">
-                                                                <span className={cn('h-2 w-2 rounded-full', STAGE_COLORS[s])} />
-                                                                {s.charAt(0).toUpperCase() + s.slice(1)}
+                                                                <span
+                                                                    className={cn(
+                                                                        'h-2 w-2 rounded-full',
+                                                                        STAGE_COLORS[
+                                                                            s
+                                                                        ],
+                                                                    )}
+                                                                />
+                                                                {s
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    s.slice(1)}
                                                             </div>
                                                         </SelectItem>
                                                     ))}
@@ -413,20 +568,46 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                     </div>
 
                                     <div data-field="priority">
-                                        <Label className="mb-1.5 text-xs font-medium text-[#374151]">Priority</Label>
-                                        <Select value={form.priority} onValueChange={(v) => handleChange('priority', v)}>
+                                        <Label className="mb-1.5 text-xs font-medium text-[#374151]">
+                                            Priority
+                                        </Label>
+                                        <Select
+                                            value={form.priority}
+                                            onValueChange={(v) =>
+                                                handleChange('priority', v)
+                                            }
+                                        >
                                             <SelectTrigger className="h-10 text-sm">
                                                 <SelectValue placeholder="Select priority" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {[
-                                                    { value: 'low', label: 'Low' },
-                                                    { value: 'medium', label: 'Medium' },
-                                                    { value: 'high', label: 'High' },
+                                                    {
+                                                        value: 'low',
+                                                        label: 'Low',
+                                                    },
+                                                    {
+                                                        value: 'medium',
+                                                        label: 'Medium',
+                                                    },
+                                                    {
+                                                        value: 'high',
+                                                        label: 'High',
+                                                    },
                                                 ].map((p) => (
-                                                    <SelectItem key={p.value} value={p.value}>
+                                                    <SelectItem
+                                                        key={p.value}
+                                                        value={p.value}
+                                                    >
                                                         <div className="flex items-center gap-2">
-                                                            <span className={cn('h-2 w-2 rounded-full', PRIORITY_COLORS[p.value])} />
+                                                            <span
+                                                                className={cn(
+                                                                    'h-2 w-2 rounded-full',
+                                                                    PRIORITY_COLORS[
+                                                                        p.value
+                                                                    ],
+                                                                )}
+                                                            />
                                                             {p.label}
                                                         </div>
                                                     </SelectItem>
@@ -444,80 +625,133 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                         <Target className="h-4 w-4 text-emerald-600" />
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">Project Details</h2>
-                                        <p className="text-[11px] text-[#6b7280]">Service, budget, and timeline information</p>
+                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">
+                                            Project Details
+                                        </h2>
+                                        <p className="text-[11px] text-[#6b7280]">
+                                            Service, budget, and timeline
+                                            information
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                                     <div data-field="service">
-                                        <Label htmlFor="service" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="service"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Service
                                         </Label>
                                         <Input
                                             id="service"
                                             value={form.service}
-                                            onChange={(e) => handleChange('service', e.target.value)}
-                                            onFocus={() => setFocused('service')}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'service',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onFocus={() =>
+                                                setFocused('service')
+                                            }
                                             onBlur={() => setFocused(null)}
                                             placeholder="e.g. Web Development"
                                             className={cn(
                                                 'h-10 text-sm transition-all',
-                                                focused === 'service' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                focused === 'service'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : '',
                                             )}
                                         />
                                     </div>
                                     <div data-field="project_type">
-                                        <Label htmlFor="project_type" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="project_type"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Project Type
                                         </Label>
                                         <Input
                                             id="project_type"
                                             value={form.project_type}
-                                            onChange={(e) => handleChange('project_type', e.target.value)}
-                                            onFocus={() => setFocused('project_type')}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'project_type',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onFocus={() =>
+                                                setFocused('project_type')
+                                            }
                                             onBlur={() => setFocused(null)}
                                             placeholder="e.g. New Website"
                                             className={cn(
                                                 'h-10 text-sm transition-all',
-                                                focused === 'project_type' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                focused === 'project_type'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : '',
                                             )}
                                         />
                                     </div>
                                     <div data-field="budget">
-                                        <Label htmlFor="budget" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="budget"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Budget
                                         </Label>
                                         <div className="relative">
-                                            <Target className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+                                            <Target className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
                                             <Input
                                                 id="budget"
                                                 value={form.budget}
-                                                onChange={(e) => handleChange('budget', e.target.value)}
-                                                onFocus={() => setFocused('budget')}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        'budget',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onFocus={() =>
+                                                    setFocused('budget')
+                                                }
                                                 onBlur={() => setFocused(null)}
                                                 placeholder="e.g. $10,000 – $20,000"
                                                 className={cn(
                                                     'h-10 pl-10 text-sm transition-all',
-                                                    focused === 'budget' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                    focused === 'budget'
+                                                        ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                        : '',
                                                 )}
                                             />
                                         </div>
                                     </div>
                                     <div data-field="timeline">
-                                        <Label htmlFor="timeline" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="timeline"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Timeline
                                         </Label>
                                         <Input
                                             id="timeline"
                                             value={form.timeline}
-                                            onChange={(e) => handleChange('timeline', e.target.value)}
-                                            onFocus={() => setFocused('timeline')}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'timeline',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onFocus={() =>
+                                                setFocused('timeline')
+                                            }
                                             onBlur={() => setFocused(null)}
                                             placeholder="e.g. 2-3 months"
                                             className={cn(
                                                 'h-10 text-sm transition-all',
-                                                focused === 'timeline' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : '',
+                                                focused === 'timeline'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : '',
                                             )}
                                         />
                                     </div>
@@ -531,63 +765,102 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                         <Send className="h-4 w-4 text-blue-600" />
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">Notes</h2>
-                                        <p className="text-[11px] text-[#6b7280]">Additional information about the lead</p>
+                                        <h2 className="text-sm font-semibold text-[#1a1a2e]">
+                                            Notes
+                                        </h2>
+                                        <p className="text-[11px] text-[#6b7280]">
+                                            Additional information about the
+                                            lead
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-5">
                                     <div data-field="message">
-                                        <Label htmlFor="message" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="message"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Message
                                         </Label>
                                         <textarea
                                             id="message"
                                             value={form.message}
-                                            onChange={(e) => handleChange('message', e.target.value)}
-                                            onFocus={() => setFocused('message')}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'message',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onFocus={() =>
+                                                setFocused('message')
+                                            }
                                             onBlur={() => setFocused(null)}
                                             rows={3}
                                             placeholder="Lead's initial message or inquiry"
                                             className={cn(
-                                                'w-full rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] outline-none transition-all resize-none',
-                                                focused === 'message' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : 'border-[#e2e6ef]',
+                                                'w-full resize-none rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] transition-all outline-none',
+                                                focused === 'message'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : 'border-[#e2e6ef]',
                                             )}
                                         />
                                     </div>
                                     <div data-field="brief">
-                                        <Label htmlFor="brief" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="brief"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Brief
                                         </Label>
                                         <textarea
                                             id="brief"
                                             value={form.brief}
-                                            onChange={(e) => handleChange('brief', e.target.value)}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'brief',
+                                                    e.target.value,
+                                                )
+                                            }
                                             onFocus={() => setFocused('brief')}
                                             onBlur={() => setFocused(null)}
                                             rows={3}
                                             placeholder="Brief description of the project"
                                             className={cn(
-                                                'w-full rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] outline-none transition-all resize-none',
-                                                focused === 'brief' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : 'border-[#e2e6ef]',
+                                                'w-full resize-none rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] transition-all outline-none',
+                                                focused === 'brief'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : 'border-[#e2e6ef]',
                                             )}
                                         />
                                     </div>
                                     <div data-field="requirements">
-                                        <Label htmlFor="requirements" className="mb-1.5 text-xs font-medium text-[#374151]">
+                                        <Label
+                                            htmlFor="requirements"
+                                            className="mb-1.5 text-xs font-medium text-[#374151]"
+                                        >
                                             Requirements
                                         </Label>
                                         <textarea
                                             id="requirements"
                                             value={form.requirements}
-                                            onChange={(e) => handleChange('requirements', e.target.value)}
-                                            onFocus={() => setFocused('requirements')}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'requirements',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onFocus={() =>
+                                                setFocused('requirements')
+                                            }
                                             onBlur={() => setFocused(null)}
                                             rows={3}
                                             placeholder="Specific requirements or scope items"
                                             className={cn(
-                                                'w-full rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] outline-none transition-all resize-none',
-                                                focused === 'requirements' ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10' : 'border-[#e2e6ef]',
+                                                'w-full resize-none rounded-xl border bg-white px-4 py-3 text-sm text-[#1a1a2e] placeholder-[#9ca3af] transition-all outline-none',
+                                                focused === 'requirements'
+                                                    ? 'border-[#2B4C8C] ring-[3px] ring-[#2B4C8C]/10'
+                                                    : 'border-[#e2e6ef]',
                                             )}
                                         />
                                     </div>
@@ -598,23 +871,40 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                             <div className="flex items-center justify-between rounded-2xl border border-[#e2e6ef] bg-white px-6 py-4 shadow-sm">
                                 <div className="flex items-center gap-4">
                                     <p className="text-xs text-[#6b7280]">
-                                        <span className="text-rose-500">*</span> Required fields
+                                        <span className="text-rose-500">*</span>{' '}
+                                        Required fields
                                     </p>
                                     <span className="hidden text-[11px] text-[#9ca3af] md:block">
-                                        <kbd className="rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">⌘</kbd>
-                                        <kbd className="ml-0.5 rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">↵</kbd>
-                                        {' '}to save
+                                        <kbd className="rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">
+                                            ⌘
+                                        </kbd>
+                                        <kbd className="ml-0.5 rounded-md border border-[#e2e6ef] bg-[#f8f9fc] px-1.5 py-0.5 text-[10px] font-medium text-[#6b7280]">
+                                            ↵
+                                        </kbd>{' '}
+                                        to save
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Link href={isEditing ? `/crm/leads/${lead.id}` : '/crm/leads'}>
-                                        <Button variant="outline" size="sm" className="h-9 border-[#e2e6ef] text-[#6b7280] hover:bg-[#f0f2f7] hover:text-[#1a1a2e]">
+                                    <Link
+                                        href={
+                                            isEditing
+                                                ? `/crm/leads/${lead.id}`
+                                                : '/crm/leads'
+                                        }
+                                    >
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="h-9 border-[#e2e6ef] text-[#6b7280] hover:bg-[#f0f2f7] hover:text-[#1a1a2e]"
+                                        >
                                             Cancel
                                         </Button>
                                     </Link>
                                     <Button
                                         size="sm"
-                                        onClick={() => formRef.current?.requestSubmit()}
+                                        onClick={() =>
+                                            formRef.current?.requestSubmit()
+                                        }
                                         disabled={saving}
                                         className={cn(
                                             'h-9 gap-2 bg-[#2B4C8C] text-white shadow-sm transition-all hover:bg-[#2B4C8C]/90 hover:shadow-md',
@@ -629,7 +919,9 @@ export default function LeadCreate({ lead, sources, stages }: Props) {
                                         ) : (
                                             <>
                                                 <Send className="h-3.5 w-3.5" />
-                                                {isEditing ? 'Update Lead' : 'Create Lead'}
+                                                {isEditing
+                                                    ? 'Update Lead'
+                                                    : 'Create Lead'}
                                             </>
                                         )}
                                     </Button>

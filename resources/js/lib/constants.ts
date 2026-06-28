@@ -109,6 +109,7 @@ export const NAV_ITEMS = [
     { label: 'nav.platform', href: '/platform' },
     { label: 'nav.work', href: '/work' },
     { label: 'nav.insights', href: '/insights' },
+    { label: 'nav.gallery', href: '/gallery' },
     { label: 'nav.about', href: '/about' },
     { label: 'nav.contact', href: '/contact' },
 ];

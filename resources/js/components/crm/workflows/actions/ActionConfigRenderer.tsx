@@ -7,13 +7,19 @@ interface Props {
     context?: ActionContext;
 }
 
-export default function ActionConfigRenderer({ actionType, value, onChange, context }: Props) {
+export default function ActionConfigRenderer({
+    actionType,
+    value,
+    onChange,
+    context,
+}: Props) {
     const Component = actionConfigRegistry[actionType];
 
     if (!Component) {
         return (
             <p className="text-[10px] text-gray-500">
-                No configuration form available for <span className="text-gray-600">{actionType}</span>
+                No configuration form available for{' '}
+                <span className="text-gray-600">{actionType}</span>
             </p>
         );
     }

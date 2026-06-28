@@ -5,6 +5,8 @@ export const en = {
         platform: 'Platform',
         work: 'Our Work',
         insights: 'Insights',
+        blog: 'Blog',
+        gallery: 'Gallery',
         about: 'About',
         contact: 'Contact',
         bookConsultation: 'Book Consultation',
@@ -104,7 +106,8 @@ export const en = {
         ourOffice: 'Our Office',
         getDirections: 'Get Directions',
         thankYou: 'Thank You',
-        thankYouMessage: "We've received your message and will get back to you within 24 hours.",
+        thankYouMessage:
+            "We've received your message and will get back to you within 24 hours.",
     },
     cta: {
         startProject: 'Start Your Project',
@@ -151,13 +154,17 @@ export const en = {
     },
     values: {
         trust: 'Trust',
-        trustDesc: 'We know that trust must be earned, so we strive every day to act in ways to build up trust in our clients, ourselves and others.',
+        trustDesc:
+            'We know that trust must be earned, so we strive every day to act in ways to build up trust in our clients, ourselves and others.',
         commitment: 'Commitment',
-        commitmentDesc: 'We recognize the importance of providing excellent services and creating an environment where commitment is part of the fabric of who we are.',
+        commitmentDesc:
+            'We recognize the importance of providing excellent services and creating an environment where commitment is part of the fabric of who we are.',
         integrity: 'Integrity',
-        integrityDesc: 'We value our reputation and conduct our business with integrity, honesty, and respect for each individual.',
+        integrityDesc:
+            'We value our reputation and conduct our business with integrity, honesty, and respect for each individual.',
         results: 'Results',
-        resultsDesc: 'We seek to deliver excellent results and we ensure our clients and customers that our results will absolutely exceed their expectations.',
+        resultsDesc:
+            'We seek to deliver excellent results and we ensure our clients and customers that our results will absolutely exceed their expectations.',
     },
     stats: {
         yearsInBusiness: 'Years in Business',
@@ -200,8 +207,7 @@ export const en = {
         },
         industries: {
             title: 'Industries We Serve',
-            subtitle:
-                "Deep expertise across Sudan's key economic sectors.",
+            subtitle: "Deep expertise across Sudan's key economic sectors.",
         },
         why: {
             title: 'Why TUTIA',

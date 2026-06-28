@@ -120,7 +120,13 @@ function getStageColor(stage: string): string {
     return colors[stage] ?? 'text-gray-500 bg-gray-100';
 }
 
-export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, recent_deals, lead_trend }: DashboardProps) {
+export default function CrmDashboard({
+    stats,
+    pipeline_by_stage,
+    recent_leads,
+    recent_deals,
+    lead_trend,
+}: DashboardProps) {
     const statCards: Stat[] = [
         {
             label: 'Total Leads',
@@ -139,7 +145,7 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
         {
             label: 'Pipeline Value',
             value: formatCurrency(stats.total_pipeline),
-            change: `${stats.total_pipeline > 0 ? `${pipeline_by_stage.filter(s => !['closed_won', 'closed_lost'].includes(s.stage)).length} active deals` : 'No active deals'}`,
+            change: `${stats.total_pipeline > 0 ? `${pipeline_by_stage.filter((s) => !['closed_won', 'closed_lost'].includes(s.stage)).length} active deals` : 'No active deals'}`,
             trend: 'up',
             icon: Target,
         },
@@ -158,7 +164,9 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
 
             <div className="p-6">
                 <div className="mb-6">
-                    <h1 className="text-lg font-medium text-[#1a1a2e]">Command Center</h1>
+                    <h1 className="text-lg font-medium text-[#1a1a2e]">
+                        Command Center
+                    </h1>
                     <p className="mt-0.5 text-xs text-[#6b7280]">
                         {new Date().toLocaleDateString('en-US', {
                             weekday: 'long',
@@ -177,7 +185,7 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                             className="rounded-lg border border-[#e2e6ef] bg-white p-4"
                         >
                             <div className="mb-3 flex items-center justify-between">
-                                <span className="text-[11px] font-medium uppercase tracking-wider text-[#6b7280]">
+                                <span className="text-[11px] font-medium tracking-wider text-[#6b7280] uppercase">
                                     {stat.label}
                                 </span>
                                 <stat.icon className="h-4 w-4 text-[#2B4C8C]" />
@@ -188,17 +196,20 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                 </span>
                                 <span
                                     className={`text-[11px] ${
-                                        stat.trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+                                        stat.trend === 'up'
+                                            ? 'text-emerald-600'
+                                            : 'text-red-600'
                                     }`}
                                 >
                                     {stat.change}
                                 </span>
                             </div>
-                            {lead_trend.length > 1 && stat.label === 'Total Leads' && (
-                                <div className="mt-1 text-emerald-500">
-                                    <MiniSparkline data={lead_trend} />
-                                </div>
-                            )}
+                            {lead_trend.length > 1 &&
+                                stat.label === 'Total Leads' && (
+                                    <div className="mt-1 text-emerald-500">
+                                        <MiniSparkline data={lead_trend} />
+                                    </div>
+                                )}
                         </div>
                     ))}
                 </div>
@@ -207,7 +218,7 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                     {/* Pipeline by Stage */}
                     <div className="col-span-2">
                         <div className="mb-1 flex items-center justify-between">
-                            <h2 className="text-xs font-medium uppercase tracking-wider text-[#6b7280]">
+                            <h2 className="text-xs font-medium tracking-wider text-[#6b7280] uppercase">
                                 Pipeline
                             </h2>
                             <Link
@@ -224,10 +235,16 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                         <div key={stage.stage}>
                                             <div className="mb-1 flex items-center justify-between text-xs">
                                                 <span className="text-[#6b7280] capitalize">
-                                                    {stage.stage.replace(/_/g, ' ')}
+                                                    {stage.stage.replace(
+                                                        /_/g,
+                                                        ' ',
+                                                    )}
                                                 </span>
                                                 <span className="text-[#9ca3af]">
-                                                    {formatCurrency(stage.total)} · {stage.count}
+                                                    {formatCurrency(
+                                                        stage.total,
+                                                    )}{' '}
+                                                    · {stage.count}
                                                 </span>
                                             </div>
                                             <div className="h-1.5 overflow-hidden rounded-full bg-[#f3f4f6]">
@@ -237,14 +254,20 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                                         width: `${Math.min(
                                                             (stage.total /
                                                                 Math.max(
-                                                                    ...pipeline_by_stage.map((s) =>
-                                                                        ['closed_won', 'closed_lost'].includes(s.stage)
-                                                                            ? 0
-                                                                            : s.total
-                                                                    )
+                                                                    ...pipeline_by_stage.map(
+                                                                        (s) =>
+                                                                            [
+                                                                                'closed_won',
+                                                                                'closed_lost',
+                                                                            ].includes(
+                                                                                s.stage,
+                                                                            )
+                                                                                ? 0
+                                                                                : s.total,
+                                                                    ),
                                                                 )) *
-                                                                 100,
-                                                             100
+                                                                100,
+                                                            100,
                                                         )}%`,
                                                     }}
                                                 />
@@ -263,7 +286,7 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                     {/* Recent Activity */}
                     <div>
                         <div className="mb-1 flex items-center justify-between">
-                            <h2 className="text-xs font-medium uppercase tracking-wider text-[#6b7280]">
+                            <h2 className="text-xs font-medium tracking-wider text-[#6b7280] uppercase">
                                 Recent Leads
                             </h2>
                             <Link
@@ -300,10 +323,16 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                                 </div>
                                                 <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[#6b7280]">
                                                     {lead.company && (
-                                                        <span>{lead.company}</span>
+                                                        <span>
+                                                            {lead.company}
+                                                        </span>
                                                     )}
                                                     <span>{lead.source}</span>
-                                                    <span>{formatDate(lead.created_at)}</span>
+                                                    <span>
+                                                        {formatDate(
+                                                            lead.created_at,
+                                                        )}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </Link>
@@ -311,7 +340,8 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                 </div>
                             ) : (
                                 <div className="px-4 py-8 text-center text-xs text-[#6b7280]">
-                                    No leads yet — website forms will appear here
+                                    No leads yet — website forms will appear
+                                    here
                                 </div>
                             )}
                         </div>
@@ -322,7 +352,7 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                 {recent_deals.length > 0 && (
                     <div className="mt-6">
                         <div className="mb-1 flex items-center justify-between">
-                            <h2 className="text-xs font-medium uppercase tracking-wider text-[#6b7280]">
+                            <h2 className="text-xs font-medium tracking-wider text-[#6b7280] uppercase">
                                 Recent Deals
                             </h2>
                         </div>
@@ -330,10 +360,18 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                             <table className="w-full">
                                 <thead>
                                     <tr className="border-b border-[#e2e6ef] text-left text-[11px] text-[#6b7280]">
-                                        <th className="px-4 py-2.5 font-medium">Deal</th>
-                                        <th className="px-4 py-2.5 font-medium">Company</th>
-                                        <th className="px-4 py-2.5 font-medium">Value</th>
-                                        <th className="px-4 py-2.5 font-medium">Stage</th>
+                                        <th className="px-4 py-2.5 font-medium">
+                                            Deal
+                                        </th>
+                                        <th className="px-4 py-2.5 font-medium">
+                                            Company
+                                        </th>
+                                        <th className="px-4 py-2.5 font-medium">
+                                            Value
+                                        </th>
+                                        <th className="px-4 py-2.5 font-medium">
+                                            Stage
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[#e2e6ef]">
@@ -343,7 +381,10 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                             className="text-[13px] text-[#1a1a2e] transition-colors hover:bg-[#f8f9fc]"
                                         >
                                             <td className="px-4 py-2.5">
-                                                <Link href={`/crm/deals/${deal.id}`} className="hover:text-[#2B4C8C]">
+                                                <Link
+                                                    href={`/crm/deals/${deal.id}`}
+                                                    className="hover:text-[#2B4C8C]"
+                                                >
                                                     {deal.title}
                                                 </Link>
                                             </td>
@@ -357,7 +398,10 @@ export default function CrmDashboard({ stats, pipeline_by_stage, recent_leads, r
                                                 <span
                                                     className={`rounded px-1.5 py-0.5 text-[10px] font-medium capitalize ${getStageColor(deal.stage)}`}
                                                 >
-                                                    {deal.stage.replace(/_/g, ' ')}
+                                                    {deal.stage.replace(
+                                                        /_/g,
+                                                        ' ',
+                                                    )}
                                                 </span>
                                             </td>
                                         </tr>

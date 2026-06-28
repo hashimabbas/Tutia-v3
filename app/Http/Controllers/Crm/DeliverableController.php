@@ -11,12 +11,34 @@ use App\Models\CrmProject;
 use App\Services\Crm\Projects\Health\DeliveryHealthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DeliverableController extends Controller
 {
     public function __construct(
         private readonly DeliveryHealthService $health,
     ) {}
+
+    public function indexAll(Request $request): Response
+    {
+        $this->authorize('viewAny', CrmDeliverable::class);
+
+        $query = CrmDeliverable::with('milestone.project.organization');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $sortField = $request->sort ?? 'sort_order';
+        $sortDir = $request->dir ?? 'asc';
+        $query->orderBy($sortField, $sortDir);
+
+        return Inertia::render('crm/deliverables/index', [
+            'deliverables' => $query->paginate(25)->withQueryString(),
+            'filters' => (object) $request->only(['status', 'sort', 'dir']),
+        ]);
+    }
 
     public function index(Request $request, CrmProject $project, CrmMilestone $milestone)
     {

@@ -17,13 +17,18 @@ export function MatgerShowcaseSection() {
                         <div className="text-center">
                             <Smartphone className="mx-auto size-16 text-neutral-400" />
                             <Text variant="body-sm" muted className="mt-4">
-                                {locale === 'ar' ? 'لقطة شاشة التطبيق' : 'App Screenshot'}
+                                {locale === 'ar'
+                                    ? 'لقطة شاشة التطبيق'
+                                    : 'App Screenshot'}
                             </Text>
                         </div>
                     </div>
                     <div>
                         <Heading level="h2">{t('home.matger.title')}</Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-600">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-600"
+                        >
                             {t('platform.subtitle')}
                         </Text>
                         <div className="mt-8 grid grid-cols-3 gap-6">
@@ -33,13 +38,19 @@ export function MatgerShowcaseSection() {
                                         {stat.value}
                                     </span>
                                     <Text variant="caption" className="mt-1">
-                                        {locale === 'ar' ? stat.labelAr : stat.label}
+                                        {locale === 'ar'
+                                            ? stat.labelAr
+                                            : stat.label}
                                     </Text>
                                 </div>
                             ))}
                         </div>
                         <div className="mt-8 flex flex-wrap gap-4">
-                            <Button asChild size="lg" className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                            <Button
+                                asChild
+                                size="lg"
+                                className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                            >
                                 <Link href="/platform">
                                     {t('cta.explorePlatform')}
                                     <ArrowRight className="ml-2 size-4 rtl:rotate-180" />

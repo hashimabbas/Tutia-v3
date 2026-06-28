@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Crm\Workflows;
 use App\Http\Controllers\Controller;
 use App\Services\Crm\Expressions\Catalogs\ExpressionFieldCatalog;
 use App\Services\Crm\Expressions\Contracts\ExpressionValidatorInterface;
+use App\Services\Crm\Workflows\Conversion\LegacyConditionToExpressionConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -108,5 +109,20 @@ class ExpressionBuilderController extends Controller
         return response()->json([
             'expression' => $expression,
         ]);
+    }
+
+    public function convertLegacy(Request $request, LegacyConditionToExpressionConverter $converter): JsonResponse
+    {
+        $data = $request->validate([
+            'conditions' => ['required', 'array'],
+            'conditions.*.field' => ['required', 'string'],
+            'conditions.*.operator' => ['required', 'string'],
+            'conditions.*.value' => ['nullable', 'string'],
+            'conditions.*.group_order' => ['sometimes', 'integer', 'min:0'],
+        ]);
+
+        $result = $converter->convert($data['conditions']);
+
+        return response()->json($result);
     }
 }

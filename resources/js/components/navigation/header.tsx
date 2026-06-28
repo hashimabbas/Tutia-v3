@@ -51,11 +51,7 @@ export function Header() {
 
                 <div className="flex items-center gap-3">
                     <LanguageSwitcher minimal className="hidden md:flex" />
-                    <Button
-                        asChild
-                        className="hidden md:inline-flex"
-                        size="sm"
-                    >
+                    <Button asChild className="hidden md:inline-flex" size="sm">
                         <Link href="/contact/consultation">
                             {t('nav.bookConsultation')}
                         </Link>

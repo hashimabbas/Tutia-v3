@@ -1,18 +1,25 @@
 interface Props {
-    versions: { key: string; label: string }[]
-    value: string
-    onChange: (version: string) => void
-    disabled?: boolean
+    versions: { key: string; label: string }[];
+    value: string;
+    onChange: (version: string) => void;
+    disabled?: boolean;
 }
 
-export default function VersionSwitch({ versions, value, onChange, disabled }: Props) {
-    if (versions.length < 2) return null
+export default function VersionSwitch({
+    versions,
+    value,
+    onChange,
+    disabled,
+}: Props) {
+    if (versions.length < 2) return null;
 
     return (
         <div className="flex items-center gap-2">
-            <span className="text-[11px] font-medium text-gray-500">Conditions Mode:</span>
-            <div className="flex rounded-md border border-gray-200 overflow-hidden">
-                {versions.map(v => (
+            <span className="text-[11px] font-medium text-gray-500">
+                Conditions Mode:
+            </span>
+            <div className="flex overflow-hidden rounded-md border border-gray-200">
+                {versions.map((v) => (
                     <button
                         key={v.key}
                         type="button"
@@ -29,5 +36,5 @@ export default function VersionSwitch({ versions, value, onChange, disabled }: P
                 ))}
             </div>
         </div>
-    )
+    );
 }

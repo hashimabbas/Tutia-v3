@@ -74,27 +74,92 @@ interface LeadsPageProps {
     };
 }
 
-const STAGE_CONFIG: Record<string, { label: string; color: string; dot: string; bar: string; glow: string }> = {
-    new:          { label: 'New',          color: 'text-blue-700 bg-blue-50 border-blue-200',         dot: 'bg-blue-600',  bar: 'bg-blue-600',  glow: 'shadow-blue-500/10' },
-    contacted:    { label: 'Contacted',     color: 'text-amber-700 bg-amber-50 border-amber-200',       dot: 'bg-amber-600', bar: 'bg-amber-600', glow: 'shadow-amber-500/10' },
-    qualified:    { label: 'Qualified',     color: 'text-violet-700 bg-violet-50 border-violet-200',     dot: 'bg-violet-600', bar: 'bg-violet-600', glow: 'shadow-violet-500/10' },
-    proposal:     { label: 'Proposal',      color: 'text-orange-700 bg-orange-50 border-orange-200',    dot: 'bg-orange-600', bar: 'bg-orange-600', glow: 'shadow-orange-500/10' },
-    negotiation:  { label: 'Negotiation',   color: 'text-rose-700 bg-rose-50 border-rose-200',         dot: 'bg-rose-600',  bar: 'bg-rose-600',  glow: 'shadow-rose-500/10' },
-    converted:    { label: 'Converted',     color: 'text-emerald-700 bg-emerald-50 border-emerald-200',   dot: 'bg-emerald-600', bar: 'bg-emerald-600', glow: 'shadow-emerald-500/10' },
-    lost:         { label: 'Lost',          color: 'text-red-700 bg-red-50 border-red-200',            dot: 'bg-red-600',   bar: 'bg-red-600',   glow: 'shadow-red-500/10' },
+const STAGE_CONFIG: Record<
+    string,
+    { label: string; color: string; dot: string; bar: string; glow: string }
+> = {
+    new: {
+        label: 'New',
+        color: 'text-blue-700 bg-blue-50 border-blue-200',
+        dot: 'bg-blue-600',
+        bar: 'bg-blue-600',
+        glow: 'shadow-blue-500/10',
+    },
+    contacted: {
+        label: 'Contacted',
+        color: 'text-amber-700 bg-amber-50 border-amber-200',
+        dot: 'bg-amber-600',
+        bar: 'bg-amber-600',
+        glow: 'shadow-amber-500/10',
+    },
+    qualified: {
+        label: 'Qualified',
+        color: 'text-violet-700 bg-violet-50 border-violet-200',
+        dot: 'bg-violet-600',
+        bar: 'bg-violet-600',
+        glow: 'shadow-violet-500/10',
+    },
+    proposal: {
+        label: 'Proposal',
+        color: 'text-orange-700 bg-orange-50 border-orange-200',
+        dot: 'bg-orange-600',
+        bar: 'bg-orange-600',
+        glow: 'shadow-orange-500/10',
+    },
+    negotiation: {
+        label: 'Negotiation',
+        color: 'text-rose-700 bg-rose-50 border-rose-200',
+        dot: 'bg-rose-600',
+        bar: 'bg-rose-600',
+        glow: 'shadow-rose-500/10',
+    },
+    converted: {
+        label: 'Converted',
+        color: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        dot: 'bg-emerald-600',
+        bar: 'bg-emerald-600',
+        glow: 'shadow-emerald-500/10',
+    },
+    lost: {
+        label: 'Lost',
+        color: 'text-red-700 bg-red-50 border-red-200',
+        dot: 'bg-red-600',
+        bar: 'bg-red-600',
+        glow: 'shadow-red-500/10',
+    },
 };
 
-const PRIORITY_CONFIG: Record<string, { label: string; color: string; dot: string }> = {
-    high:   { label: 'High',   color: 'text-rose-700 bg-rose-50', dot: 'bg-rose-600' },
-    medium: { label: 'Medium', color: 'text-amber-700 bg-amber-50', dot: 'bg-amber-600' },
-    low:    { label: 'Low',    color: 'text-slate-600 bg-slate-100', dot: 'bg-slate-500' },
+const PRIORITY_CONFIG: Record<
+    string,
+    { label: string; color: string; dot: string }
+> = {
+    high: {
+        label: 'High',
+        color: 'text-rose-700 bg-rose-50',
+        dot: 'bg-rose-600',
+    },
+    medium: {
+        label: 'Medium',
+        color: 'text-amber-700 bg-amber-50',
+        dot: 'bg-amber-600',
+    },
+    low: {
+        label: 'Low',
+        color: 'text-slate-600 bg-slate-100',
+        dot: 'bg-slate-500',
+    },
 };
 
 function StageBadge({ stage }: { stage: string }) {
     const cfg = STAGE_CONFIG[stage];
     if (!cfg) return null;
     return (
-        <span className={cn('inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize', cfg.color)}>
+        <span
+            className={cn(
+                'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize',
+                cfg.color,
+            )}
+        >
             <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
             {cfg.label}
         </span>
@@ -113,22 +178,34 @@ function formatDate(date: string): string {
 }
 
 function formatFullDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return new Date(date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
 }
 
-function EmptyState({ view, onCreate }: { view: string; onCreate: () => void }) {
+function EmptyState({
+    view,
+    onCreate,
+}: {
+    view: string;
+    onCreate: () => void;
+}) {
     return (
         <div className="flex h-full flex-col items-center justify-center p-12">
             <div className="relative mb-6">
                 <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 ring-1 ring-[#e2e6ef]">
                     <Target className="h-8 w-8 text-[#6b7280]" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#2B4C8C] ring-2 ring-white">
+                <div className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#2B4C8C] ring-2 ring-white">
                     <Zap className="h-3 w-3 text-white" />
                 </div>
             </div>
-            <h3 className="mb-1 text-base font-medium text-[#1a1a2e]">No leads {view === 'kanban' ? 'in this view' : 'found'}</h3>
-            <p className="mb-6 text-center text-xs text-[#6b7280] max-w-[240px]">
+            <h3 className="mb-1 text-base font-medium text-[#1a1a2e]">
+                No leads {view === 'kanban' ? 'in this view' : 'found'}
+            </h3>
+            <p className="mb-6 max-w-[240px] text-center text-xs text-[#6b7280]">
                 {view === 'kanban'
                     ? 'Try changing your filter criteria or create a new lead to get started.'
                     : 'No leads match your current filters. Try adjusting your search or filter criteria.'}
@@ -145,9 +222,24 @@ function EmptyState({ view, onCreate }: { view: string; onCreate: () => void }) 
     );
 }
 
-function StatsRow({ kanban_groups }: { kanban_groups: Record<string, Lead[]> }) {
-    const stageOrder = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'converted', 'lost'];
-    const total = stageOrder.reduce((sum, s) => sum + (kanban_groups[s]?.length ?? 0), 0);
+function StatsRow({
+    kanban_groups,
+}: {
+    kanban_groups: Record<string, Lead[]>;
+}) {
+    const stageOrder = [
+        'new',
+        'contacted',
+        'qualified',
+        'proposal',
+        'negotiation',
+        'converted',
+        'lost',
+    ];
+    const total = stageOrder.reduce(
+        (sum, s) => sum + (kanban_groups[s]?.length ?? 0),
+        0,
+    );
     const newCount = kanban_groups['new']?.length ?? 0;
     const convertedCount = kanban_groups['converted']?.length ?? 0;
 
@@ -167,15 +259,25 @@ function StatsRow({ kanban_groups }: { kanban_groups: Record<string, Lead[]> }) 
                     >
                         <div className="relative z-10">
                             <div className="flex items-center gap-1.5">
-                                <span className={cn('h-1.5 w-1.5 rounded-full', cfg?.dot)} />
-                                <span className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">
+                                <span
+                                    className={cn(
+                                        'h-1.5 w-1.5 rounded-full',
+                                        cfg?.dot,
+                                    )}
+                                />
+                                <span className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
                                     {cfg?.label ?? stage}
                                 </span>
                             </div>
-                            <p className="mt-1.5 text-xl font-semibold text-[#1a1a2e]">{count}</p>
+                            <p className="mt-1.5 text-xl font-semibold text-[#1a1a2e]">
+                                {count}
+                            </p>
                             <div className="mt-2 h-1 overflow-hidden rounded-full bg-[#e2e6ef]">
                                 <div
-                                    className={cn('h-full rounded-full transition-all duration-500', cfg?.bar)}
+                                    className={cn(
+                                        'h-full rounded-full transition-all duration-500',
+                                        cfg?.bar,
+                                    )}
                                     style={{ width: `${pct}%` }}
                                 />
                             </div>
@@ -198,16 +300,26 @@ function ActiveFilters({
 }) {
     const chips: { label: string; key: string; value?: string }[] = [];
 
-    if (filters.search) chips.push({ label: `"${filters.search}"`, key: 'search' });
+    if (filters.search)
+        chips.push({ label: `"${filters.search}"`, key: 'search' });
     if (filters.stage) {
         const s = stages.find((st) => st === filters.stage);
-        if (s) chips.push({ label: `Stage: ${s.replace(/_/g, ' ')}`, key: 'stage' });
+        if (s)
+            chips.push({
+                label: `Stage: ${s.replace(/_/g, ' ')}`,
+                key: 'stage',
+            });
     }
     if (filters.source) {
         const s = sources.find((src) => src === filters.source);
-        if (s) chips.push({ label: `Source: ${s.replace(/_/g, ' ')}`, key: 'source' });
+        if (s)
+            chips.push({
+                label: `Source: ${s.replace(/_/g, ' ')}`,
+                key: 'source',
+            });
     }
-    if (filters.priority) chips.push({ label: `Priority: ${filters.priority}`, key: 'priority' });
+    if (filters.priority)
+        chips.push({ label: `Priority: ${filters.priority}`, key: 'priority' });
 
     if (chips.length === 0) return null;
 
@@ -223,7 +335,9 @@ function ActiveFilters({
 
     return (
         <div className="flex flex-wrap items-center gap-1.5 px-6 pb-2">
-            <span className="mr-0.5 text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Filters:</span>
+            <span className="mr-0.5 text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                Filters:
+            </span>
             {chips.map((chip) => (
                 <button
                     key={chip.key}
@@ -244,27 +358,55 @@ function ActiveFilters({
     );
 }
 
-function SortIcon({ field, currentSort, currentDir }: { field: string; currentSort?: string; currentDir?: string }) {
-    if (currentSort !== field) return <ArrowUpDown className="ml-1 h-3 w-3 opacity-30" />;
-    if (currentDir === 'asc') return <ArrowUp className="ml-1 h-3 w-3 text-[#2b4c8c]" />;
+function SortIcon({
+    field,
+    currentSort,
+    currentDir,
+}: {
+    field: string;
+    currentSort?: string;
+    currentDir?: string;
+}) {
+    if (currentSort !== field)
+        return <ArrowUpDown className="ml-1 h-3 w-3 opacity-30" />;
+    if (currentDir === 'asc')
+        return <ArrowUp className="ml-1 h-3 w-3 text-[#2b4c8c]" />;
     return <ArrowDown className="ml-1 h-3 w-3 text-[#2b4c8c]" />;
 }
 
-export default function LeadsIndex({ leads, kanban_groups, stages, sources, filters }: LeadsPageProps) {
+export default function LeadsIndex({
+    leads,
+    kanban_groups,
+    stages,
+    sources,
+    filters,
+}: LeadsPageProps) {
     const [view, setView] = useState<'kanban' | 'list'>('kanban');
     const [search, setSearch] = useState(filters.search ?? '');
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
     const [selectAll, setSelectAll] = useState(false);
     const searchTimer = useRef<ReturnType<typeof setTimeout>>();
 
-    const stageOrder = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'converted', 'lost'];
+    const stageOrder = [
+        'new',
+        'contacted',
+        'qualified',
+        'proposal',
+        'negotiation',
+        'converted',
+        'lost',
+    ];
 
-    const totalLeads = stageOrder.reduce((sum, s) => sum + (kanban_groups[s]?.length ?? 0), 0);
-    const newToday = kanban_groups['new']?.filter((l) => {
-        const d = new Date(l.created_at);
-        const now = new Date();
-        return d.toDateString() === now.toDateString();
-    }).length ?? 0;
+    const totalLeads = stageOrder.reduce(
+        (sum, s) => sum + (kanban_groups[s]?.length ?? 0),
+        0,
+    );
+    const newToday =
+        kanban_groups['new']?.filter((l) => {
+            const d = new Date(l.created_at);
+            const now = new Date();
+            return d.toDateString() === now.toDateString();
+        }).length ?? 0;
 
     const allLeadIds = useMemo(() => leads.data.map((l) => l.id), [leads.data]);
 
@@ -290,7 +432,10 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
 
     const handleSort = useCallback(
         (field: string) => {
-            const dir = filters.sort === field && filters.dir === 'asc' ? 'desc' : 'asc';
+            const dir =
+                filters.sort === field && filters.dir === 'asc'
+                    ? 'desc'
+                    : 'asc';
             navigate({ sort: field, dir, search: filters.search ?? '' });
         },
         [navigate, filters],
@@ -313,7 +458,9 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
     }, [allLeadIds]);
 
     useEffect(() => {
-        setSelectAll(selectedIds.size === allLeadIds.length && allLeadIds.length > 0);
+        setSelectAll(
+            selectedIds.size === allLeadIds.length && allLeadIds.length > 0,
+        );
     }, [selectedIds, allLeadIds]);
 
     const clearSelection = useCallback(() => {
@@ -332,7 +479,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
         [selectedIds, clearSelection],
     );
 
-    const hasActiveFilters = filters.search || filters.stage || filters.source || filters.priority;
+    const hasActiveFilters =
+        filters.search || filters.stage || filters.source || filters.priority;
 
     return (
         <>
@@ -344,9 +492,11 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                     <div className="flex items-center justify-between px-6 py-4">
                         <div className="flex items-center gap-4">
                             <div>
-                                <h1 className="text-xl font-semibold text-[#1a1a2e] tracking-tight">
+                                <h1 className="text-xl font-semibold tracking-tight text-[#1a1a2e]">
                                     Leads
-                                    <span className="ml-2 text-sm font-normal text-[#6b7280]">· {totalLeads} total</span>
+                                    <span className="ml-2 text-sm font-normal text-[#6b7280]">
+                                        · {totalLeads} total
+                                    </span>
                                 </h1>
                                 <p className="flex items-center gap-1.5 text-[11px] text-[#6b7280]">
                                     {newToday > 0 && (
@@ -363,18 +513,20 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                         <div className="flex items-center gap-2">
                             {/* Search */}
                             <div className="relative">
-                                <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b7280]" />
+                                <Search className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-[#6b7280]" />
                                 <input
                                     type="text"
                                     value={search}
-                                    onChange={(e) => handleSearch(e.target.value)}
+                                    onChange={(e) =>
+                                        handleSearch(e.target.value)
+                                    }
                                     placeholder="Search leads..."
-                                    className="h-8 w-[220px] rounded-lg border border-[#e2e6ef] bg-white pl-8 pr-8 text-xs text-[#1a1a2e] placeholder-[#6b7280] outline-none transition-all focus:w-[280px] focus:border-[#2b4c8c] focus:ring-1 focus:ring-[#2b4c8c]/20"
+                                    className="h-8 w-[220px] rounded-lg border border-[#e2e6ef] bg-white pr-8 pl-8 text-xs text-[#1a1a2e] placeholder-[#6b7280] transition-all outline-none focus:w-[280px] focus:border-[#2b4c8c] focus:ring-1 focus:ring-[#2b4c8c]/20"
                                 />
                                 {search && (
                                     <button
                                         onClick={() => handleSearch('')}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6b7280] hover:text-[#374151]"
+                                        className="absolute top-1/2 right-2 -translate-y-1/2 text-[#6b7280] hover:text-[#374151]"
                                     >
                                         <X className="h-3 w-3" />
                                     </button>
@@ -414,7 +566,10 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                             <div className="h-5 w-px bg-[#e2e6ef]" />
 
                             <Link href="/crm/leads/create">
-                                <Button size="sm" className="gap-1.5 bg-[#2B4C8C] text-white hover:bg-[#2B4C8C]/90">
+                                <Button
+                                    size="sm"
+                                    className="gap-1.5 bg-[#2B4C8C] text-white hover:bg-[#2B4C8C]/90"
+                                >
                                     <Plus className="h-3.5 w-3.5" />
                                     New Lead
                                 </Button>
@@ -441,7 +596,7 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                 align="start"
                                 className="w-44 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]"
                             >
-                                <DropdownMenuLabel className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">
+                                <DropdownMenuLabel className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
                                     Filter by stage
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator className="bg-[#e2e6ef]" />
@@ -456,7 +611,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                 navigate({
                                                     ...filters,
                                                     stage: active ? '' : s,
-                                                    search: filters.search ?? '',
+                                                    search:
+                                                        filters.search ?? '',
                                                 })
                                             }
                                             className={cn(
@@ -465,11 +621,22 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                             )}
                                         >
                                             <div className="flex items-center gap-2">
-                                                {active && <Check className="h-3 w-3 text-[#2b4c8c]" />}
-                                                <span className={cn('h-1.5 w-1.5 rounded-full', cfg?.dot)} />
-                                                <span className="capitalize">{cfg?.label ?? s}</span>
+                                                {active && (
+                                                    <Check className="h-3 w-3 text-[#2b4c8c]" />
+                                                )}
+                                                <span
+                                                    className={cn(
+                                                        'h-1.5 w-1.5 rounded-full',
+                                                        cfg?.dot,
+                                                    )}
+                                                />
+                                                <span className="capitalize">
+                                                    {cfg?.label ?? s}
+                                                </span>
                                             </div>
-                                            <span className="text-[10px] text-[#6b7280]">{count}</span>
+                                            <span className="text-[10px] text-[#6b7280]">
+                                                {count}
+                                            </span>
                                         </DropdownMenuItem>
                                     );
                                 })}
@@ -478,7 +645,13 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                         <DropdownMenuSeparator className="bg-[#e2e6ef]" />
                                         <DropdownMenuItem
                                             onClick={() =>
-                                                navigate({ search: filters.search ?? '', stage: '', source: filters.source ?? '' })
+                                                navigate({
+                                                    search:
+                                                        filters.search ?? '',
+                                                    stage: '',
+                                                    source:
+                                                        filters.source ?? '',
+                                                })
                                             }
                                             className="cursor-pointer justify-center text-[#6b7280] focus:bg-[#eef1f8]"
                                         >
@@ -501,7 +674,7 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                 align="start"
                                 className="w-44 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]"
                             >
-                                <DropdownMenuLabel className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">
+                                <DropdownMenuLabel className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
                                     Filter by source
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator className="bg-[#e2e6ef]" />
@@ -514,7 +687,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                 navigate({
                                                     ...filters,
                                                     source: active ? '' : s,
-                                                    search: filters.search ?? '',
+                                                    search:
+                                                        filters.search ?? '',
                                                 })
                                             }
                                             className={cn(
@@ -522,8 +696,16 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                 active && 'bg-[#e2e6ef]',
                                             )}
                                         >
-                                            {active && <Check className="h-3 w-3 text-[#2b4c8c]" />}
-                                            <span className={cn(active ? 'ml-0' : 'ml-5')}>{s.replace(/_/g, ' ')}</span>
+                                            {active && (
+                                                <Check className="h-3 w-3 text-[#2b4c8c]" />
+                                            )}
+                                            <span
+                                                className={cn(
+                                                    active ? 'ml-0' : 'ml-5',
+                                                )}
+                                            >
+                                                {s.replace(/_/g, ' ')}
+                                            </span>
                                         </DropdownMenuItem>
                                     );
                                 })}
@@ -542,39 +724,62 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                 align="start"
                                 className="w-44 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]"
                             >
-                                <DropdownMenuLabel className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">
+                                <DropdownMenuLabel className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
                                     Filter by priority
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator className="bg-[#e2e6ef]" />
-                                {Object.entries(PRIORITY_CONFIG).map(([key, cfg]) => {
-                                    const active = filters.priority === key;
-                                    return (
-                                        <DropdownMenuItem
-                                            key={key}
-                                            onClick={() =>
-                                                navigate({
-                                                    ...filters,
-                                                    priority: active ? '' : key,
-                                                    search: filters.search ?? '',
-                                                })
-                                            }
-                                            className={cn(
-                                                'flex cursor-pointer items-center gap-2 capitalize focus:bg-[#eef1f8]',
-                                                active && 'bg-[#e2e6ef]',
-                                            )}
-                                        >
-                                            {active && <Check className="h-3 w-3 text-[#2b4c8c]" />}
-                                            <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
-                                            <span className={cn(active ? 'ml-0' : 'ml-5')}>{cfg.label}</span>
-                                        </DropdownMenuItem>
-                                    );
-                                })}
+                                {Object.entries(PRIORITY_CONFIG).map(
+                                    ([key, cfg]) => {
+                                        const active = filters.priority === key;
+                                        return (
+                                            <DropdownMenuItem
+                                                key={key}
+                                                onClick={() =>
+                                                    navigate({
+                                                        ...filters,
+                                                        priority: active
+                                                            ? ''
+                                                            : key,
+                                                        search:
+                                                            filters.search ??
+                                                            '',
+                                                    })
+                                                }
+                                                className={cn(
+                                                    'flex cursor-pointer items-center gap-2 capitalize focus:bg-[#eef1f8]',
+                                                    active && 'bg-[#e2e6ef]',
+                                                )}
+                                            >
+                                                {active && (
+                                                    <Check className="h-3 w-3 text-[#2b4c8c]" />
+                                                )}
+                                                <span
+                                                    className={cn(
+                                                        'h-1.5 w-1.5 rounded-full',
+                                                        cfg.dot,
+                                                    )}
+                                                />
+                                                <span
+                                                    className={cn(
+                                                        active
+                                                            ? 'ml-0'
+                                                            : 'ml-5',
+                                                    )}
+                                                >
+                                                    {cfg.label}
+                                                </span>
+                                            </DropdownMenuItem>
+                                        );
+                                    },
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
 
                         {hasActiveFilters && (
                             <button
-                                onClick={() => (window.location.href = '/crm/leads')}
+                                onClick={() =>
+                                    (window.location.href = '/crm/leads')
+                                }
                                 className="ml-auto inline-flex items-center gap-1 text-[11px] text-[#6b7280] hover:text-[#374151]"
                             >
                                 <RefreshCw className="h-3 w-3" />
@@ -584,7 +789,11 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                     </div>
 
                     {/* Active filter chips */}
-                    <ActiveFilters filters={filters} stages={stages} sources={sources} />
+                    <ActiveFilters
+                        filters={filters}
+                        stages={stages}
+                        sources={sources}
+                    />
                 </div>
 
                 {/* Stats row */}
@@ -597,12 +806,19 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                         <div className="absolute bottom-4 left-1/2 z-30 -translate-x-1/2 animate-in fade-in slide-in-from-bottom-4">
                             <div className="flex items-center gap-3 rounded-xl border border-[#e2e6ef] bg-[#f0f2f7]/95 px-4 py-2.5 shadow-2xl shadow-black/5 backdrop-blur-xl">
                                 <span className="text-xs font-medium text-[#1a1a2e]">
-                                    <span className="text-[#2b4c8c]">{selectedIds.size}</span> selected
+                                    <span className="text-[#2b4c8c]">
+                                        {selectedIds.size}
+                                    </span>{' '}
+                                    selected
                                 </span>
                                 <div className="h-4 w-px bg-[#e2e6ef]" />
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="sm" className="h-7 text-[11px] text-[#6b7280]">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-[11px] text-[#6b7280]"
+                                        >
                                             Change Stage
                                             <ChevronDown className="ml-1 h-3 w-3" />
                                         </Button>
@@ -619,7 +835,11 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                         ))}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                <Button variant="ghost" size="sm" className="h-7 text-[11px] text-[#1a1a2e]">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 text-[11px] text-[#1a1a2e]"
+                                >
                                     Assign
                                     <User className="ml-1 h-3 w-3" />
                                 </Button>
@@ -651,7 +871,10 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                 const columnLeads = kanban_groups[stage] ?? [];
                                 const cfg = STAGE_CONFIG[stage];
                                 return (
-                                    <div key={stage} className="flex w-64 shrink-0 flex-col">
+                                    <div
+                                        key={stage}
+                                        className="flex w-64 shrink-0 flex-col"
+                                    >
                                         {/* Column header */}
                                         <div
                                             className={cn(
@@ -661,15 +884,25 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={cn('h-2 w-2 rounded-full', cfg?.dot)} />
-                                                    <h3 className="text-[11px] font-semibold uppercase tracking-wider text-[#1a1a2e]">
-                                                        {cfg?.label ?? stage.replace(/_/g, ' ')}
+                                                    <span
+                                                        className={cn(
+                                                            'h-2 w-2 rounded-full',
+                                                            cfg?.dot,
+                                                        )}
+                                                    />
+                                                    <h3 className="text-[11px] font-semibold tracking-wider text-[#1a1a2e] uppercase">
+                                                        {cfg?.label ??
+                                                            stage.replace(
+                                                                /_/g,
+                                                                ' ',
+                                                            )}
                                                     </h3>
                                                 </div>
                                                 <span
                                                     className={cn(
                                                         'flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium',
-                                                        cfg?.color ?? 'text-gray-400 bg-gray-500/10',
+                                                        cfg?.color ??
+                                                            'bg-gray-500/10 text-gray-400',
                                                     )}
                                                 >
                                                     {columnLeads.length}
@@ -689,7 +922,7 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                         {/* Stage color accent line */}
                                                         <div
                                                             className={cn(
-                                                                'absolute left-0 top-0 h-full w-0.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100',
+                                                                'absolute top-0 left-0 h-full w-0.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100',
                                                                 cfg?.bar,
                                                             )}
                                                         />
@@ -697,27 +930,41 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                         <div className="flex items-start justify-between">
                                                             <div className="flex items-center gap-2.5">
                                                                 <Avatar className="h-7 w-7 rounded-lg">
-                                                                    <AvatarFallback className="bg-[#e2e6ef] text-[10px] font-medium text-[#6b7280] rounded-lg">
-                                                                        {lead.name.charAt(0).toUpperCase()}
+                                                                    <AvatarFallback className="rounded-lg bg-[#e2e6ef] text-[10px] font-medium text-[#6b7280]">
+                                                                        {lead.name
+                                                                            .charAt(
+                                                                                0,
+                                                                            )
+                                                                            .toUpperCase()}
                                                                     </AvatarFallback>
                                                                 </Avatar>
                                                                 <div>
-                                                                    <h4 className="text-[13px] font-medium text-[#1a1a2e] leading-tight">
-                                                                        {lead.name}
+                                                                    <h4 className="text-[13px] leading-tight font-medium text-[#1a1a2e]">
+                                                                        {
+                                                                            lead.name
+                                                                        }
                                                                     </h4>
                                                                     {lead.company && (
                                                                         <p className="text-[10px] text-[#6b7280]">
-                                                                            {lead.company}
+                                                                            {
+                                                                                lead.company
+                                                                            }
                                                                         </p>
                                                                     )}
                                                                 </div>
                                                             </div>
 
                                                             <DropdownMenu>
-                                                                <DropdownMenuTrigger asChild>
+                                                                <DropdownMenuTrigger
+                                                                    asChild
+                                                                >
                                                                     <button
-                                                                        onClick={(e) => e.preventDefault()}
-                                                                        className="flex h-6 w-6 items-center justify-center rounded-md text-[#6b7280] opacity-0 transition-all hover:bg-[#eef1f8] hover:text-[#374151] group-hover:opacity-100"
+                                                                        onClick={(
+                                                                            e,
+                                                                        ) =>
+                                                                            e.preventDefault()
+                                                                        }
+                                                                        className="flex h-6 w-6 items-center justify-center rounded-md text-[#6b7280] opacity-0 transition-all group-hover:opacity-100 hover:bg-[#eef1f8] hover:text-[#374151]"
                                                                     >
                                                                         <MoreHorizontal className="h-3 w-3" />
                                                                     </button>
@@ -726,38 +973,58 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                     align="end"
                                                                     className="w-32 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]"
                                                                 >
-                                                                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#eef1f8]">
-                                                                        <Link href={`/crm/leads/${lead.id}`}>
+                                                                    <DropdownMenuItem
+                                                                        asChild
+                                                                        className="cursor-pointer focus:bg-[#eef1f8]"
+                                                                    >
+                                                                        <Link
+                                                                            href={`/crm/leads/${lead.id}`}
+                                                                        >
                                                                             <Eye className="mr-2 h-3 w-3" />
                                                                             View
                                                                         </Link>
                                                                     </DropdownMenuItem>
-                                                                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#eef1f8]">
-                                                                        <Link href={`/crm/leads/${lead.id}/edit`}>
+                                                                    <DropdownMenuItem
+                                                                        asChild
+                                                                        className="cursor-pointer focus:bg-[#eef1f8]"
+                                                                    >
+                                                                        <Link
+                                                                            href={`/crm/leads/${lead.id}/edit`}
+                                                                        >
                                                                             <Edit className="mr-2 h-3 w-3" />
                                                                             Edit
                                                                         </Link>
                                                                     </DropdownMenuItem>
                                                                     <DropdownMenuSeparator className="bg-[#e2e6ef]" />
-<DropdownMenuItem className="cursor-pointer text-rose-600 focus:bg-[#eef1f8]">
-                                        <Trash2 className="mr-2 h-3 w-3" />
-                                        Delete
-                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem className="cursor-pointer text-rose-600 focus:bg-[#eef1f8]">
+                                                                        <Trash2 className="mr-2 h-3 w-3" />
+                                                                        Delete
+                                                                    </DropdownMenuItem>
                                                                 </DropdownMenuContent>
                                                             </DropdownMenu>
                                                         </div>
 
                                                         <div className="mt-2.5 flex items-center gap-2 text-[10px] text-[#6b7280]">
                                                             <Mail className="h-3 w-3" />
-                                                            <span className="truncate">{lead.email}</span>
+                                                            <span className="truncate">
+                                                                {lead.email}
+                                                            </span>
                                                         </div>
 
                                                         <div className="mt-2 flex items-center justify-between border-t border-[#e2e6ef]/50 pt-2">
                                                             <div className="flex items-center gap-2 text-[10px] text-[#6b7280]">
                                                                 <Calendar className="h-3 w-3" />
-                                                                <span>{formatDate(lead.created_at)}</span>
+                                                                <span>
+                                                                    {formatDate(
+                                                                        lead.created_at,
+                                                                    )}
+                                                                </span>
                                                             </div>
-                                                            <StageBadge stage={lead.stage} />
+                                                            <StageBadge
+                                                                stage={
+                                                                    lead.stage
+                                                                }
+                                                            />
                                                         </div>
                                                     </Link>
                                                 ))
@@ -766,7 +1033,9 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                     <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-[#e2e6ef]">
                                                         <Target className="h-3.5 w-3.5 text-[#6b7280]" />
                                                     </div>
-                                                    <p className="text-[11px] text-[#6b7280]">No leads</p>
+                                                    <p className="text-[11px] text-[#6b7280]">
+                                                        No leads
+                                                    </p>
                                                 </div>
                                             )}
                                         </div>
@@ -793,37 +1062,69 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                             : 'border-[#e2e6ef] hover:border-[#c8cce0]',
                                                     )}
                                                 >
-                                                    {selectAll && <Check className="h-3 w-3" />}
+                                                    {selectAll && (
+                                                        <Check className="h-3 w-3" />
+                                                    )}
                                                 </button>
                                             </th>
                                             <th className="px-4 py-3">
                                                 <button
-                                                    onClick={() => handleSort('name')}
+                                                    onClick={() =>
+                                                        handleSort('name')
+                                                    }
                                                     className="inline-flex items-center font-medium hover:text-[#374151]"
                                                 >
                                                     Name
-                                                    <SortIcon field="name" currentSort={filters.sort} currentDir={filters.dir} />
+                                                    <SortIcon
+                                                        field="name"
+                                                        currentSort={
+                                                            filters.sort
+                                                        }
+                                                        currentDir={filters.dir}
+                                                    />
                                                 </button>
                                             </th>
-                                            <th className="px-4 py-3 font-medium">Contact</th>
+                                            <th className="px-4 py-3 font-medium">
+                                                Contact
+                                            </th>
                                             <th className="px-4 py-3">
                                                 <button
-                                                    onClick={() => handleSort('stage')}
+                                                    onClick={() =>
+                                                        handleSort('stage')
+                                                    }
                                                     className="inline-flex items-center font-medium hover:text-[#374151]"
                                                 >
                                                     Stage
-                                                    <SortIcon field="stage" currentSort={filters.sort} currentDir={filters.dir} />
+                                                    <SortIcon
+                                                        field="stage"
+                                                        currentSort={
+                                                            filters.sort
+                                                        }
+                                                        currentDir={filters.dir}
+                                                    />
                                                 </button>
                                             </th>
-                                            <th className="px-4 py-3 font-medium">Priority</th>
-                                            <th className="px-4 py-3 font-medium">Source</th>
+                                            <th className="px-4 py-3 font-medium">
+                                                Priority
+                                            </th>
+                                            <th className="px-4 py-3 font-medium">
+                                                Source
+                                            </th>
                                             <th className="px-4 py-3">
                                                 <button
-                                                    onClick={() => handleSort('created_at')}
+                                                    onClick={() =>
+                                                        handleSort('created_at')
+                                                    }
                                                     className="inline-flex items-center font-medium hover:text-[#374151]"
                                                 >
                                                     Created
-                                                    <SortIcon field="created_at" currentSort={filters.sort} currentDir={filters.dir} />
+                                                    <SortIcon
+                                                        field="created_at"
+                                                        currentSort={
+                                                            filters.sort
+                                                        }
+                                                        currentDir={filters.dir}
+                                                    />
                                                 </button>
                                             </th>
                                             <th className="w-12 px-4 py-3"></th>
@@ -832,7 +1133,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                     <tbody>
                                         {leads.data.length > 0 ? (
                                             leads.data.map((lead) => {
-                                                const isSelected = selectedIds.has(lead.id);
+                                                const isSelected =
+                                                    selectedIds.has(lead.id);
                                                 return (
                                                     <tr
                                                         key={lead.id}
@@ -845,7 +1147,11 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                     >
                                                         <td className="px-4 py-3">
                                                             <button
-                                                                onClick={() => toggleSelect(lead.id)}
+                                                                onClick={() =>
+                                                                    toggleSelect(
+                                                                        lead.id,
+                                                                    )
+                                                                }
                                                                 className={cn(
                                                                     'flex h-4 w-4 items-center justify-center rounded border transition-all',
                                                                     isSelected
@@ -853,7 +1159,9 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                         : 'border-[#e2e6ef] hover:border-[#c8cce0]',
                                                                 )}
                                                             >
-                                                                {isSelected && <Check className="h-3 w-3" />}
+                                                                {isSelected && (
+                                                                    <Check className="h-3 w-3" />
+                                                                )}
                                                             </button>
                                                         </td>
                                                         <td className="px-4 py-3">
@@ -862,18 +1170,26 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                 className="flex items-center gap-3"
                                                             >
                                                                 <Avatar className="h-7 w-7 rounded-lg">
-                                                                    <AvatarFallback className="bg-[#e2e6ef] text-[10px] font-medium text-[#6b7280] rounded-lg">
-                                                                        {lead.name.charAt(0).toUpperCase()}
+                                                                    <AvatarFallback className="rounded-lg bg-[#e2e6ef] text-[10px] font-medium text-[#6b7280]">
+                                                                        {lead.name
+                                                                            .charAt(
+                                                                                0,
+                                                                            )
+                                                                            .toUpperCase()}
                                                                     </AvatarFallback>
                                                                 </Avatar>
                                                                 <div>
                                                                     <div className="font-medium text-[#1a1a2e]">
-                                                                        {lead.name}
+                                                                        {
+                                                                            lead.name
+                                                                        }
                                                                     </div>
                                                                     {lead.company && (
                                                                         <div className="flex items-center gap-1 text-[10px] text-[#6b7280]">
                                                                             <Building2 className="h-2.5 w-2.5" />
-                                                                            {lead.company}
+                                                                            {
+                                                                                lead.company
+                                                                            }
                                                                         </div>
                                                                     )}
                                                                 </div>
@@ -894,43 +1210,65 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                         className="flex items-center gap-1.5 text-[11px] text-[#6b7280] hover:text-[#374151]"
                                                                     >
                                                                         <Phone className="h-2.5 w-2.5" />
-                                                                        {lead.phone}
+                                                                        {
+                                                                            lead.phone
+                                                                        }
                                                                     </a>
                                                                 )}
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3">
-                                                            <StageBadge stage={lead.stage} />
+                                                            <StageBadge
+                                                                stage={
+                                                                    lead.stage
+                                                                }
+                                                            />
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <div className="flex items-center gap-2">
                                                                 <span
                                                                     className={cn(
                                                                         'h-1.5 w-1.5 rounded-full',
-                                                                        PRIORITY_CONFIG[lead.priority]?.dot ?? 'bg-slate-500',
+                                                                        PRIORITY_CONFIG[
+                                                                            lead
+                                                                                .priority
+                                                                        ]
+                                                                            ?.dot ??
+                                                                            'bg-slate-500',
                                                                     )}
                                                                 />
-                                                                <span className="text-[11px] capitalize text-[#6b7280]">
-                                                                    {PRIORITY_CONFIG[lead.priority]?.label ?? lead.priority}
+                                                                <span className="text-[11px] text-[#6b7280] capitalize">
+                                                                    {PRIORITY_CONFIG[
+                                                                        lead
+                                                                            .priority
+                                                                    ]?.label ??
+                                                                        lead.priority}
                                                                 </span>
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3">
-                                                            <span className="inline-flex items-center gap-1 text-[11px] capitalize text-[#6b7280]">
+                                                            <span className="inline-flex items-center gap-1 text-[11px] text-[#6b7280] capitalize">
                                                                 <Globe className="h-3 w-3" />
-                                                                {lead.source.replace(/_/g, ' ')}
+                                                                {lead.source.replace(
+                                                                    /_/g,
+                                                                    ' ',
+                                                                )}
                                                             </span>
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <span className="inline-flex items-center gap-1 text-[11px] text-[#6b7280]">
                                                                 <Clock className="h-3 w-3" />
-                                                                {formatFullDate(lead.created_at)}
+                                                                {formatFullDate(
+                                                                    lead.created_at,
+                                                                )}
                                                             </span>
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <DropdownMenu>
-                                                                <DropdownMenuTrigger asChild>
-                                                                    <button className="flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] opacity-0 transition-all hover:bg-[#eef1f8] hover:text-[#374151] group-hover:opacity-100 [tr:hover_&]:opacity-100">
+                                                                <DropdownMenuTrigger
+                                                                    asChild
+                                                                >
+                                                                    <button className="flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] opacity-0 transition-all group-hover:opacity-100 hover:bg-[#eef1f8] hover:text-[#374151] [tr:hover_&]:opacity-100">
                                                                         <MoreHorizontal className="h-3.5 w-3.5" />
                                                                     </button>
                                                                 </DropdownMenuTrigger>
@@ -938,14 +1276,24 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                     align="end"
                                                                     className="w-36 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]"
                                                                 >
-                                                                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#eef1f8]">
-                                                                        <Link href={`/crm/leads/${lead.id}`}>
+                                                                    <DropdownMenuItem
+                                                                        asChild
+                                                                        className="cursor-pointer focus:bg-[#eef1f8]"
+                                                                    >
+                                                                        <Link
+                                                                            href={`/crm/leads/${lead.id}`}
+                                                                        >
                                                                             <Eye className="mr-2 h-3 w-3" />
                                                                             View
                                                                         </Link>
                                                                     </DropdownMenuItem>
-                                                                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#eef1f8]">
-                                                                        <Link href={`/crm/leads/${lead.id}/edit`}>
+                                                                    <DropdownMenuItem
+                                                                        asChild
+                                                                        className="cursor-pointer focus:bg-[#eef1f8]"
+                                                                    >
+                                                                        <Link
+                                                                            href={`/crm/leads/${lead.id}/edit`}
+                                                                        >
                                                                             <Edit className="mr-2 h-3 w-3" />
                                                                             Edit
                                                                         </Link>
@@ -955,10 +1303,10 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                                                         Duplicate
                                                                     </DropdownMenuItem>
                                                                     <DropdownMenuSeparator className="bg-[#e2e6ef]" />
-<DropdownMenuItem className="cursor-pointer text-rose-600 focus:bg-[#eef1f8]">
-                                        <Trash2 className="mr-2 h-3 w-3" />
-                                        Delete
-                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem className="cursor-pointer text-rose-600 focus:bg-[#eef1f8]">
+                                                                        <Trash2 className="mr-2 h-3 w-3" />
+                                                                        Delete
+                                                                    </DropdownMenuItem>
                                                                 </DropdownMenuContent>
                                                             </DropdownMenu>
                                                         </td>
@@ -968,7 +1316,10 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                         ) : (
                                             <tr>
                                                 <td colSpan={8}>
-                                                    <EmptyState view="list" onCreate={() => {}} />
+                                                    <EmptyState
+                                                        view="list"
+                                                        onCreate={() => {}}
+                                                    />
                                                 </td>
                                             </tr>
                                         )}
@@ -980,7 +1331,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                             {leads.meta && leads.meta.total > 25 && (
                                 <div className="flex items-center justify-between border-t border-[#e2e6ef] px-6 py-3">
                                     <span className="text-[11px] text-[#6b7280]">
-                                        Showing {leads.meta.from ?? 1}–{leads.meta.to ?? leads.data.length} of{' '}
+                                        Showing {leads.meta.from ?? 1}–
+                                        {leads.meta.to ?? leads.data.length} of{' '}
                                         {leads.meta.total}
                                     </span>
                                     <div className="flex items-center gap-1">
@@ -991,7 +1343,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                             disabled={!leads.meta.prev_page_url}
                                             onClick={() => {
                                                 if (leads.meta.prev_page_url) {
-                                                    window.location.href = leads.meta.prev_page_url;
+                                                    window.location.href =
+                                                        leads.meta.prev_page_url;
                                                 }
                                             }}
                                         >
@@ -1004,7 +1357,8 @@ export default function LeadsIndex({ leads, kanban_groups, stages, sources, filt
                                             disabled={!leads.meta.next_page_url}
                                             onClick={() => {
                                                 if (leads.meta.next_page_url) {
-                                                    window.location.href = leads.meta.next_page_url;
+                                                    window.location.href =
+                                                        leads.meta.next_page_url;
                                                 }
                                             }}
                                         >

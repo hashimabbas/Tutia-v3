@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, AlertTriangle, ArrowRight, FileText, Calendar } from 'lucide-react';
+import {
+    CheckCircle2,
+    AlertTriangle,
+    ArrowRight,
+    FileText,
+    Calendar,
+} from 'lucide-react';
 
 const iconMap: Record<string, typeof CheckCircle2> = {
     milestone_completed: CheckCircle2,
@@ -48,8 +54,8 @@ export function PortalTimeline({ projectId }: PortalTimelineProps) {
 
     useEffect(() => {
         fetch(`/portal/api/timeline?project_id=${projectId}`)
-            .then(res => res.json())
-            .then(data => setEvents(data.data ?? data))
+            .then((res) => res.json())
+            .then((data) => setEvents(data.data ?? data))
             .catch(() => {})
             .finally(() => setLoading(false));
     }, [projectId]);
@@ -57,15 +63,22 @@ export function PortalTimeline({ projectId }: PortalTimelineProps) {
     if (loading) {
         return (
             <div className="space-y-3">
-                {[1, 2, 3].map(i => (
-                    <div key={i} className="h-12 animate-pulse rounded-lg bg-[#1a1a24]" />
+                {[1, 2, 3].map((i) => (
+                    <div
+                        key={i}
+                        className="h-12 animate-pulse rounded-lg bg-[#1a1a24]"
+                    />
                 ))}
             </div>
         );
     }
 
     if (events.length === 0) {
-        return <p className="py-4 text-center text-[11px] text-[#555570]">No recent activity</p>;
+        return (
+            <p className="py-4 text-center text-[11px] text-[#555570]">
+                No recent activity
+            </p>
+        );
     }
 
     return (
@@ -78,7 +91,7 @@ export function PortalTimeline({ projectId }: PortalTimelineProps) {
                 return (
                     <div key={event.id} className="relative flex gap-3 pb-4">
                         {!isLast && (
-                            <div className="absolute bottom-0 left-[11px] top-6 w-px bg-[#1e1e2a]" />
+                            <div className="absolute top-6 bottom-0 left-[11px] w-px bg-[#1e1e2a]" />
                         )}
                         <div
                             className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
@@ -87,14 +100,19 @@ export function PortalTimeline({ projectId }: PortalTimelineProps) {
                             <Icon className="h-3 w-3" style={{ color }} />
                         </div>
                         <div className="min-w-0 flex-1">
-                            <p className="text-[12px] text-[#e8e8ed]">{event.subject}</p>
+                            <p className="text-[12px] text-[#e8e8ed]">
+                                {event.subject}
+                            </p>
                             <p className="mt-0.5 text-[10px] text-[#555570]">
-                                {new Date(event.created_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                })}
+                                {new Date(event.created_at).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    },
+                                )}
                             </p>
                         </div>
                     </div>

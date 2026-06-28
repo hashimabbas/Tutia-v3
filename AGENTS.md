@@ -178,4 +178,37 @@ Use Wayfinder to generate TypeScript functions for Laravel routes. Import from `
 
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
+---
+
+## CRM-8 Automation Intelligence Platform
+
+**Status**: Phase 1 — Recommendation Lifecycle (In Progress)
+
+### Architecture Decision Record
+- CRM-8 is a **read-only consumer** of CRM-6/CRM-7 — no modifications to existing engines
+- **RecommendationTarget** (`target_type` + `target_id`) replaces `workflow_id` for polymorphism
+- **Snapshot is a typed DTO** (`RecommendationSnapshot`) not a JSON blob — queried by Phase 4+
+- **State Machine** (11 states, 13 valid transitions) — enables future automation
+- **RecommendationVersion** tracks changing priorities over time
+- **Score ≠ Impact** — Score is aggregate (per target), Impact is per-recommendation
+- **Lifecycle first, then Impact** — Phase 1 must precede Phase 2
+
+### Phase 1 — Recommendation Lifecycle
+- **Migration**: `crm_recommendation_lifecycle_events` table
+- **DTOs**: `LifecycleStatus` (enum), `RecommendationTarget`, `RecommendationSnapshot`, `RecommendationVersion`, `RecommendationLifecycleEvent`
+- **Services**: `RecommendationLifecycleService` (event tracking), `RecommendationLifecycleManager` (state machine transitions), `RecommendationSnapshotService`
+- **API**: `POST /crm/optimization/recommendations/track`, `GET /crm/optimization/recommendations`, `GET /crm/optimization/recommendations/{type}/status`, `GET /crm/optimization/recommendations/{event}/snapshot`
+- **Tests**: 35–45 (unit + feature)
+
+### Phase 2 (Next) — Impact Measurement
+### Phase 3 (Next) — Automation Score
+### Phase 4 (Next) — Optimization Center UI
+### Phase 5 (Next) — Continuous Improvement
+
+### Relevant Directories
+- `app/Services/Crm/Optimization/` — Core services + DTOs
+- `app/Http/Controllers/Crm/Optimization/` — API controllers
+- `routes/optimization.php` — Route registration
+- `resources/js/pages/crm/optimization/` — React components
+- `docs/crm-8-architecture.md` — Full architecture document
 </laravel-boost-guidelines>

@@ -1,9 +1,18 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import {
-    ArrowLeft, AlertTriangle, CheckCircle2, Calendar,
-    Clock, DollarSign, Users, FileText, Plus,
-    ChevronDown, TrendingUp, TrendingDown,
+    ArrowLeft,
+    AlertTriangle,
+    CheckCircle2,
+    Calendar,
+    Clock,
+    DollarSign,
+    Users,
+    FileText,
+    Plus,
+    ChevronDown,
+    TrendingUp,
+    TrendingDown,
     Milestone,
 } from 'lucide-react';
 import ProjectStatusBadge from '@/components/crm/project-status-badge';
@@ -115,15 +124,30 @@ interface Props {
 }
 
 function formatCurrency(val: number): string {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+    }).format(val);
 }
 
 function formatDate(date: string | null): string {
     if (!date) return '-';
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return new Date(date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
 }
 
-const statusActions = ['planned', 'initiating', 'active', 'at_risk', 'completed', 'archived'];
+const statusActions = [
+    'planned',
+    'initiating',
+    'active',
+    'at_risk',
+    'completed',
+    'archived',
+];
 const milestoneStatusConfig: Record<string, { color: string; bg: string }> = {
     pending: { color: '#6b7280', bg: 'rgba(107,114,128,0.12)' },
     in_progress: { color: '#2B4C8C', bg: 'rgba(43,76,140,0.12)' },
@@ -132,17 +156,35 @@ const milestoneStatusConfig: Record<string, { color: string; bg: string }> = {
 
 export default function ProjectShow({ project, health }: Props) {
     const handleStatusChange = (status: string) => {
-        router.patch(`/crm/projects/${project.id}`, { status }, { preserveScroll: true, preserveState: true });
+        router.patch(
+            `/crm/projects/${project.id}`,
+            { status },
+            { preserveScroll: true, preserveState: true },
+        );
     };
 
     const totalValue = project.contract_value + project.change_order_total;
-    const billedPct = totalValue > 0 ? Math.round((project.billed_amount / totalValue) * 100) : 0;
-    const collectedPct = project.billed_amount > 0 ? Math.round((project.collected_amount / project.billed_amount) * 100) : 0;
+    const billedPct =
+        totalValue > 0
+            ? Math.round((project.billed_amount / totalValue) * 100)
+            : 0;
+    const collectedPct =
+        project.billed_amount > 0
+            ? Math.round(
+                  (project.collected_amount / project.billed_amount) * 100,
+              )
+            : 0;
 
-    const activeRisks = project.risks.filter(r => r.status !== 'closed');
-    const activeIssues = project.issues.filter(i => i.status !== 'closed' && i.status !== 'resolved');
-    const completedMilestones = project.milestones.filter(m => m.status === 'completed');
-    const pendingCOs = project.changeOrders.filter(co => co.status === 'identified');
+    const activeRisks = (project.risks ?? []).filter((r) => r.status !== 'closed');
+    const activeIssues = (project.issues ?? []).filter(
+        (i) => i.status !== 'closed' && i.status !== 'resolved',
+    );
+    const completedMilestones = (project.milestones ?? []).filter(
+        (m) => m.status === 'completed',
+    );
+    const pendingCOs = (project.changeOrders ?? []).filter(
+        (co) => co.status === 'identified',
+    );
 
     return (
         <>
@@ -150,29 +192,43 @@ export default function ProjectShow({ project, health }: Props) {
 
             <div className="flex h-full flex-col">
                 {/* Top bar */}
-                <div className="flex items-center justify-between border-b border-[#e2e6ef] bg-white/90 backdrop-blur-xl px-6 py-2.5 z-10">
+                <div className="z-10 flex items-center justify-between border-b border-[#e2e6ef] bg-white/90 px-6 py-2.5 backdrop-blur-xl">
                     <div className="flex items-center gap-3">
-                        <Link href="/crm/projects" className="flex h-7 w-7 items-center justify-center rounded text-[#6b7280] transition-colors hover:bg-[#f8f9fc] hover:text-[#1a1a2e]">
+                        <Link
+                            href="/crm/projects"
+                            className="flex h-7 w-7 items-center justify-center rounded text-[#6b7280] transition-colors hover:bg-[#f8f9fc] hover:text-[#1a1a2e]"
+                        >
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                         <div className="flex items-center gap-2 text-xs">
-                            <Link href="/crm/projects" className="text-[#6b7280] hover:text-[#1a1a2e]">Projects</Link>
+                            <Link
+                                href="/crm/projects"
+                                className="text-[#6b7280] hover:text-[#1a1a2e]"
+                            >
+                                Projects
+                            </Link>
                             <span className="text-[#6b7280]">/</span>
-                            <span className="text-[#1a1a2e]">{project.name}</span>
+                            <span className="text-[#1a1a2e]">
+                                {project.name}
+                            </span>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <ProjectStatusBadge status={project.status} />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="flex h-7 items-center gap-1 rounded-md border border-[#e2e6ef] bg-white px-2.5 text-[11px] font-medium text-[#1a1a2e] transition-colors hover:border-[#c8ccd6] capitalize">
+                                <button className="flex h-7 items-center gap-1 rounded-md border border-[#e2e6ef] bg-white px-2.5 text-[11px] font-medium text-[#1a1a2e] capitalize transition-colors hover:border-[#c8ccd6]">
                                     Change Status
                                     <ChevronDown className="h-3 w-3 text-[#6b7280]" />
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-40 border-[#e2e6ef] bg-white text-xs text-[#1a1a2e]">
-                                {statusActions.map(s => (
-                                    <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="cursor-pointer focus:bg-[#f8f9fc] capitalize">
+                                {statusActions.map((s) => (
+                                    <DropdownMenuItem
+                                        key={s}
+                                        onClick={() => handleStatusChange(s)}
+                                        className="cursor-pointer capitalize focus:bg-[#f8f9fc]"
+                                    >
                                         {s.replace(/_/g, ' ')}
                                     </DropdownMenuItem>
                                 ))}
@@ -184,7 +240,7 @@ export default function ProjectShow({ project, health }: Props) {
                 {/* 3-panel layout */}
                 <div className="flex flex-1 overflow-hidden">
                     {/* LEFT panel: Health + Risks + Issues */}
-                    <div className="w-72 shrink-0 overflow-y-auto border-r border-[#e2e6ef] bg-[#f8f9fc] p-4 space-y-4">
+                    <div className="w-72 shrink-0 space-y-4 overflow-y-auto border-r border-[#e2e6ef] bg-[#f8f9fc] p-4">
                         {/* Health Score */}
                         {health && (
                             <HealthBreakdownPanel
@@ -196,41 +252,80 @@ export default function ProjectShow({ project, health }: Props) {
                         )}
 
                         {/* KPI Summary */}
-                        <div className="grid grid-cols-2 gap-px rounded-lg border border-[#e2e6ef] bg-[#e2e6ef] overflow-hidden">
+                        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[#e2e6ef] bg-[#e2e6ef]">
                             <div className="bg-white px-2.5 py-2 text-center">
-                                <div className="text-sm font-semibold text-[#1a1a2e]">{project.milestones.length}</div>
-                                <div className="text-[9px] text-[#6b7280]">Milestones</div>
+                                <div className="text-sm font-semibold text-[#1a1a2e]">
+                                    {(project.milestones ?? []).length}
+                                </div>
+                                <div className="text-[9px] text-[#6b7280]">
+                                    Milestones
+                                </div>
                             </div>
                             <div className="bg-white px-2.5 py-2 text-center">
-                                <div className="text-sm font-semibold text-[#1a1a2e]">{completedMilestones.length}</div>
-                                <div className="text-[9px] text-[#6b7280]">Done</div>
+                                <div className="text-sm font-semibold text-[#1a1a2e]">
+                                    {completedMilestones.length}
+                                </div>
+                                <div className="text-[9px] text-[#6b7280]">
+                                    Done
+                                </div>
                             </div>
                             <div className="bg-white px-2.5 py-2 text-center">
-                                <div className="text-sm font-semibold text-[#ef4444]">{activeRisks.length}</div>
-                                <div className="text-[9px] text-[#6b7280]">Open Risks</div>
+                                <div className="text-sm font-semibold text-[#ef4444]">
+                                    {activeRisks.length}
+                                </div>
+                                <div className="text-[9px] text-[#6b7280]">
+                                    Open Risks
+                                </div>
                             </div>
                             <div className="bg-white px-2.5 py-2 text-center">
-                                <div className="text-sm font-semibold text-[#f59e0b]">{activeIssues.length}</div>
-                                <div className="text-[9px] text-[#6b7280]">Open Issues</div>
+                                <div className="text-sm font-semibold text-[#f59e0b]">
+                                    {activeIssues.length}
+                                </div>
+                                <div className="text-[9px] text-[#6b7280]">
+                                    Open Issues
+                                </div>
                             </div>
                         </div>
 
                         {/* Active Risks */}
                         <section>
                             <div className="mb-2 flex items-center justify-between">
-                                <h2 className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Risks ({activeRisks.length})</h2>
-                                <Link href={`/crm/projects/${project.id}/risks`} className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]">View all</Link>
+                                <h2 className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                                    Risks ({activeRisks.length})
+                                </h2>
+                                <Link
+                                    href={`/crm/projects/${project.id}/risks`}
+                                    className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]"
+                                >
+                                    View all
+                                </Link>
                             </div>
                             <div className="space-y-1.5">
                                 {activeRisks.length === 0 ? (
-                                    <p className="text-[10px] text-[#6b7280]">No active risks</p>
+                                    <p className="text-[10px] text-[#6b7280]">
+                                        No active risks
+                                    </p>
                                 ) : (
-                                    activeRisks.slice(0, 5).map(r => (
-                                        <RiskIssueCard key={r.id} id={r.id} description={r.description} severity={r.severity} status={r.status} owner={r.owner} projectId={project.id} type="risk" />
-                                    ))
+                                    activeRisks
+                                        .slice(0, 5)
+                                        .map((r) => (
+                                            <RiskIssueCard
+                                                key={r.id}
+                                                id={r.id}
+                                                description={r.description}
+                                                severity={r.severity}
+                                                status={r.status}
+                                                owner={r.owner}
+                                                projectId={project.id}
+                                                type="risk"
+                                            />
+                                        ))
                                 )}
                                 {activeRisks.length > 5 && (
-                                    <Link href={`/crm/projects/${project.id}/risks`} className="block text-center text-[9px] text-[#6b7280] hover:text-[#1a1a2e]">
+                                    <Link
+                                        href={`/crm/projects/${project.id}/risks`}
+                                        className="block text-center text-[9px] text-[#6b7280] hover:text-[#1a1a2e]"
+                                    >
                                         +{activeRisks.length - 5} more
                                     </Link>
                                 )}
@@ -240,19 +335,42 @@ export default function ProjectShow({ project, health }: Props) {
                         {/* Active Issues */}
                         <section>
                             <div className="mb-2 flex items-center justify-between">
-                                <h2 className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Issues ({activeIssues.length})</h2>
-                                <Link href={`/crm/projects/${project.id}/issues`} className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]">View all</Link>
+                                <h2 className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                                    Issues ({activeIssues.length})
+                                </h2>
+                                <Link
+                                    href={`/crm/projects/${project.id}/issues`}
+                                    className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]"
+                                >
+                                    View all
+                                </Link>
                             </div>
                             <div className="space-y-1.5">
                                 {activeIssues.length === 0 ? (
-                                    <p className="text-[10px] text-[#6b7280]">No open issues</p>
+                                    <p className="text-[10px] text-[#6b7280]">
+                                        No open issues
+                                    </p>
                                 ) : (
-                                    activeIssues.slice(0, 5).map(i => (
-                                        <RiskIssueCard key={i.id} id={i.id} description={i.description} severity={i.severity} status={i.status} owner={i.owner} projectId={project.id} type="issue" />
-                                    ))
+                                    activeIssues
+                                        .slice(0, 5)
+                                        .map((i) => (
+                                            <RiskIssueCard
+                                                key={i.id}
+                                                id={i.id}
+                                                description={i.description}
+                                                severity={i.severity}
+                                                status={i.status}
+                                                owner={i.owner}
+                                                projectId={project.id}
+                                                type="issue"
+                                            />
+                                        ))
                                 )}
                                 {activeIssues.length > 5 && (
-                                    <Link href={`/crm/projects/${project.id}/issues`} className="block text-center text-[9px] text-[#6b7280] hover:text-[#1a1a2e]">
+                                    <Link
+                                        href={`/crm/projects/${project.id}/issues`}
+                                        className="block text-center text-[9px] text-[#6b7280] hover:text-[#1a1a2e]"
+                                    >
                                         +{activeIssues.length - 5} more
                                     </Link>
                                 )}
@@ -262,7 +380,7 @@ export default function ProjectShow({ project, health }: Props) {
 
                     {/* CENTER panel: Main content */}
                     <div className="flex flex-1 flex-col overflow-hidden">
-                        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+                        <div className="flex-1 space-y-5 overflow-y-auto p-5">
                             {/* Project Header */}
                             <div>
                                 <div className="flex items-center gap-2 text-lg font-medium text-[#1a1a2e]">
@@ -272,49 +390,108 @@ export default function ProjectShow({ project, health }: Props) {
                                     <span>{project.organization?.name}</span>
                                     <span>·</span>
                                     <span>{formatCurrency(totalValue)}</span>
-                                    {project.start_date && <><span>·</span><span>Start: {formatDate(project.start_date)}</span></>}
-                                    {project.target_end_date && <><span>·</span><span>Target: {formatDate(project.target_end_date)}</span></>}
+                                    {project.start_date && (
+                                        <>
+                                            <span>·</span>
+                                            <span>
+                                                Start:{' '}
+                                                {formatDate(project.start_date)}
+                                            </span>
+                                        </>
+                                    )}
+                                    {project.target_end_date && (
+                                        <>
+                                            <span>·</span>
+                                            <span>
+                                                Target:{' '}
+                                                {formatDate(
+                                                    project.target_end_date,
+                                                )}
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
                             {/* Financial Overview */}
                             <div className="rounded-lg border border-[#e2e6ef] bg-white p-3">
-                                <h2 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Financial Overview</h2>
+                                <h2 className="mb-2 text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                                    Financial Overview
+                                </h2>
                                 <div className="grid grid-cols-4 gap-4">
                                     <div>
-                                        <div className="text-xs text-[#6b7280]">Contract</div>
-                                        <div className="text-sm font-semibold text-[#1a1a2e]">{formatCurrency(project.contract_value)}</div>
+                                        <div className="text-xs text-[#6b7280]">
+                                            Contract
+                                        </div>
+                                        <div className="text-sm font-semibold text-[#1a1a2e]">
+                                            {formatCurrency(
+                                                project.contract_value,
+                                            )}
+                                        </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-[#6b7280]">Change Orders</div>
-                                        <div className="text-sm font-semibold text-[#f59e0b]">+{formatCurrency(project.change_order_total)}</div>
+                                        <div className="text-xs text-[#6b7280]">
+                                            Change Orders
+                                        </div>
+                                        <div className="text-sm font-semibold text-[#f59e0b]">
+                                            +
+                                            {formatCurrency(
+                                                project.change_order_total,
+                                            )}
+                                        </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-[#6b7280]">Total Value</div>
-                                        <div className="text-sm font-semibold text-[#10b981]">{formatCurrency(totalValue)}</div>
+                                        <div className="text-xs text-[#6b7280]">
+                                            Total Value
+                                        </div>
+                                        <div className="text-sm font-semibold text-[#10b981]">
+                                            {formatCurrency(totalValue)}
+                                        </div>
                                     </div>
                                     <div>
-                                        <div className="text-xs text-[#6b7280]">Pending COs</div>
-                                        <div className="text-sm font-semibold text-[#f97316]">{pendingCOs.length}</div>
+                                        <div className="text-xs text-[#6b7280]">
+                                            Pending COs
+                                        </div>
+                                        <div className="text-sm font-semibold text-[#f97316]">
+                                            {pendingCOs.length}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="mt-3 grid grid-cols-2 gap-4">
                                     <div>
                                         <div className="mb-1 flex items-center justify-between text-[11px]">
-                                            <span className="text-[#6b7280]">Billed</span>
-                                            <span className="text-[#1a1a2e]">{billedPct}%</span>
+                                            <span className="text-[#6b7280]">
+                                                Billed
+                                            </span>
+                                            <span className="text-[#1a1a2e]">
+                                                {billedPct}%
+                                            </span>
                                         </div>
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f3f4f6]">
-                                            <div className="h-full rounded-full bg-[#2B4C8C]" style={{ width: `${billedPct}%` }} />
+                                            <div
+                                                className="h-full rounded-full bg-[#2B4C8C]"
+                                                style={{
+                                                    width: `${billedPct}%`,
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                     <div>
                                         <div className="mb-1 flex items-center justify-between text-[11px]">
-                                            <span className="text-[#6b7280]">Collected</span>
-                                            <span className="text-[#1a1a2e]">{collectedPct}%</span>
+                                            <span className="text-[#6b7280]">
+                                                Collected
+                                            </span>
+                                            <span className="text-[#1a1a2e]">
+                                                {collectedPct}%
+                                            </span>
                                         </div>
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f3f4f6]">
-                                            <div className="h-full rounded-full bg-[#10b981]" style={{ width: `${collectedPct}%` }} />
+                                            <div
+                                                className="h-full rounded-full bg-[#10b981]"
+                                                style={{
+                                                    width: `${collectedPct}%`,
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -323,60 +500,151 @@ export default function ProjectShow({ project, health }: Props) {
                             {/* Milestones + Deliverables */}
                             <section>
                                 <div className="mb-2 flex items-center justify-between">
-                                    <h2 className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Milestones ({project.milestones.length})</h2>
+                                    <h2 className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                                        Milestones ({(project.milestones ?? []).length})
+                                    </h2>
                                 </div>
-                                {project.milestones.length === 0 ? (
+                                {(project.milestones ?? []).length === 0 ? (
                                     <div className="rounded-lg border border-[#e2e6ef] bg-white px-4 py-6 text-center">
                                         <Milestone className="mx-auto mb-2 h-6 w-6 text-[#e2e6ef]" />
-                                        <p className="text-xs text-[#6b7280]">No milestones defined</p>
-                                        <p className="text-[10px] text-[#6b7280]">Milestones are created when a project is converted from a deal.</p>
+                                        <p className="text-xs text-[#6b7280]">
+                                            No milestones defined
+                                        </p>
+                                        <p className="text-[10px] text-[#6b7280]">
+                                            Milestones are created when a
+                                            project is converted from a deal.
+                                        </p>
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
-                                        {project.milestones.map(m => {
-                                            const mConfig = milestoneStatusConfig[m.status] ?? milestoneStatusConfig.pending;
-                                            const totalDeliverables = m.deliverables.length;
-                                            const doneDeliverables = m.deliverables.filter(d => d.status === 'completed' || d.status === 'approved').length;
-                                            const delivPct = totalDeliverables > 0 ? Math.round((doneDeliverables / totalDeliverables) * 100) : 0;
+                                        {(project.milestones ?? []).map((m) => {
+                                            const mConfig =
+                                                milestoneStatusConfig[
+                                                    m.status
+                                                ] ??
+                                                milestoneStatusConfig.pending;
+                                            const totalDeliverables =
+                                                m.deliverables.length;
+                                            const doneDeliverables =
+                                                m.deliverables.filter(
+                                                    (d) =>
+                                                        d.status ===
+                                                            'completed' ||
+                                                        d.status === 'approved',
+                                                ).length;
+                                            const delivPct =
+                                                totalDeliverables > 0
+                                                    ? Math.round(
+                                                          (doneDeliverables /
+                                                              totalDeliverables) *
+                                                              100,
+                                                      )
+                                                    : 0;
 
                                             return (
-                                                <div key={m.id} className="rounded-lg border border-[#e2e6ef] bg-white">
+                                                <div
+                                                    key={m.id}
+                                                    className="rounded-lg border border-[#e2e6ef] bg-white"
+                                                >
                                                     <div className="flex items-center justify-between px-3 py-2">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: mConfig.color }} />
-                                                            <span className="text-xs font-medium text-[#1a1a2e]">{m.name}</span>
+                                                            <div
+                                                                className="h-2 w-2 rounded-full"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        mConfig.color,
+                                                                }}
+                                                            />
+                                                            <span className="text-xs font-medium text-[#1a1a2e]">
+                                                                {m.name}
+                                                            </span>
                                                             <span
                                                                 className="rounded-full px-1.5 py-0.5 text-[9px] font-medium capitalize"
-                                                                style={{ backgroundColor: mConfig.bg, color: mConfig.color }}
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        mConfig.bg,
+                                                                    color: mConfig.color,
+                                                                }}
                                                             >
-                                                                {m.status.replace(/_/g, ' ')}
+                                                                {m.status.replace(
+                                                                    /_/g,
+                                                                    ' ',
+                                                                )}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-3 text-[10px] text-[#6b7280]">
-                                                            {m.end_date && <span>{formatDate(m.end_date)}</span>}
-                                                            {totalDeliverables > 0 && <span>{doneDeliverables}/{totalDeliverables} deliverables</span>}
+                                                            {m.end_date && (
+                                                                <span>
+                                                                    {formatDate(
+                                                                        m.end_date,
+                                                                    )}
+                                                                </span>
+                                                            )}
+                                                            {totalDeliverables >
+                                                                0 && (
+                                                                <span>
+                                                                    {
+                                                                        doneDeliverables
+                                                                    }
+                                                                    /
+                                                                    {
+                                                                        totalDeliverables
+                                                                    }{' '}
+                                                                    deliverables
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                     {totalDeliverables > 0 && (
                                                         <div className="border-t border-[#e2e6ef] px-3 py-1.5">
                                                             <div className="h-1 w-full overflow-hidden rounded-full bg-[#f3f4f6]">
-                                                                <div className="h-full rounded-full bg-[#2B4C8C]" style={{ width: `${delivPct}%` }} />
+                                                                <div
+                                                                    className="h-full rounded-full bg-[#2B4C8C]"
+                                                                    style={{
+                                                                        width: `${delivPct}%`,
+                                                                    }}
+                                                                />
                                                             </div>
                                                         </div>
                                                     )}
-                                                    {m.deliverables.length > 0 && (
-                                                        <div className="border-t border-[#e2e6ef] px-3 py-1.5 space-y-1">
-                                                            {m.deliverables.slice(0, 3).map(d => (
-                                                                <div key={d.id} className="flex items-center justify-between">
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <FileText className="h-3 w-3 text-[#6b7280]" />
-                                                                        <span className="text-[11px] text-[#6b7280]">{d.name}</span>
+                                                    {m.deliverables.length >
+                                                        0 && (
+                                                        <div className="space-y-1 border-t border-[#e2e6ef] px-3 py-1.5">
+                                                            {m.deliverables
+                                                                .slice(0, 3)
+                                                                .map((d) => (
+                                                                    <div
+                                                                        key={
+                                                                            d.id
+                                                                        }
+                                                                        className="flex items-center justify-between"
+                                                                    >
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            <FileText className="h-3 w-3 text-[#6b7280]" />
+                                                                            <span className="text-[11px] text-[#6b7280]">
+                                                                                {
+                                                                                    d.name
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                        <span className="text-[9px] text-[#6b7280] capitalize">
+                                                                            {d.status.replace(
+                                                                                /_/g,
+                                                                                ' ',
+                                                                            )}
+                                                                        </span>
                                                                     </div>
-                                                                    <span className="text-[9px] capitalize text-[#6b7280]">{d.status.replace(/_/g, ' ')}</span>
+                                                                ))}
+                                                            {m.deliverables
+                                                                .length > 3 && (
+                                                                <div className="text-center text-[9px] text-[#6b7280]">
+                                                                    +
+                                                                    {m
+                                                                        .deliverables
+                                                                        .length -
+                                                                        3}{' '}
+                                                                    more
                                                                 </div>
-                                                            ))}
-                                                            {m.deliverables.length > 3 && (
-                                                                <div className="text-center text-[9px] text-[#6b7280]">+{m.deliverables.length - 3} more</div>
                                                             )}
                                                         </div>
                                                     )}
@@ -388,25 +656,64 @@ export default function ProjectShow({ project, health }: Props) {
                             </section>
 
                             {/* Change Orders Summary */}
-                            {project.changeOrders.length > 0 && (
+                            {(project.changeOrders ?? []).length > 0 && (
                                 <section>
                                     <div className="mb-2 flex items-center justify-between">
-                                        <h2 className="text-[10px] font-medium uppercase tracking-wider text-[#6b7280]">Change Orders ({project.changeOrders.length})</h2>
-                                        <Link href={`/crm/projects/${project.id}/change-orders`} className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]">View all</Link>
+                                        <h2 className="text-[10px] font-medium tracking-wider text-[#6b7280] uppercase">
+                                            Change Orders (
+                                            {(project.changeOrders ?? []).length})
+                                        </h2>
+                                        <Link
+                                            href={`/crm/projects/${project.id}/change-orders`}
+                                            className="text-[9px] text-[#2B4C8C] hover:text-[#3b5d9c]"
+                                        >
+                                            View all
+                                        </Link>
                                     </div>
                                     <div className="space-y-1">
-                                        {project.changeOrders.slice(0, 3).map(co => (
-                                            <div key={co.id} className="flex items-center justify-between rounded border border-[#e2e6ef] bg-white px-2.5 py-1.5">
-                                                <div className="flex items-center gap-2">
-                                                    <FileText className="h-3 w-3 text-[#6b7280]" />
-                                                    <span className="text-xs text-[#1a1a2e]">{co.title}</span>
-                                                    <SeverityBadge severity={co.status === 'approved' ? 'low' : co.status === 'rejected' ? 'minor' : 'medium'} />
+                                        {(project.changeOrders ?? [])
+                                            .slice(0, 3)
+                                            .map((co) => (
+                                                <div
+                                                    key={co.id}
+                                                    className="flex items-center justify-between rounded border border-[#e2e6ef] bg-white px-2.5 py-1.5"
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <FileText className="h-3 w-3 text-[#6b7280]" />
+                                                        <span className="text-xs text-[#1a1a2e]">
+                                                            {co.title}
+                                                        </span>
+                                                        <SeverityBadge
+                                                            severity={
+                                                                co.status ===
+                                                                'approved'
+                                                                    ? 'low'
+                                                                    : co.status ===
+                                                                        'rejected'
+                                                                      ? 'minor'
+                                                                      : 'medium'
+                                                            }
+                                                        />
+                                                    </div>
+                                                    <span
+                                                        className="text-xs font-medium"
+                                                        style={{
+                                                            color:
+                                                                co.cost_impact >
+                                                                0
+                                                                    ? '#f59e0b'
+                                                                    : '#10b981',
+                                                        }}
+                                                    >
+                                                        {co.cost_impact > 0
+                                                            ? '+'
+                                                            : ''}
+                                                        {formatCurrency(
+                                                            co.cost_impact,
+                                                        )}
+                                                    </span>
                                                 </div>
-                                                <span className="text-xs font-medium" style={{ color: co.cost_impact > 0 ? '#f59e0b' : '#10b981' }}>
-                                                    {co.cost_impact > 0 ? '+' : ''}{formatCurrency(co.cost_impact)}
-                                                </span>
-                                            </div>
-                                        ))}
+                                            ))}
                                     </div>
                                 </section>
                             )}
@@ -415,7 +722,10 @@ export default function ProjectShow({ project, health }: Props) {
 
                     {/* RIGHT panel: Timeline */}
                     <div className="w-80 shrink-0 border-l border-[#e2e6ef] bg-white">
-                        <ActivityTimeline entityType="project" entityId={project.id} />
+                        <ActivityTimeline
+                            entityType="project"
+                            entityId={project.id}
+                        />
                     </div>
                 </div>
             </div>

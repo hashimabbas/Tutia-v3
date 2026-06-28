@@ -8,25 +8,28 @@ use App\Services\Crm\Communications\Registry\NotificationEventCatalog;
 use App\Services\Crm\Workflows\Catalogs\WorkflowActionCatalog;
 use App\Services\Crm\Workflows\Catalogs\WorkflowOperatorCatalog;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Inertia\Response;
 use ReflectionClass;
 
 class MetadataController extends Controller
 {
-    public function events(): JsonResponse
+    public function events(): JsonResponse|Response
     {
         $events = (new ReflectionClass(NotificationEventCatalog::class))->getConstants();
+        $catalog = collect($events)->map(fn (string $key) => [
+            'key' => $key,
+            'label' => Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
+        ])->sortBy('label')->values();
 
-        return response()->json([
-            'events' => Arr::sort(collect($events)->map(fn (string $key) => [
-                'key' => $key,
-                'label' => Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
-            ])->values()),
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json(['events' => $catalog]);
+        }
+
+        return inertia('crm/workflows/meta/events', ['events' => $catalog]);
     }
 
-    public function operators(): JsonResponse
+    public function operators(): JsonResponse|Response
     {
         $labels = [
             'eq' => 'Equals',
@@ -42,38 +45,50 @@ class MetadataController extends Controller
             'not_empty' => 'Not Empty',
         ];
 
-        return response()->json([
-            'operators' => collect(WorkflowOperatorCatalog::ALL)->map(fn (string $key) => [
-                'key' => $key,
-                'label' => $labels[$key] ?? Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
-            ])->values(),
-        ]);
+        $catalog = collect(WorkflowOperatorCatalog::ALL)->map(fn (string $key) => [
+            'key' => $key,
+            'label' => $labels[$key] ?? Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
+        ])->values();
+
+        if (request()->wantsJson()) {
+            return response()->json(['operators' => $catalog]);
+        }
+
+        return inertia('crm/workflows/meta/operators', ['operators' => $catalog]);
     }
 
-    public function actions(): JsonResponse
+    public function actions(): JsonResponse|Response
     {
-        return response()->json([
-            'actions' => collect(WorkflowActionCatalog::ALL)->map(fn (string $key) => [
-                'key' => $key,
-                'label' => Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
-            ])->values(),
-        ]);
+        $catalog = collect(WorkflowActionCatalog::ALL)->map(fn (string $key) => [
+            'key' => $key,
+            'label' => Str::of($key)->replace(['.', '_'], ' ')->title()->value(),
+        ])->values();
+
+        if (request()->wantsJson()) {
+            return response()->json(['actions' => $catalog]);
+        }
+
+        return inertia('crm/workflows/meta/actions', ['actions' => $catalog]);
     }
 
-    public function approvalFlows(): JsonResponse
+    public function approvalFlows(): JsonResponse|Response
     {
         $flows = CrmApprovalFlow::withCount('steps')
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
 
-        return response()->json([
-            'approvalFlows' => $flows->map(fn (CrmApprovalFlow $flow) => [
-                'id' => $flow->id,
-                'name' => $flow->name,
-                'strategy' => $flow->strategy,
-                'steps_count' => $flow->steps_count,
-            ]),
+        $catalog = $flows->map(fn (CrmApprovalFlow $flow) => [
+            'id' => $flow->id,
+            'name' => $flow->name,
+            'strategy' => $flow->strategy,
+            'steps_count' => $flow->steps_count,
         ]);
+
+        if (request()->wantsJson()) {
+            return response()->json(['approvalFlows' => $catalog]);
+        }
+
+        return inertia('crm/workflows/meta/approval-flows', ['approvalFlows' => $catalog]);
     }
 }

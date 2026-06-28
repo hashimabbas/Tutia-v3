@@ -1,5 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutDashboard, FolderKanban, Bell, User, LogOut } from 'lucide-react';
+import {
+    LayoutDashboard,
+    FolderKanban,
+    Bell,
+    User,
+    LogOut,
+} from 'lucide-react';
 
 const navItems = [
     { href: '/portal/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -17,11 +23,15 @@ export function PortalSidebar() {
         <>
             <aside className="hidden w-56 flex-col border-r border-[#1e1e2a] bg-[#0f0f14] md:flex">
                 <div className="flex h-14 items-center gap-2 border-b border-[#1e1e2a] px-4">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#3b6cdb] text-[10px] font-bold text-white">T</div>
-                    <span className="text-sm font-semibold text-[#e8e8ed]">Customer Portal</span>
+                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#3b6cdb] text-[10px] font-bold text-white">
+                        T
+                    </div>
+                    <span className="text-sm font-semibold text-[#e8e8ed]">
+                        Customer Portal
+                    </span>
                 </div>
                 <nav className="flex-1 space-y-1 p-3">
-                    {navItems.map(item => {
+                    {navItems.map((item) => {
                         const Icon = item.icon;
                         const active = isActive(item.href);
                         return (
@@ -53,8 +63,8 @@ export function PortalSidebar() {
                 </div>
             </aside>
 
-            <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-[#1e1e2a] bg-[#0f0f14] md:hidden">
-                {navItems.map(item => {
+            <nav className="fixed right-0 bottom-0 left-0 z-50 flex border-t border-[#1e1e2a] bg-[#0f0f14] md:hidden">
+                {navItems.map((item) => {
                     const Icon = item.icon;
                     const active = isActive(item.href);
                     return (

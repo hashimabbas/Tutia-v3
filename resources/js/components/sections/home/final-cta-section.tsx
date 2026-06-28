@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { COMPANY_INFO } from '@/lib/constants';
 import { useI18n } from '@/lib/i18n';
 
-
 export function FinalCtaSection() {
     const { t, locale } = useI18n();
 
@@ -23,7 +22,8 @@ export function FinalCtaSection() {
                             size="lg"
                             className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
                         >
-                            {t('home.finalCta.consultation') || 'Book a Free Consultation'}
+                            {t('home.finalCta.consultation') ||
+                                'Book a Free Consultation'}
                         </Button>
                     </Link>
                     <Link href="/contact/proposal">
@@ -32,13 +32,16 @@ export function FinalCtaSection() {
                             variant="outline"
                             className="border-white/20 text-white hover:bg-white/10"
                         >
-                            {t('home.finalCta.proposal') || 'Request a Proposal'}
+                            {t('home.finalCta.proposal') ||
+                                'Request a Proposal'}
                         </Button>
                     </Link>
                 </div>
 
                 <Text variant="caption" muted className="mt-10">
-                    {locale === 'ar' ? COMPANY_INFO.taglineAr : COMPANY_INFO.tagline}
+                    {locale === 'ar'
+                        ? COMPANY_INFO.taglineAr
+                        : COMPANY_INFO.tagline}
                 </Text>
             </Container>
         </Section>

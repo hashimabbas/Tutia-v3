@@ -24,34 +24,52 @@ interface Props {
     context?: ActionContext;
 }
 
-export default function ActionBuilder({ workflowId, actions: initial, actionTypes, context }: Props) {
+export default function ActionBuilder({
+    workflowId,
+    actions: initial,
+    actionTypes,
+    context,
+}: Props) {
     const [items, setItems] = useState(initial);
 
     const handleAdd = async () => {
-        const nextOrder = items.length > 0 ? Math.max(...items.map(a => a.sort_order)) + 1 : 1;
+        const nextOrder =
+            items.length > 0
+                ? Math.max(...items.map((a) => a.sort_order)) + 1
+                : 1;
         const res = await fetch(`/crm/workflows/${workflowId}/actions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
             body: JSON.stringify({ action_type: '', sort_order: nextOrder }),
         });
-        if (!res.ok) { toast.error('Failed to add action'); return; }
+        if (!res.ok) {
+            toast.error('Failed to add action');
+            return;
+        }
         const data = await res.json();
-        setItems(prev => [...prev, data.action]);
+        setItems((prev) => [...prev, data.action]);
         toast.success('Action added');
     };
 
     const handleDelete = useCallback((actionId: number) => {
-        setItems(prev => prev.filter(a => a.id !== actionId));
+        setItems((prev) => prev.filter((a) => a.id !== actionId));
     }, []);
 
     const handleUpdate = useCallback((updated: Action) => {
-        setItems(prev => prev.map(a => a.id === updated.id ? updated : a));
+        setItems((prev) =>
+            prev.map((a) => (a.id === updated.id ? updated : a)),
+        );
     }, []);
 
     return (
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">Actions</h2>
+            <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Actions
+                </h2>
                 <button
                     onClick={handleAdd}
                     className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[10px] text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-700"
@@ -61,7 +79,10 @@ export default function ActionBuilder({ workflowId, actions: initial, actionType
             </div>
 
             {items.length === 0 && (
-                <p className="text-xs text-gray-400">No actions yet. Add an action to define what happens when conditions are met.</p>
+                <p className="text-xs text-gray-400">
+                    No actions yet. Add an action to define what happens when
+                    conditions are met.
+                </p>
             )}
 
             <div className="space-y-3">

@@ -1,5 +1,13 @@
 import { Head, Link } from '@inertiajs/react';
-import { Landmark, BrainCircuit, Wifi, Globe, Building2, ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+    Landmark,
+    BrainCircuit,
+    Wifi,
+    Globe,
+    Building2,
+    ArrowLeft,
+    ArrowRight,
+} from 'lucide-react';
 import { Section, Container, Heading, Text } from '@/components/design-system';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
@@ -12,15 +20,18 @@ export default function Government() {
             icon: BrainCircuit,
             title: 'ICT Consulting',
             titleAr: 'الاستشارات التقنية',
-            description: 'Technology strategy, digital transformation planning, and advisory for government entities.',
-            descriptionAr: 'استراتيجية تقنية وتخطيط التحول الرقمي واستشارات للجهات الحكومية.',
+            description:
+                'Technology strategy, digital transformation planning, and advisory for government entities.',
+            descriptionAr:
+                'استراتيجية تقنية وتخطيط التحول الرقمي واستشارات للجهات الحكومية.',
             href: '/services/consulting',
         },
         {
             icon: Wifi,
             title: 'Connectivity Solutions',
             titleAr: 'حلول الاتصال',
-            description: 'Reliable network infrastructure and connectivity for government facilities.',
+            description:
+                'Reliable network infrastructure and connectivity for government facilities.',
             descriptionAr: 'بنية تحتية شبكية موثوقة واتصال للمرافق الحكومية.',
             href: '/services/connectivity',
         },
@@ -28,16 +39,20 @@ export default function Government() {
             icon: Globe,
             title: 'Web Development',
             titleAr: 'تطوير المواقع',
-            description: 'Government portals, citizen service platforms, and information systems.',
-            descriptionAr: 'بوابات حكومية ومنصات خدمة المواطنين وأنظمة معلومات.',
+            description:
+                'Government portals, citizen service platforms, and information systems.',
+            descriptionAr:
+                'بوابات حكومية ومنصات خدمة المواطنين وأنظمة معلومات.',
             href: '/services/web-development',
         },
         {
             icon: Building2,
             title: 'ERP Systems',
             titleAr: 'أنظمة تخطيط الموارد',
-            description: 'Enterprise resource planning for government financial and administrative operations.',
-            descriptionAr: 'تخطيط الموارد المؤسسية للعمليات المالية والإدارية الحكومية.',
+            description:
+                'Enterprise resource planning for government financial and administrative operations.',
+            descriptionAr:
+                'تخطيط الموارد المؤسسية للعمليات المالية والإدارية الحكومية.',
             href: '/services/erp',
         },
     ];
@@ -45,10 +60,20 @@ export default function Government() {
     return (
         <>
             <Head title={locale === 'ar' ? 'القطاع الحكومي' : 'Government'}>
-                <meta name="description" content={locale === 'ar' ? 'حلول القطاع الحكومي من توتيا' : 'TUTIA government sector solutions'} />
+                <meta
+                    name="description"
+                    content={
+                        locale === 'ar'
+                            ? 'حلول القطاع الحكومي من توتيا'
+                            : 'TUTIA government sector solutions'
+                    }
+                />
             </Head>
 
-            <Section background="navy" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+            <Section
+                background="navy"
+                className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
+            >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-gold-500/5 via-transparent to-transparent" />
                 <Container>
                     <div className="mx-auto max-w-3xl text-center">
@@ -56,10 +81,13 @@ export default function Government() {
                         <Heading level="h1" className="text-white">
                             {locale === 'ar' ? 'القطاع الحكومي' : 'Government'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-300">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-300"
+                        >
                             {locale === 'ar'
                                 ? 'دعم التحول الرقمي في القطاع الحكومي السوداني'
-                                : 'Supporting digital transformation in Sudan\'s public sector'}
+                                : "Supporting digital transformation in Sudan's public sector"}
                         </Text>
                     </div>
                 </Container>
@@ -68,7 +96,9 @@ export default function Government() {
             <Section>
                 <Container className="mx-auto max-w-3xl">
                     <Heading level="h2">
-                        {locale === 'ar' ? 'أهمية هذا القطاع' : 'Why This Industry Matters'}
+                        {locale === 'ar'
+                            ? 'أهمية هذا القطاع'
+                            : 'Why This Industry Matters'}
                     </Heading>
                     <Text variant="body-lg" className="mt-4 text-neutral-600">
                         {locale === 'ar'
@@ -86,7 +116,9 @@ export default function Government() {
             <Section background="muted">
                 <Container>
                     <Heading level="h2">
-                        {locale === 'ar' ? 'كيف تخدم توتيا هذا القطاع' : 'How TUTIA Serves This Sector'}
+                        {locale === 'ar'
+                            ? 'كيف تخدم توتيا هذا القطاع'
+                            : 'How TUTIA Serves This Sector'}
                     </Heading>
                     <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                         {services.map((service) => {
@@ -98,12 +130,21 @@ export default function Government() {
                                     href={service.href}
                                     className="group rounded-xl border border-neutral-200 bg-white p-6 transition-all hover:border-brand-navy-200 hover:shadow-md"
                                 >
-                                    {Icon && <Icon className="mb-4 size-8 text-brand-navy-500" />}
+                                    {Icon && (
+                                        <Icon className="mb-4 size-8 text-brand-navy-500" />
+                                    )}
                                     <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-brand-navy-500">
-                                        {locale === 'ar' ? service.titleAr : service.title}
+                                        {locale === 'ar'
+                                            ? service.titleAr
+                                            : service.title}
                                     </h3>
-                                    <Text variant="body-sm" className="mt-2 text-neutral-600">
-                                        {locale === 'ar' ? service.descriptionAr : service.description}
+                                    <Text
+                                        variant="body-sm"
+                                        className="mt-2 text-neutral-600"
+                                    >
+                                        {locale === 'ar'
+                                            ? service.descriptionAr
+                                            : service.description}
                                     </Text>
                                     <span className="mt-4 inline-flex items-center text-sm font-medium text-brand-navy-500">
                                         {t('services.cta.learnMore')}
@@ -127,9 +168,15 @@ export default function Government() {
                             : 'We have a proven track record of successful projects with government institutions and organizations in Sudan, including connectivity solutions, ERP systems, and advisory services.'}
                     </Text>
                     <div className="mt-6">
-                        <Button asChild variant="link" className="text-brand-navy-500">
+                        <Button
+                            asChild
+                            variant="link"
+                            className="text-brand-navy-500"
+                        >
                             <Link href="/work">
-                                {locale === 'ar' ? 'عرض جميع دراسات الحالة' : 'View All Case Studies'}
+                                {locale === 'ar'
+                                    ? 'عرض جميع دراسات الحالة'
+                                    : 'View All Case Studies'}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
                             </Link>
                         </Button>
@@ -140,21 +187,32 @@ export default function Government() {
             <Section background="navy">
                 <Container className="mx-auto max-w-3xl text-center">
                     <Heading level="h2" className="text-white">
-                        {locale === 'ar' ? 'دعم تحولكم الرقمي' : 'Support Your Digital Transformation'}
+                        {locale === 'ar'
+                            ? 'دعم تحولكم الرقمي'
+                            : 'Support Your Digital Transformation'}
                     </Heading>
                     <Text variant="body-lg" className="mt-4 text-neutral-300">
                         {locale === 'ar'
                             ? 'تحدث مع خبيرنا لمناقشة احتياجات مؤسستك'
-                            : 'Talk to our expert to discuss your organization\'s needs'}
+                            : "Talk to our expert to discuss your organization's needs"}
                     </Text>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                        <Button asChild size="lg" className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                        >
                             <Link href="/contact/consultation">
                                 {t('cta.talkToExpert')}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
                             </Link>
                         </Button>
-                        <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                        <Button
+                            asChild
+                            size="lg"
+                            variant="outline"
+                            className="border-white/20 text-white hover:bg-white/10"
+                        >
                             <Link href="/contact/quote">
                                 {t('services.cta.getQuote')}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
@@ -166,10 +224,16 @@ export default function Government() {
 
             <Section>
                 <Container>
-                    <Button asChild variant="link" className="text-brand-navy-500">
+                    <Button
+                        asChild
+                        variant="link"
+                        className="text-brand-navy-500"
+                    >
                         <Link href="/industries">
                             <ArrowLeft className="mr-2 size-4 rtl:rotate-180" />
-                            {locale === 'ar' ? 'العودة إلى القطاعات' : 'Back to Industries'}
+                            {locale === 'ar'
+                                ? 'العودة إلى القطاعات'
+                                : 'Back to Industries'}
                         </Link>
                     </Button>
                 </Container>

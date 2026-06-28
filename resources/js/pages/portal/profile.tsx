@@ -26,32 +26,50 @@ export default function PortalProfile({ account }: ProfileProps) {
                             <User className="h-6 w-6 text-[#3b6cdb]" />
                         </div>
                         <div>
-                            <h2 className="text-base font-semibold text-[#e8e8ed]">{account.name}</h2>
-                            <p className="text-[11px] text-[#8b8b9e]">{account.email}</p>
+                            <h2 className="text-base font-semibold text-[#e8e8ed]">
+                                {account.name}
+                            </h2>
+                            <p className="text-[11px] text-[#8b8b9e]">
+                                {account.email}
+                            </p>
                         </div>
                     </div>
                     <div className="space-y-3">
                         <div className="flex items-center gap-3 text-[12px]">
                             <Mail className="h-4 w-4 text-[#555570]" />
                             <span className="text-[#8b8b9e]">Email</span>
-                            <span className="ml-auto text-[#e8e8ed]">{account.email}</span>
+                            <span className="ml-auto text-[#e8e8ed]">
+                                {account.email}
+                            </span>
                         </div>
                         <div className="flex items-center gap-3 text-[12px]">
                             <Globe className="h-4 w-4 text-[#555570]" />
                             <span className="text-[#8b8b9e]">Language</span>
-                            <span className="ml-auto text-[#e8e8ed]">{account.locale === 'ar' ? 'العربية' : 'English'}</span>
+                            <span className="ml-auto text-[#e8e8ed]">
+                                {account.locale === 'ar'
+                                    ? 'العربية'
+                                    : 'English'}
+                            </span>
                         </div>
                         <div className="flex items-center gap-3 text-[12px]">
                             <LogIn className="h-4 w-4 text-[#555570]" />
                             <span className="text-[#8b8b9e]">Logins</span>
-                            <span className="ml-auto text-[#e8e8ed]">{account.login_count}</span>
+                            <span className="ml-auto text-[#e8e8ed]">
+                                {account.login_count}
+                            </span>
                         </div>
                         <div className="flex items-center gap-3 text-[12px]">
                             <Calendar className="h-4 w-4 text-[#555570]" />
                             <span className="text-[#8b8b9e]">Last Login</span>
                             <span className="ml-auto text-[#e8e8ed]">
                                 {account.last_login_at
-                                    ? new Date(account.last_login_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                    ? new Date(
+                                          account.last_login_at,
+                                      ).toLocaleDateString('en-US', {
+                                          month: 'short',
+                                          day: 'numeric',
+                                          year: 'numeric',
+                                      })
                                     : '—'}
                             </span>
                         </div>
@@ -60,7 +78,13 @@ export default function PortalProfile({ account }: ProfileProps) {
                             <span className="text-[#8b8b9e]">Portal Since</span>
                             <span className="ml-auto text-[#e8e8ed]">
                                 {account.enabled_at
-                                    ? new Date(account.enabled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                    ? new Date(
+                                          account.enabled_at,
+                                      ).toLocaleDateString('en-US', {
+                                          month: 'short',
+                                          day: 'numeric',
+                                          year: 'numeric',
+                                      })
                                     : '—'}
                             </span>
                         </div>

@@ -1,29 +1,104 @@
-import { Section, Container, MetricCard, Text } from '@/components/design-system';
+import {
+    Section,
+    Container,
+    MetricCard,
+    Text,
+} from '@/components/design-system';
 import { STATS } from '@/lib/constants';
 import { useI18n } from '@/lib/i18n';
 
 const CLIENT_LOGOS = [
-    { src: '/images/customers/bdr.png', alt: 'BDR', style: { filter: 'brightness(0) saturate(100%) invert(22%) sepia(8%) saturate(2140%) hue-rotate(200deg) brightness(95%) contrast(88%)' } },
-    { src: '/images/customers/hyundai.png', alt: 'Hyundai', style: { filter: 'none' } },
-    { src: '/images/customers/nissan.png', alt: 'Nissan', style: { filter: 'none' } },
+    {
+        src: '/images/customers/bdr.png',
+        alt: 'BDR',
+        style: {
+            filter: 'brightness(0) saturate(100%) invert(22%) sepia(8%) saturate(2140%) hue-rotate(200deg) brightness(95%) contrast(88%)',
+        },
+    },
+    {
+        src: '/images/customers/hyundai.png',
+        alt: 'Hyundai',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/nissan.png',
+        alt: 'Nissan',
+        style: { filter: 'none' },
+    },
     { src: '/images/customers/jac.png', alt: 'JAC', style: { filter: 'none' } },
-    { src: '/images/customers/bajaj.png', alt: 'Bajaj', style: { filter: 'none' } },
-    { src: '/images/customers/mobipay.png', alt: 'Mobipay', style: { filter: 'none' } },
-    { src: '/images/customers/sudia-cargo.png', alt: 'Sudia Cargo', style: { filter: 'none' } },
-    { src: '/images/customers/icrc.jpg', alt: 'ICRC', style: { filter: 'none' } },
-    { src: '/images/customers/sanofi.png', alt: 'Sanofi', style: { filter: 'none' } },
-    { src: '/images/customers/u.s.embassy.png', alt: 'U.S. Embassy', style: { filter: 'none' } },
-    { src: '/images/customers/biritish-conucil.png', alt: 'British Council', style: { filter: 'none' } },
-    { src: '/images/customers/faisal.jpg', alt: 'Faisal', style: { filter: 'none' } },
+    {
+        src: '/images/customers/bajaj.png',
+        alt: 'Bajaj',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/mobipay.png',
+        alt: 'Mobipay',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/sudia-cargo.png',
+        alt: 'Sudia Cargo',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/icrc.jpg',
+        alt: 'ICRC',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/sanofi.png',
+        alt: 'Sanofi',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/u.s.embassy.png',
+        alt: 'U.S. Embassy',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/biritish-conucil.png',
+        alt: 'British Council',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/customers/faisal.jpg',
+        alt: 'Faisal',
+        style: { filter: 'none' },
+    },
 ];
 
 const PARTNER_LOGOS = [
-    { src: '/images/partner/bank-khartoum.png', alt: 'Bank of Khartoum', style: { filter: 'none' } },
-    { src: '/images/partner/maestros.png', alt: 'Maestros', style: { filter: 'none' } },
-    { src: '/images/partner/zolpay.png', alt: 'Zolpay', style: { filter: 'none' } },
-    { src: '/images/partner/trust.png', alt: 'Trust', style: { filter: 'none' } },
-    { src: '/images/partner/tradive.png', alt: 'Tradive', style: { filter: 'none' } },
-    { src: '/images/partner/nilogy.png', alt: 'Nilogy', style: { filter: 'none' } },
+    {
+        src: '/images/partner/bank-khartoum.png',
+        alt: 'Bank of Khartoum',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/partner/maestros.png',
+        alt: 'Maestros',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/partner/zolpay.png',
+        alt: 'Zolpay',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/partner/trust.png',
+        alt: 'Trust',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/partner/tradive.png',
+        alt: 'Tradive',
+        style: { filter: 'none' },
+    },
+    {
+        src: '/images/partner/nilogy.png',
+        alt: 'Nilogy',
+        style: { filter: 'none' },
+    },
 ];
 
 const gradientPairs = [
@@ -74,7 +149,7 @@ export function TrustIndicatorsSection() {
                         {CLIENT_LOGOS.map((logo, i) => (
                             <div
                                 key={logo.src}
-                                className={`group flex items-center justify-center rounded-xl bg-gradient-to-br ${gradientPairs[i % gradientPairs.length]} p-5 ring-1 ring-neutral-200/60 transition-all duration-300 hover:scale-105 hover:ring-brand-gold-300/50 hover:shadow-lg hover:shadow-neutral-200/50`}
+                                className={`group flex items-center justify-center rounded-xl bg-gradient-to-br ${gradientPairs[i % gradientPairs.length]} p-5 ring-1 ring-neutral-200/60 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-neutral-200/50 hover:ring-brand-gold-300/50`}
                             >
                                 <img
                                     src={logo.src}
@@ -95,7 +170,7 @@ export function TrustIndicatorsSection() {
                         {PARTNER_LOGOS.map((logo, i) => (
                             <div
                                 key={logo.src}
-                                className={`group flex items-center justify-center rounded-xl bg-gradient-to-br ${partnerGradientPairs[i % partnerGradientPairs.length]} p-5 ring-1 ring-neutral-200/60 transition-all duration-300 hover:scale-105 hover:ring-brand-gold-300/50 hover:shadow-lg hover:shadow-neutral-200/50`}
+                                className={`group flex items-center justify-center rounded-xl bg-gradient-to-br ${partnerGradientPairs[i % partnerGradientPairs.length]} p-5 ring-1 ring-neutral-200/60 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-neutral-200/50 hover:ring-brand-gold-300/50`}
                             >
                                 <img
                                     src={logo.src}

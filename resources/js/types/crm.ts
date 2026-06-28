@@ -18,7 +18,13 @@ export type LeadStage =
     | 'closed-lost'
     | 'on-hold';
 
-export type LeadSource = 'google' | 'social' | 'referral' | 'direct' | 'whatsapp' | 'phone';
+export type LeadSource =
+    | 'google'
+    | 'social'
+    | 'referral'
+    | 'direct'
+    | 'whatsapp'
+    | 'phone';
 
 export type QuickContactData = {
     name: string;

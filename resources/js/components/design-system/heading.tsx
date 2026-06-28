@@ -34,7 +34,14 @@ export function Heading({
     const Tag = levelMap[level];
 
     return (
-        <Tag id={id} className={cn(styleMap[level], 'text-brand-navy-900 dark:text-white', className)}>
+        <Tag
+            id={id}
+            className={cn(
+                styleMap[level],
+                'text-brand-navy-900 dark:text-white',
+                className,
+            )}
+        >
             {children}
         </Tag>
     );

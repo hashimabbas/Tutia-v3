@@ -10,10 +10,20 @@ export default function Resources() {
     return (
         <>
             <Head title={locale === 'ar' ? 'الموارد' : 'Resources'}>
-                <meta name="description" content={locale === 'ar' ? 'موارد توتيا - أوراق بحثية وأدلة وأدوات' : 'TUTIA Resources - Whitepapers, guides, and tools'} />
+                <meta
+                    name="description"
+                    content={
+                        locale === 'ar'
+                            ? 'موارد توتيا - أوراق بحثية وأدلة وأدوات'
+                            : 'TUTIA Resources - Whitepapers, guides, and tools'
+                    }
+                />
             </Head>
 
-            <Section background="navy" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+            <Section
+                background="navy"
+                className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
+            >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-gold-500/5 via-transparent to-transparent" />
                 <Container>
                     <div className="mx-auto max-w-3xl text-center">
@@ -21,7 +31,10 @@ export default function Resources() {
                         <Heading level="h1" className="text-white">
                             {locale === 'ar' ? 'الموارد' : 'Resources'}
                         </Heading>
-                        <Text variant="body-lg" className="mt-4 text-neutral-300">
+                        <Text
+                            variant="body-lg"
+                            className="mt-4 text-neutral-300"
+                        >
                             {locale === 'ar'
                                 ? 'أوراق بحثية وأدلة وأدوات لمساعدتك في رحلتك التقنية'
                                 : 'Whitepapers, guides, and tools to support your technology journey'}
@@ -50,9 +63,14 @@ export default function Resources() {
                                 : 'Subscribe to our newsletter to get notified when new resources are available'}
                         </Text>
                         <div className="mt-6">
-                            <Button asChild className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                            <Button
+                                asChild
+                                className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                            >
                                 <Link href="/contact">
-                                    {locale === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to Newsletter'}
+                                    {locale === 'ar'
+                                        ? 'اشترك في النشرة البريدية'
+                                        : 'Subscribe to Newsletter'}
                                     <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
                                 </Link>
                             </Button>
@@ -72,9 +90,15 @@ export default function Resources() {
                             : 'Browse our case studies to learn more about our work'}
                     </Text>
                     <div className="mt-8">
-                        <Button asChild size="lg" className="bg-brand-gold-500 text-white hover:bg-brand-gold-600">
+                        <Button
+                            asChild
+                            size="lg"
+                            className="bg-brand-gold-500 text-white hover:bg-brand-gold-600"
+                        >
                             <Link href="/insights/case-studies">
-                                {locale === 'ar' ? 'عرض دراسات الحالة' : 'View Case Studies'}
+                                {locale === 'ar'
+                                    ? 'عرض دراسات الحالة'
+                                    : 'View Case Studies'}
                                 <ArrowRight className="ml-2 size-4 rtl:rotate-180" />
                             </Link>
                         </Button>
@@ -84,10 +108,16 @@ export default function Resources() {
 
             <Section>
                 <Container>
-                    <Button asChild variant="link" className="text-brand-navy-500">
+                    <Button
+                        asChild
+                        variant="link"
+                        className="text-brand-navy-500"
+                    >
                         <Link href="/insights">
                             <ArrowLeft className="mr-2 size-4 rtl:rotate-180" />
-                            {locale === 'ar' ? 'العودة إلى المدونة والموارد' : 'Back to Insights & Resources'}
+                            {locale === 'ar'
+                                ? 'العودة إلى المدونة والموارد'
+                                : 'Back to Insights & Resources'}
                         </Link>
                     </Button>
                 </Container>

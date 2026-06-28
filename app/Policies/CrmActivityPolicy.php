@@ -26,6 +26,11 @@ class CrmActivityPolicy
         return $user->hasPermissionTo('crm.activities.create');
     }
 
+    public function update(User $user, CrmActivity $activity): bool
+    {
+        return $user->hasAnyPermission(['crm.activities.edit', 'crm.activities.create']);
+    }
+
     public function delete(User $user, CrmActivity $activity): bool
     {
         if ($user->hasRole('manager')) {

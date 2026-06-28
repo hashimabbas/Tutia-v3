@@ -24,7 +24,9 @@ export function LanguageSwitcher({
                     'inline-flex items-center gap-1 px-2 py-1 text-sm font-medium transition-colors hover:text-brand-navy-500',
                     className,
                 )}
-                aria-label={locale === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+                aria-label={
+                    locale === 'en' ? 'Switch to Arabic' : 'Switch to English'
+                }
             >
                 <Globe className="size-3.5" />
                 <span>{locale === 'en' ? 'AR' : 'EN'}</span>

@@ -1,13 +1,27 @@
-import { Facebook, Twitter, Instagram, Linkedin, MessageCircle } from 'lucide-react';
+import {
+    Facebook,
+    Twitter,
+    Instagram,
+    Linkedin,
+    MessageCircle,
+} from 'lucide-react';
 import { COMPANY_INFO } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 const socialIcons = [
     { href: COMPANY_INFO.social.facebook, icon: Facebook, label: 'Facebook' },
     { href: COMPANY_INFO.social.twitter, icon: Twitter, label: 'Twitter' },
-    { href: COMPANY_INFO.social.instagram, icon: Instagram, label: 'Instagram' },
+    {
+        href: COMPANY_INFO.social.instagram,
+        icon: Instagram,
+        label: 'Instagram',
+    },
     { href: COMPANY_INFO.social.linkedin, icon: Linkedin, label: 'LinkedIn' },
-    { href: COMPANY_INFO.social.whatsapp, icon: MessageCircle, label: 'WhatsApp' },
+    {
+        href: COMPANY_INFO.social.whatsapp,
+        icon: MessageCircle,
+        label: 'WhatsApp',
+    },
 ];
 
 export function SocialLinks({ className }: { className?: string }) {

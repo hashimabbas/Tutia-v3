@@ -1,5 +1,5 @@
-import { useState, useCallback  } from 'react';
-import type {ReactNode} from 'react';
+import { useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { useDirection } from '@/hooks/use-direction';
 import { I18nContext } from '@/lib/i18n';
 import { t as translate, getDirection } from '@/lib/i18n';
@@ -15,14 +15,11 @@ export function I18nProvider({
     const [locale, setLocaleState] = useState<Locale>(initialLocale);
     const direction: Direction = useDirection(locale);
 
-    const setLocale = useCallback(
-        (newLocale: Locale) => {
-            setLocaleState(newLocale);
-            document.documentElement.dir = getDirection(newLocale);
-            document.documentElement.lang = newLocale;
-        },
-        [],
-    );
+    const setLocale = useCallback((newLocale: Locale) => {
+        setLocaleState(newLocale);
+        document.documentElement.dir = getDirection(newLocale);
+        document.documentElement.lang = newLocale;
+    }, []);
 
     const t = useCallback(
         (key: string): string => translate(locale, key),

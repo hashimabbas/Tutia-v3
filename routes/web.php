@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Crm\ActivityController;
 use App\Http\Controllers\Crm\ChangeOrderController;
 use App\Http\Controllers\Crm\ContactController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Crm\CrmIssueController;
 use App\Http\Controllers\Crm\CrmProjectRiskController;
 use App\Http\Controllers\Crm\DealController;
 use App\Http\Controllers\Crm\DeliverableController;
+use App\Http\Controllers\Crm\ExperienceController as CrmExperienceController;
 use App\Http\Controllers\Crm\ForecastController;
 use App\Http\Controllers\Crm\ImportController;
 use App\Http\Controllers\Crm\LeadController as CrmLeadController;
@@ -19,6 +21,7 @@ use App\Http\Controllers\Crm\ProjectController;
 use App\Http\Controllers\Crm\QuotationController;
 use App\Http\Controllers\Crm\TimelineController;
 use App\Http\Controllers\CrmController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PlatformController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,7 +78,8 @@ Route::inertia('/work/ticketing-system', 'work/ticketing-system')->name('work.ti
 
 // Insights
 Route::inertia('/insights', 'insights/index')->name('insights');
-Route::inertia('/insights/blog', 'insights/blog')->name('insights.blog');
+Route::get('/insights/blog', [BlogController::class, 'index'])->name('insights.blog');
+Route::get('/insights/blog/{slug}', [BlogController::class, 'show'])->name('insights.blog.show');
 Route::inertia('/insights/case-studies', 'insights/case-studies')->name('insights.case-studies');
 Route::inertia('/insights/resources', 'insights/resources')->name('insights.resources');
 
@@ -108,6 +112,10 @@ Route::post('/contact/proposal', [CrmController::class, 'proposal'])->name('cont
 Route::post('/contact/quote', [CrmController::class, 'quote'])->name('contact.quote.submit');
 Route::post('/newsletter/subscribe', [CrmController::class, 'subscribe'])->name('newsletter.subscribe');
 
+// Gallery (Public)
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+Route::get('/gallery/{slug:slug}', [GalleryController::class, 'show'])->name('gallery.show');
+
 /*
 |--------------------------------------------------------------------------
 | Auth Routes (Keep existing)
@@ -120,6 +128,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require __DIR__.'/workflow-management.php';
     require __DIR__.'/approval-management.php';
     require __DIR__.'/analytics.php';
+    require __DIR__.'/optimization.php';
+    require __DIR__.'/blog.php';
 
     // --- CRM Routes ---
     Route::prefix('crm')->name('crm.')->group(function () {
@@ -148,6 +158,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/deals/{deal}', [DealController::class, 'destroy'])->name('deals.destroy');
 
         // Activities
+        Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
         Route::post('/activities', [ActivityController::class, 'store'])->name('activities.store');
         Route::post('/activities/{activity}/complete', [ActivityController::class, 'complete'])->name('activities.complete');
         Route::delete('/activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.destroy');
@@ -188,6 +199,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/products/{product}', [ProductCatalogController::class, 'destroy'])->name('products.destroy');
 
         // CRM-3: Quotations
+        Route::get('/quotations', [QuotationController::class, 'indexAll'])->name('quotations.all');
         Route::get('/deals/{deal}/quotations', [QuotationController::class, 'index'])->name('quotations.index');
         Route::get('/quotations/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
         Route::post('/deals/{deal}/quotations', [QuotationController::class, 'store'])->name('quotations.store');
@@ -201,12 +213,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pipeline', [PipelineController::class, 'index'])->name('pipeline.index');
 
         // CRM-4: Project Risks
+        Route::get('/risks', [CrmProjectRiskController::class, 'indexAll'])->name('risks.all');
         Route::get('/projects/{project}/risks', [CrmProjectRiskController::class, 'index'])->name('projects.risks.index');
         Route::post('/projects/{project}/risks', [CrmProjectRiskController::class, 'store'])->name('projects.risks.store');
         Route::patch('/projects/{project}/risks/{risk}', [CrmProjectRiskController::class, 'update'])->name('projects.risks.update');
         Route::delete('/projects/{project}/risks/{risk}', [CrmProjectRiskController::class, 'destroy'])->name('projects.risks.destroy');
 
         // CRM-4: Project Issues
+        Route::get('/issues', [CrmIssueController::class, 'indexAll'])->name('issues.all');
         Route::get('/projects/{project}/issues', [CrmIssueController::class, 'index'])->name('projects.issues.index');
         Route::post('/projects/{project}/issues', [CrmIssueController::class, 'store'])->name('projects.issues.store');
         Route::patch('/projects/{project}/issues/{issue}', [CrmIssueController::class, 'update'])->name('projects.issues.update');
@@ -220,6 +234,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/projects/{project}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
 
         // CRM-4: Milestones
+        Route::get('/milestones', [MilestoneController::class, 'indexAll'])->name('milestones.all');
         Route::get('/projects/{project}/milestones', [MilestoneController::class, 'index'])->name('projects.milestones.index');
         Route::post('/projects/{project}/milestones', [MilestoneController::class, 'store'])->name('projects.milestones.store');
         Route::patch('/projects/{project}/milestones/{milestone}', [MilestoneController::class, 'update'])->name('projects.milestones.update');
@@ -228,6 +243,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/projects/{project}/milestones/{milestone}', [MilestoneController::class, 'destroy'])->name('projects.milestones.destroy');
 
         // CRM-4: Deliverables
+        Route::get('/deliverables', [DeliverableController::class, 'indexAll'])->name('deliverables.all');
         Route::get('/projects/{project}/milestones/{milestone}/deliverables', [DeliverableController::class, 'index'])->name('projects.milestones.deliverables.index');
         Route::post('/projects/{project}/milestones/{milestone}/deliverables', [DeliverableController::class, 'store'])->name('projects.milestones.deliverables.store');
         Route::patch('/projects/{project}/milestones/{milestone}/deliverables/{deliverable}', [DeliverableController::class, 'update'])->name('projects.milestones.deliverables.update');
@@ -236,12 +252,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/projects/{project}/milestones/{milestone}/deliverables/{deliverable}', [DeliverableController::class, 'destroy'])->name('projects.milestones.deliverables.destroy');
 
         // CRM-4: Change Orders
+        Route::get('/change-orders', [ChangeOrderController::class, 'indexAll'])->name('change-orders.all');
         Route::get('/projects/{project}/change-orders', [ChangeOrderController::class, 'index'])->name('projects.change-orders.index');
         Route::post('/projects/{project}/change-orders', [ChangeOrderController::class, 'store'])->name('projects.change-orders.store');
         Route::patch('/projects/{project}/change-orders/{changeOrder}', [ChangeOrderController::class, 'update'])->name('projects.change-orders.update');
         Route::post('/projects/{project}/change-orders/{changeOrder}/approve', [ChangeOrderController::class, 'approve'])->name('projects.change-orders.approve');
         Route::post('/projects/{project}/change-orders/{changeOrder}/reject', [ChangeOrderController::class, 'reject'])->name('projects.change-orders.reject');
         Route::delete('/projects/{project}/change-orders/{changeOrder}', [ChangeOrderController::class, 'destroy'])->name('projects.change-orders.destroy');
+
+        // CRM-8: Experience Gallery
+        Route::get('/experiences', [CrmExperienceController::class, 'index'])->name('experiences.index');
+        Route::get('/experiences/create', [CrmExperienceController::class, 'create'])->name('experiences.create');
+        Route::post('/experiences', [CrmExperienceController::class, 'store'])->name('experiences.store');
+        Route::get('/experiences/{experience}/edit', [CrmExperienceController::class, 'edit'])->name('experiences.edit');
+        Route::patch('/experiences/{experience}', [CrmExperienceController::class, 'update'])->name('experiences.update');
+        Route::delete('/experiences/{experience}', [CrmExperienceController::class, 'destroy'])->name('experiences.destroy');
+        Route::post('/experiences/{experience}/images', [CrmExperienceController::class, 'uploadImage'])->name('experiences.images.upload');
+        Route::post('/experiences/{experience}/images/reorder', [CrmExperienceController::class, 'reorderImages'])->name('experiences.images.reorder');
+        Route::patch('/experiences/images/{image}', [CrmExperienceController::class, 'updateImage'])->name('experiences.images.update');
+        Route::delete('/experiences/images/{image}', [CrmExperienceController::class, 'deleteImage'])->name('experiences.images.delete');
+        Route::post('/experiences/{experience}/toggle-published', [CrmExperienceController::class, 'togglePublished'])->name('experiences.toggle-published');
+        Route::post('/experiences/{experience}/toggle-featured', [CrmExperienceController::class, 'toggleFeatured'])->name('experiences.toggle-featured');
+        Route::post('/experiences/bulk-delete', [CrmExperienceController::class, 'bulkDelete'])->name('experiences.bulk-delete');
+        Route::post('/experiences/bulk-publish', [CrmExperienceController::class, 'bulkPublish'])->name('experiences.bulk-publish');
     });
 });
 

@@ -22,8 +22,15 @@ interface Props {
     status: string;
 }
 
-function isTraceFormat(trace: TraceEntry[] | null | undefined): trace is TraceEntry[] {
-    return Array.isArray(trace) && trace.length > 0 && typeof trace[0] === 'object' && 'field' in trace[0];
+function isTraceFormat(
+    trace: TraceEntry[] | null | undefined,
+): trace is TraceEntry[] {
+    return (
+        Array.isArray(trace) &&
+        trace.length > 0 &&
+        typeof trace[0] === 'object' &&
+        'field' in trace[0]
+    );
 }
 
 export default function WorkflowDebugConsole({
@@ -40,9 +47,12 @@ export default function WorkflowDebugConsole({
     if (!expression && !hasTrace) {
         return (
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm">
-                <p className="text-xs text-gray-500">No expression debug data available for this run.</p>
+                <p className="text-xs text-gray-500">
+                    No expression debug data available for this run.
+                </p>
                 <p className="mt-1 text-[10px] text-gray-400">
-                    Debug data is only captured for v2 expression-based workflows.
+                    Debug data is only captured for v2 expression-based
+                    workflows.
                 </p>
             </div>
         );
@@ -65,14 +75,9 @@ export default function WorkflowDebugConsole({
                 passedRules={passedRules}
             />
 
-            <ExecutionPath
-                trace={trace ?? []}
-                expression={expression}
-            />
+            <ExecutionPath trace={trace ?? []} expression={expression} />
 
-            {hasTrace && (
-                <TraceTable trace={trace!} />
-            )}
+            {hasTrace && <TraceTable trace={trace!} />}
         </div>
     );
 }

@@ -20,7 +20,10 @@ export function PortalHealthBadge({ tier }: PortalHealthBadgeProps) {
                 color: config.color,
             }}
         >
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: config.color }} />
+            <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: config.color }}
+            />
             {config.label}
         </span>
     );

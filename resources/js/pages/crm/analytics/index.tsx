@@ -106,7 +106,11 @@ interface WfFailureReason {
     totalRuns: number;
     failedRuns: number;
     failureRate: number;
-    topActions: { actionType: string; failureCount: number; failurePercentage: number }[];
+    topActions: {
+        actionType: string;
+        failureCount: number;
+        failurePercentage: number;
+    }[];
 }
 
 interface WfHeatmapCell {
@@ -362,13 +366,32 @@ export default function CrmAnalytics({
 }: Props) {
     const { url } = usePage();
     const params = new URLSearchParams(url.split('?')[1] ?? '');
-    const initialTab = params.get('tab') as 'workflows' | 'approvals' | 'intelligence' | 'optimization' | 'predictions' | null;
-    const validTabs = ['workflows', 'approvals', 'intelligence', 'optimization', 'predictions'];
-    const [tab, setTab] = useState<'workflows' | 'approvals' | 'intelligence' | 'optimization' | 'predictions'>(
-        initialTab && validTabs.includes(initialTab) ? initialTab : 'workflows'
+    const initialTab = params.get('tab') as
+        | 'workflows'
+        | 'approvals'
+        | 'intelligence'
+        | 'optimization'
+        | 'predictions'
+        | null;
+    const validTabs = [
+        'workflows',
+        'approvals',
+        'intelligence',
+        'optimization',
+        'predictions',
+    ];
+    const [tab, setTab] = useState<
+        | 'workflows'
+        | 'approvals'
+        | 'intelligence'
+        | 'optimization'
+        | 'predictions'
+    >(initialTab && validTabs.includes(initialTab) ? initialTab : 'workflows');
+    const [expandedCards, setExpandedCards] = useState<Record<number, boolean>>(
+        {},
     );
-    const [expandedCards, setExpandedCards] = useState<Record<number, boolean>>({});
-    const toggleCard = (i: number) => setExpandedCards((prev) => ({ ...prev, [i]: !prev[i] }));
+    const toggleCard = (i: number) =>
+        setExpandedCards((prev) => ({ ...prev, [i]: !prev[i] }));
 
     const tabs = [
         { key: 'workflows' as const, label: 'Workflows' },
@@ -381,7 +404,8 @@ export default function CrmAnalytics({
     const formatDuration = (seconds: number | null): string => {
         if (seconds === null) return '—';
         if (seconds < 60) return `${seconds}s`;
-        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+        if (seconds < 3600)
+            return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
         return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
     };
 
@@ -394,30 +418,48 @@ export default function CrmAnalytics({
     const formatPct = (value: number | null): string =>
         value !== null ? `${value}%` : '—';
 
-    const [filteredWorkflows, setFilteredWorkflows] = useState<WorkflowBreakdown[] | null>(null);
-    const [filteredApprovals, setFilteredApprovals] = useState<ApprovalFlowBreakdown[] | null>(null);
+    const [filteredWorkflows, setFilteredWorkflows] = useState<
+        WorkflowBreakdown[] | null
+    >(null);
+    const [filteredApprovals, setFilteredApprovals] = useState<
+        ApprovalFlowBreakdown[] | null
+    >(null);
     const [segmentExpression, setSegmentExpression] = useState('');
-    const [matchInfo, setMatchInfo] = useState<{ count: number; total: number; percentage: number } | null>(null);
+    const [matchInfo, setMatchInfo] = useState<{
+        count: number;
+        total: number;
+        percentage: number;
+    } | null>(null);
 
-    const handleSegmentFilter = useCallback(async (tab: 'workflows' | 'approvals', expression: string) => {
-        try {
-            const res = await fetch('/crm/analytics/api/segment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-                body: JSON.stringify({ tab, expression }),
-            });
-            const data = await res.json();
-            setSegmentExpression(expression);
-            setMatchInfo({ count: data.count, total: data.total, percentage: data.percentage });
-            if (tab === 'workflows') {
-                setFilteredWorkflows(data.items as WorkflowBreakdown[]);
-            } else {
-                setFilteredApprovals(data.items as ApprovalFlowBreakdown[]);
+    const handleSegmentFilter = useCallback(
+        async (tab: 'workflows' | 'approvals', expression: string) => {
+            try {
+                const res = await fetch('/crm/analytics/api/segment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ tab, expression }),
+                });
+                const data = await res.json();
+                setSegmentExpression(expression);
+                setMatchInfo({
+                    count: data.count,
+                    total: data.total,
+                    percentage: data.percentage,
+                });
+                if (tab === 'workflows') {
+                    setFilteredWorkflows(data.items as WorkflowBreakdown[]);
+                } else {
+                    setFilteredApprovals(data.items as ApprovalFlowBreakdown[]);
+                }
+            } catch {
+                // fallback: show all
             }
-        } catch {
-            // fallback: show all
-        }
-    }, []);
+        },
+        [],
+    );
 
     const handleSegmentClear = useCallback((tab: 'workflows' | 'approvals') => {
         setSegmentExpression('');
@@ -440,7 +482,9 @@ export default function CrmAnalytics({
             <div className="flex h-full flex-col">
                 <div className="border-b border-border/70 px-6 py-2.5">
                     <div className="flex items-center justify-between">
-                        <h1 className="text-lg font-medium text-foreground">Analytics</h1>
+                        <h1 className="text-lg font-medium text-foreground">
+                            Analytics
+                        </h1>
                         <div className="flex gap-1 rounded-lg border border-border/70 p-0.5">
                             {tabs.map((t) => (
                                 <button
@@ -465,37 +509,102 @@ export default function CrmAnalytics({
                         {tab === 'workflows' && (
                             <>
                                 <div className="grid grid-cols-5 gap-4">
-                                    <MetricCard label="Total Runs" value={workflowMetrics.total} color="text-foreground" />
-                                    <MetricCard label="Success Rate" value={formatPct(workflowMetrics.successRate)} color="text-success" />
-                                    <MetricCard label="Failure Rate" value={formatPct(workflowMetrics.failureRate)} color="text-error" />
-                                    <MetricCard label="Avg Duration" value={formatDuration(workflowMetrics.averageDurationSeconds)} color="text-info" />
-                                    <MetricCard label="Running / Paused" value={`${workflowMetrics.running} / ${workflowMetrics.paused}`} color="text-warning" />
+                                    <MetricCard
+                                        label="Total Runs"
+                                        value={workflowMetrics.total}
+                                        color="text-foreground"
+                                    />
+                                    <MetricCard
+                                        label="Success Rate"
+                                        value={formatPct(
+                                            workflowMetrics.successRate,
+                                        )}
+                                        color="text-success"
+                                    />
+                                    <MetricCard
+                                        label="Failure Rate"
+                                        value={formatPct(
+                                            workflowMetrics.failureRate,
+                                        )}
+                                        color="text-error"
+                                    />
+                                    <MetricCard
+                                        label="Avg Duration"
+                                        value={formatDuration(
+                                            workflowMetrics.averageDurationSeconds,
+                                        )}
+                                        color="text-info"
+                                    />
+                                    <MetricCard
+                                        label="Running / Paused"
+                                        value={`${workflowMetrics.running} / ${workflowMetrics.paused}`}
+                                        color="text-warning"
+                                    />
                                 </div>
 
                                 {topTriggeredWorkflows.length > 0 && (
-                                    <DataTable title="Top Triggered Workflows" cols={['Workflow', 'Total Runs', 'Completed', 'Failed']}>
+                                    <DataTable
+                                        title="Top Triggered Workflows"
+                                        cols={[
+                                            'Workflow',
+                                            'Total Runs',
+                                            'Completed',
+                                            'Failed',
+                                        ]}
+                                    >
                                         {topTriggeredWorkflows.map((w, i) => (
-                                            <tr key={w.workflowId} className="border-b border-border/70">
+                                            <tr
+                                                key={w.workflowId}
+                                                className="border-b border-border/70"
+                                            >
                                                 <td className="px-4 py-2.5 text-xs text-foreground">
-                                                    <span className="mr-2 text-[10px] text-muted-foreground">#{i + 1}</span>
-                                                    {w.workflowName ?? `Workflow #${w.workflowId}`}
+                                                    <span className="mr-2 text-[10px] text-muted-foreground">
+                                                        #{i + 1}
+                                                    </span>
+                                                    {w.workflowName ??
+                                                        `Workflow #${w.workflowId}`}
                                                 </td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{w.totalRuns}</td>
-                                                <td className="px-4 py-2.5 text-xs text-success">{w.completed}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{w.failed}</td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {w.totalRuns}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-success">
+                                                    {w.completed}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {w.failed}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 {topFailedActions.length > 0 && (
-                                    <DataTable title="Top Failed Actions" cols={['Action Type', 'Total', 'Failures', 'Failure Rate']}>
+                                    <DataTable
+                                        title="Top Failed Actions"
+                                        cols={[
+                                            'Action Type',
+                                            'Total',
+                                            'Failures',
+                                            'Failure Rate',
+                                        ]}
+                                    >
                                         {topFailedActions.map((a) => (
-                                            <tr key={a.actionType} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.actionType}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.totalCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{a.failureCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(a.failureRate)}</td>
+                                            <tr
+                                                key={a.actionType}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {a.actionType}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {a.totalCount}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {a.failureCount}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatPct(a.failureRate)}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
@@ -503,50 +612,133 @@ export default function CrmAnalytics({
 
                                 <SegmentFilter
                                     tab="workflows"
-                                    onFilter={(expr) => handleSegmentFilter('workflows', expr)}
-                                    onClear={() => handleSegmentClear('workflows')}
+                                    onFilter={(expr) =>
+                                        handleSegmentFilter('workflows', expr)
+                                    }
+                                    onClear={() =>
+                                        handleSegmentClear('workflows')
+                                    }
                                     isActive={isFiltered && tab === 'workflows'}
-                                    matchInfo={isFiltered && tab === 'workflows' ? matchInfo : null}
+                                    matchInfo={
+                                        isFiltered && tab === 'workflows'
+                                            ? matchInfo
+                                            : null
+                                    }
                                 />
 
                                 {displayWorkflows.length > 0 && (
-                                    <DataTable title={isFiltered && tab === 'workflows' ? 'Workflow Performance (Filtered)' : 'Workflow Performance'} cols={['Workflow', 'Runs', 'Completed', 'Failed', 'Paused', 'Success Rate']}>
+                                    <DataTable
+                                        title={
+                                            isFiltered && tab === 'workflows'
+                                                ? 'Workflow Performance (Filtered)'
+                                                : 'Workflow Performance'
+                                        }
+                                        cols={[
+                                            'Workflow',
+                                            'Runs',
+                                            'Completed',
+                                            'Failed',
+                                            'Paused',
+                                            'Success Rate',
+                                        ]}
+                                    >
                                         {displayWorkflows.map((w) => (
-                                            <tr key={w.id} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{w.name}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{w.totalRuns}</td>
-                                                <td className="px-4 py-2.5 text-xs text-success">{w.completed}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{w.failed}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{w.paused}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(w.successRate)}</td>
+                                            <tr
+                                                key={w.id}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {w.name}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {w.totalRuns}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-success">
+                                                    {w.completed}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {w.failed}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-warning">
+                                                    {w.paused}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatPct(w.successRate)}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 {actionPerformance.length > 0 && (
-                                    <DataTable title="Action Performance" cols={['Action Type', 'Total', 'Failures', 'Failure Rate', 'Avg Duration']}>
+                                    <DataTable
+                                        title="Action Performance"
+                                        cols={[
+                                            'Action Type',
+                                            'Total',
+                                            'Failures',
+                                            'Failure Rate',
+                                            'Avg Duration',
+                                        ]}
+                                    >
                                         {actionPerformance.map((a) => (
-                                            <tr key={a.actionType} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.actionType}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.totalCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{a.failureCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(a.failureRate)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatDuration(a.averageDurationSeconds)}</td>
+                                            <tr
+                                                key={a.actionType}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {a.actionType}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {a.totalCount}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {a.failureCount}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatPct(a.failureRate)}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatDuration(
+                                                        a.averageDurationSeconds,
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 {workflowDailyTrends.length > 0 && (
-                                    <CollapsibleTable title="Daily Trends (30 days)" cols={['Date', 'Total', 'Completed', 'Failed', 'Paused']}>
+                                    <CollapsibleTable
+                                        title="Daily Trends (30 days)"
+                                        cols={[
+                                            'Date',
+                                            'Total',
+                                            'Completed',
+                                            'Failed',
+                                            'Paused',
+                                        ]}
+                                    >
                                         {workflowDailyTrends.map((d) => (
-                                            <tr key={d.date} className="border-b border-border/70">
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.date}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{d.total}</td>
-                                                <td className="px-4 py-2 text-[10px] text-success">{d.completed}</td>
-                                                <td className="px-4 py-2 text-[10px] text-error">{d.failed}</td>
-                                                <td className="px-4 py-2 text-[10px] text-warning">{d.paused}</td>
+                                            <tr
+                                                key={d.date}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                    {d.date}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                    {d.total}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-success">
+                                                    {d.completed}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-error">
+                                                    {d.failed}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-warning">
+                                                    {d.paused}
+                                                </td>
                                             </tr>
                                         ))}
                                     </CollapsibleTable>
@@ -561,67 +753,200 @@ export default function CrmAnalytics({
                         {tab === 'approvals' && (
                             <>
                                 <div className="grid grid-cols-5 gap-4">
-                                    <MetricCard label="Total Requests" value={approvalMetrics.total} color="text-foreground" />
-                                    <MetricCard label="Pending" value={approvalMetrics.pending} color="text-warning" />
-                                    <MetricCard label="Approval Rate" value={formatPct(approvalMetrics.approvalRate)} color="text-success" />
-                                    <MetricCard label="Avg Cycle Time" value={formatMinutes(approvalMetrics.averageResolutionTimeMinutes)} color="text-info" />
-                                    <MetricCard label="Escalation Rate" value={formatPct(approvalMetrics.escalationRate)} color="text-orange-400" />
+                                    <MetricCard
+                                        label="Total Requests"
+                                        value={approvalMetrics.total}
+                                        color="text-foreground"
+                                    />
+                                    <MetricCard
+                                        label="Pending"
+                                        value={approvalMetrics.pending}
+                                        color="text-warning"
+                                    />
+                                    <MetricCard
+                                        label="Approval Rate"
+                                        value={formatPct(
+                                            approvalMetrics.approvalRate,
+                                        )}
+                                        color="text-success"
+                                    />
+                                    <MetricCard
+                                        label="Avg Cycle Time"
+                                        value={formatMinutes(
+                                            approvalMetrics.averageResolutionTimeMinutes,
+                                        )}
+                                        color="text-info"
+                                    />
+                                    <MetricCard
+                                        label="Escalation Rate"
+                                        value={formatPct(
+                                            approvalMetrics.escalationRate,
+                                        )}
+                                        color="text-orange-400"
+                                    />
                                 </div>
 
                                 <div className="grid grid-cols-4 gap-4">
-                                    <MetricCard label="Approved" value={approvalMetrics.approved} color="text-success" />
-                                    <MetricCard label="Rejected" value={approvalMetrics.rejected} color="text-error" />
-                                    <MetricCard label="Expired" value={approvalMetrics.expired} color="text-muted-foreground" />
-                                    <MetricCard label="Avg First Response" value={formatMinutes(approvalMetrics.averageFirstResponseMinutes)} color="text-info" />
+                                    <MetricCard
+                                        label="Approved"
+                                        value={approvalMetrics.approved}
+                                        color="text-success"
+                                    />
+                                    <MetricCard
+                                        label="Rejected"
+                                        value={approvalMetrics.rejected}
+                                        color="text-error"
+                                    />
+                                    <MetricCard
+                                        label="Expired"
+                                        value={approvalMetrics.expired}
+                                        color="text-muted-foreground"
+                                    />
+                                    <MetricCard
+                                        label="Avg First Response"
+                                        value={formatMinutes(
+                                            approvalMetrics.averageFirstResponseMinutes,
+                                        )}
+                                        color="text-info"
+                                    />
                                 </div>
 
                                 <SegmentFilter
                                     tab="approvals"
-                                    onFilter={(expr) => handleSegmentFilter('approvals', expr)}
-                                    onClear={() => handleSegmentClear('approvals')}
+                                    onFilter={(expr) =>
+                                        handleSegmentFilter('approvals', expr)
+                                    }
+                                    onClear={() =>
+                                        handleSegmentClear('approvals')
+                                    }
                                     isActive={isFiltered && tab === 'approvals'}
-                                    matchInfo={isFiltered && tab === 'approvals' ? matchInfo : null}
+                                    matchInfo={
+                                        isFiltered && tab === 'approvals'
+                                            ? matchInfo
+                                            : null
+                                    }
                                 />
 
                                 {displayApprovals.length > 0 && (
-                                    <DataTable title={isFiltered && tab === 'approvals' ? 'Approval by Flow (Filtered)' : 'Approval by Flow'} cols={['Flow', 'Total', 'Approved', 'Rejected', 'Pending', 'Escalated', 'Avg Resolution', 'Escalation Rate']}>
+                                    <DataTable
+                                        title={
+                                            isFiltered && tab === 'approvals'
+                                                ? 'Approval by Flow (Filtered)'
+                                                : 'Approval by Flow'
+                                        }
+                                        cols={[
+                                            'Flow',
+                                            'Total',
+                                            'Approved',
+                                            'Rejected',
+                                            'Pending',
+                                            'Escalated',
+                                            'Avg Resolution',
+                                            'Escalation Rate',
+                                        ]}
+                                    >
                                         {displayApprovals.map((f) => (
-                                            <tr key={f.id} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{f.name}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{f.total}</td>
-                                                <td className="px-4 py-2.5 text-xs text-success">{f.approved}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{f.rejected}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{f.pending}</td>
-                                                <td className="px-4 py-2.5 text-xs text-orange-400">{f.escalated}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatMinutes(f.avgResolutionMinutes)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(f.escalationRate)}</td>
+                                            <tr
+                                                key={f.id}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {f.name}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {f.total}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-success">
+                                                    {f.approved}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {f.rejected}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-warning">
+                                                    {f.pending}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-orange-400">
+                                                    {f.escalated}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatMinutes(
+                                                        f.avgResolutionMinutes,
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {formatPct(
+                                                        f.escalationRate,
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 {approverPerformance.length > 0 && (
-                                    <DataTable title="Approver Performance" cols={['Approver', 'Total', 'Approved', 'Rejected', 'Abstained']}>
+                                    <DataTable
+                                        title="Approver Performance"
+                                        cols={[
+                                            'Approver',
+                                            'Total',
+                                            'Approved',
+                                            'Rejected',
+                                            'Abstained',
+                                        ]}
+                                    >
                                         {approverPerformance.map((a) => (
-                                            <tr key={a.userId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.userName ?? `User #${a.userId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.total}</td>
-                                                <td className="px-4 py-2.5 text-xs text-success">{a.approved}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{a.rejected}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground">{a.abstained}</td>
+                                            <tr
+                                                key={a.userId}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {a.userName ??
+                                                        `User #${a.userId}`}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {a.total}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-success">
+                                                    {a.approved}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-error">
+                                                    {a.rejected}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground">
+                                                    {a.abstained}
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 {approvalDailyTrends.length > 0 && (
-                                    <CollapsibleTable title="Daily Trends (30 days)" cols={['Date', 'Total', 'Approved', 'Rejected']}>
+                                    <CollapsibleTable
+                                        title="Daily Trends (30 days)"
+                                        cols={[
+                                            'Date',
+                                            'Total',
+                                            'Approved',
+                                            'Rejected',
+                                        ]}
+                                    >
                                         {approvalDailyTrends.map((d) => (
-                                            <tr key={d.date} className="border-b border-border/70">
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.date}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{d.total}</td>
-                                                <td className="px-4 py-2 text-[10px] text-success">{d.approved}</td>
-                                                <td className="px-4 py-2 text-[10px] text-error">{d.rejected}</td>
+                                            <tr
+                                                key={d.date}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                    {d.date}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                    {d.total}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-success">
+                                                    {d.approved}
+                                                </td>
+                                                <td className="px-4 py-2 text-[10px] text-error">
+                                                    {d.rejected}
+                                                </td>
                                             </tr>
                                         ))}
                                     </CollapsibleTable>
@@ -636,228 +961,617 @@ export default function CrmAnalytics({
                         {tab === 'intelligence' && (
                             <>
                                 <div className="flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Workflow Intelligence</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Workflow Intelligence
+                                    </span>
                                 </div>
 
-                                {workflowIntelligence.topFailureReasons.length > 0 && (
+                                {workflowIntelligence.topFailureReasons.length >
+                                    0 && (
                                     <div className="space-y-4">
-                                        <p className="text-[11px] font-medium text-foreground">Top Failure Reasons</p>
-                                        {workflowIntelligence.topFailureReasons.map((w) => (
-                                            <div key={w.workflowId} className="rounded-lg border border-border/70 bg-card p-4">
-                                                <div className="flex items-baseline justify-between">
-                                                    <p className="text-sm font-medium text-foreground">{w.workflowName}</p>
-                                                    <span className="rounded-full bg-red-400/10 px-2 py-0.5 text-[10px] text-error">{w.failureRate}% failure</span>
-                                                </div>
-                                                <p className="mt-1 text-[10px] text-muted-foreground">{w.failedRuns} / {w.totalRuns} runs failed</p>
-                                                {w.topActions.length > 0 && (
-                                                    <div className="mt-3 space-y-1">
-                                                        {w.topActions.map((a) => (
-                                                            <div key={a.actionType} className="flex items-center gap-2">
-                                                                <div
-                                                                    className="h-1.5 rounded-full bg-red-400/30"
-                                                                    style={{ width: `${Math.max(a.failurePercentage, 5)}%` }}
-                                                                />
-                                                                <span className="text-[10px] text-muted-foreground/70">{a.actionType}</span>
-                                                                <span className="text-[10px] text-error">{a.failureCount} ({a.failurePercentage}%)</span>
-                                                            </div>
-                                                        ))}
+                                        <p className="text-[11px] font-medium text-foreground">
+                                            Top Failure Reasons
+                                        </p>
+                                        {workflowIntelligence.topFailureReasons.map(
+                                            (w) => (
+                                                <div
+                                                    key={w.workflowId}
+                                                    className="rounded-lg border border-border/70 bg-card p-4"
+                                                >
+                                                    <div className="flex items-baseline justify-between">
+                                                        <p className="text-sm font-medium text-foreground">
+                                                            {w.workflowName}
+                                                        </p>
+                                                        <span className="rounded-full bg-red-400/10 px-2 py-0.5 text-[10px] text-error">
+                                                            {w.failureRate}%
+                                                            failure
+                                                        </span>
                                                     </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                    <p className="mt-1 text-[10px] text-muted-foreground">
+                                                        {w.failedRuns} /{' '}
+                                                        {w.totalRuns} runs
+                                                        failed
+                                                    </p>
+                                                    {w.topActions.length >
+                                                        0 && (
+                                                        <div className="mt-3 space-y-1">
+                                                            {w.topActions.map(
+                                                                (a) => (
+                                                                    <div
+                                                                        key={
+                                                                            a.actionType
+                                                                        }
+                                                                        className="flex items-center gap-2"
+                                                                    >
+                                                                        <div
+                                                                            className="h-1.5 rounded-full bg-red-400/30"
+                                                                            style={{
+                                                                                width: `${Math.max(a.failurePercentage, 5)}%`,
+                                                                            }}
+                                                                        />
+                                                                        <span className="text-[10px] text-muted-foreground/70">
+                                                                            {
+                                                                                a.actionType
+                                                                            }
+                                                                        </span>
+                                                                        <span className="text-[10px] text-error">
+                                                                            {
+                                                                                a.failureCount
+                                                                            }{' '}
+                                                                            (
+                                                                            {
+                                                                                a.failurePercentage
+                                                                            }
+                                                                            %)
+                                                                        </span>
+                                                                    </div>
+                                                                ),
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ),
+                                        )}
                                     </div>
                                 )}
 
-                                {workflowIntelligence.successTrends.length > 0 && (
-                                    <DataTable title="Success Trends (Weekly)" cols={['Week', 'Total', 'Completed', 'Failed', 'Success Rate', 'Failure Rate']}>
-                                        {workflowIntelligence.successTrends.map((w) => (
-                                            <tr key={w.week} className="border-b border-border/70">
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">{w.label}</td>
-                                                <td className="px-4 py-2 text-xs text-muted-foreground/70">{w.totalRuns}</td>
-                                                <td className="px-4 py-2 text-xs text-success">{w.completed}</td>
-                                                <td className="px-4 py-2 text-xs text-error">{w.failed}</td>
-                                                <td className="px-4 py-2 text-xs text-success">{formatPct(w.successRate)}</td>
-                                                <td className="px-4 py-2 text-xs text-error">{formatPct(w.failureRate)}</td>
-                                            </tr>
-                                        ))}
+                                {workflowIntelligence.successTrends.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Success Trends (Weekly)"
+                                        cols={[
+                                            'Week',
+                                            'Total',
+                                            'Completed',
+                                            'Failed',
+                                            'Success Rate',
+                                            'Failure Rate',
+                                        ]}
+                                    >
+                                        {workflowIntelligence.successTrends.map(
+                                            (w) => (
+                                                <tr
+                                                    key={w.week}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                        {w.label}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-xs text-muted-foreground/70">
+                                                        {w.totalRuns}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-xs text-success">
+                                                        {w.completed}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-xs text-error">
+                                                        {w.failed}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-xs text-success">
+                                                        {formatPct(
+                                                            w.successRate,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-xs text-error">
+                                                        {formatPct(
+                                                            w.failureRate,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {workflowIntelligence.slowestWorkflows.length > 0 && (
-                                    <DataTable title="Slowest Workflows" cols={['Workflow', 'Runs', 'Avg Duration', 'Max', 'Min']}>
-                                        {workflowIntelligence.slowestWorkflows.map((w) => (
-                                            <tr key={w.workflowId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{w.workflowName ?? `Workflow #${w.workflowId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{w.totalRuns}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{formatDuration(w.avgDurationSeconds)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatDuration(w.maxDurationSeconds)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatDuration(w.minDurationSeconds)}</td>
-                                            </tr>
-                                        ))}
+                                {workflowIntelligence.slowestWorkflows.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Slowest Workflows"
+                                        cols={[
+                                            'Workflow',
+                                            'Runs',
+                                            'Avg Duration',
+                                            'Max',
+                                            'Min',
+                                        ]}
+                                    >
+                                        {workflowIntelligence.slowestWorkflows.map(
+                                            (w) => (
+                                                <tr
+                                                    key={w.workflowId}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {w.workflowName ??
+                                                            `Workflow #${w.workflowId}`}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {w.totalRuns}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-warning">
+                                                        {formatDuration(
+                                                            w.avgDurationSeconds,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatDuration(
+                                                            w.maxDurationSeconds,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatDuration(
+                                                            w.minDurationSeconds,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {workflowIntelligence.slowestActions.length > 0 && (
-                                    <DataTable title="Slowest Actions" cols={['Action Type', 'Count', 'Avg Duration', 'Max Duration']}>
-                                        {workflowIntelligence.slowestActions.map((a) => (
-                                            <tr key={a.actionType} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.actionType}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.totalCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{formatDuration(a.avgDurationSeconds)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatDuration(a.maxDurationSeconds)}</td>
-                                            </tr>
-                                        ))}
+                                {workflowIntelligence.slowestActions.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Slowest Actions"
+                                        cols={[
+                                            'Action Type',
+                                            'Count',
+                                            'Avg Duration',
+                                            'Max Duration',
+                                        ]}
+                                    >
+                                        {workflowIntelligence.slowestActions.map(
+                                            (a) => (
+                                                <tr
+                                                    key={a.actionType}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {a.actionType}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {a.totalCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-warning">
+                                                        {formatDuration(
+                                                            a.avgDurationSeconds,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatDuration(
+                                                            a.maxDurationSeconds,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {workflowIntelligence.retryCandidates.length > 0 && (
-                                    <DataTable title="Retry Candidates" cols={['Action Type', 'Total', 'Failures', 'Failure Rate', 'Retryable']}>
-                                        {workflowIntelligence.retryCandidates.map((a) => (
-                                            <tr key={a.actionType} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.actionType}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.totalCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{a.failureCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(a.failureRate)}</td>
-                                                <td className="px-4 py-2.5 text-xs">
-                                                    <span className={cn('rounded-full px-2 py-0.5 text-[10px]', a.isRetryable ? 'bg-green-400/10 text-success' : 'bg-muted text-muted-foreground')}>
-                                                        {a.isRetryable ? 'Yes' : 'No'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                {workflowIntelligence.retryCandidates.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Retry Candidates"
+                                        cols={[
+                                            'Action Type',
+                                            'Total',
+                                            'Failures',
+                                            'Failure Rate',
+                                            'Retryable',
+                                        ]}
+                                    >
+                                        {workflowIntelligence.retryCandidates.map(
+                                            (a) => (
+                                                <tr
+                                                    key={a.actionType}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {a.actionType}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {a.totalCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-error">
+                                                        {a.failureCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatPct(
+                                                            a.failureRate,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs">
+                                                        <span
+                                                            className={cn(
+                                                                'rounded-full px-2 py-0.5 text-[10px]',
+                                                                a.isRetryable
+                                                                    ? 'bg-green-400/10 text-success'
+                                                                    : 'bg-muted text-muted-foreground',
+                                                            )}
+                                                        >
+                                                            {a.isRetryable
+                                                                ? 'Yes'
+                                                                : 'No'}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {workflowIntelligence.failureHeatmap.length > 0 && (
-                                    <CollapsibleTable title="Failure Heatmap (Workflow × Action)" cols={['Workflow', 'Action Type', 'Total Runs', 'Failures', 'Failure Rate']}>
-                                        {workflowIntelligence.failureHeatmap.map((h, i) => (
-                                            <tr key={i} className="border-b border-border/70">
-                                                <td className="px-4 py-2 text-[10px] text-foreground">{h.workflowName}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{h.actionType}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{h.totalRuns}</td>
-                                                <td className="px-4 py-2 text-[10px] text-error">{h.failures}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{formatPct(h.failureRate)}</td>
-                                            </tr>
-                                        ))}
+                                {workflowIntelligence.failureHeatmap.length >
+                                    0 && (
+                                    <CollapsibleTable
+                                        title="Failure Heatmap (Workflow × Action)"
+                                        cols={[
+                                            'Workflow',
+                                            'Action Type',
+                                            'Total Runs',
+                                            'Failures',
+                                            'Failure Rate',
+                                        ]}
+                                    >
+                                        {workflowIntelligence.failureHeatmap.map(
+                                            (h, i) => (
+                                                <tr
+                                                    key={i}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2 text-[10px] text-foreground">
+                                                        {h.workflowName}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                        {h.actionType}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                        {h.totalRuns}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-error">
+                                                        {h.failures}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                        {formatPct(
+                                                            h.failureRate,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </CollapsibleTable>
                                 )}
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Approval Intelligence</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Approval Intelligence
+                                    </span>
                                 </div>
 
-                                {approvalIntelligence.bottleneckSteps.length > 0 && (
-                                    <DataTable title="Bottleneck Steps" cols={['Flow', 'Step', 'Type', 'Decisions', 'Avg Time', 'Max Time']}>
-                                        {approvalIntelligence.bottleneckSteps.map((b, i) => (
-                                            <tr key={i} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{b.flowName}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">Step {b.stepOrder}: {b.stepName}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground">{b.approverType}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{b.totalDecisions}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{formatMinutes(b.avgDecisionTimeMinutes)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{formatMinutes(b.maxDecisionTimeMinutes)}</td>
-                                            </tr>
-                                        ))}
+                                {approvalIntelligence.bottleneckSteps.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Bottleneck Steps"
+                                        cols={[
+                                            'Flow',
+                                            'Step',
+                                            'Type',
+                                            'Decisions',
+                                            'Avg Time',
+                                            'Max Time',
+                                        ]}
+                                    >
+                                        {approvalIntelligence.bottleneckSteps.map(
+                                            (b, i) => (
+                                                <tr
+                                                    key={i}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {b.flowName}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        Step {b.stepOrder}:{' '}
+                                                        {b.stepName}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground">
+                                                        {b.approverType}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {b.totalDecisions}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-warning">
+                                                        {formatMinutes(
+                                                            b.avgDecisionTimeMinutes,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-error">
+                                                        {formatMinutes(
+                                                            b.maxDecisionTimeMinutes,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {approvalIntelligence.slowestApprovers.length > 0 && (
-                                    <DataTable title="Slowest Approvers" cols={['Approver', 'Decisions', 'Avg Decision Time', 'Approved', 'Rejected', 'Approval Rate']}>
-                                        {approvalIntelligence.slowestApprovers.map((a) => (
-                                            <tr key={a.userId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{a.userName ?? `User #${a.userId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{a.totalDecisions}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{formatMinutes(a.avgDecisionTimeMinutes)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-success">{a.approved}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{a.rejected}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(a.approvalRate)}</td>
-                                            </tr>
-                                        ))}
+                                {approvalIntelligence.slowestApprovers.length >
+                                    0 && (
+                                    <DataTable
+                                        title="Slowest Approvers"
+                                        cols={[
+                                            'Approver',
+                                            'Decisions',
+                                            'Avg Decision Time',
+                                            'Approved',
+                                            'Rejected',
+                                            'Approval Rate',
+                                        ]}
+                                    >
+                                        {approvalIntelligence.slowestApprovers.map(
+                                            (a) => (
+                                                <tr
+                                                    key={a.userId}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {a.userName ??
+                                                            `User #${a.userId}`}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {a.totalDecisions}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-warning">
+                                                        {formatMinutes(
+                                                            a.avgDecisionTimeMinutes,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-success">
+                                                        {a.approved}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-error">
+                                                        {a.rejected}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatPct(
+                                                            a.approvalRate,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {approvalIntelligence.slaRiskFlows.length > 0 && (
-                                    <DataTable title="SLA Risk Assessment" cols={['Flow', 'SLA (min)', 'Avg Resolution', 'Breaches', 'Pending', 'Risk']}>
-                                        {approvalIntelligence.slaRiskFlows.map((f) => (
-                                            <tr key={f.flowId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{f.flowName}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{f.slaBreachMinutes ?? '—'}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatMinutes(f.avgResolutionMinutes)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{f.breachCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{f.pendingCount}</td>
-                                                <td className="px-4 py-2.5 text-xs">
-                                                    <span className={cn(
-                                                        'rounded-full px-2 py-0.5 text-[10px]',
-                                                        f.riskLevel === 'high' ? 'bg-red-400/10 text-error' :
-                                                            f.riskLevel === 'medium' ? 'bg-yellow-400/10 text-warning' :
-                                                                'bg-green-400/10 text-success',
-                                                    )}>
-                                                        {f.riskLevel}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                {approvalIntelligence.slaRiskFlows.length >
+                                    0 && (
+                                    <DataTable
+                                        title="SLA Risk Assessment"
+                                        cols={[
+                                            'Flow',
+                                            'SLA (min)',
+                                            'Avg Resolution',
+                                            'Breaches',
+                                            'Pending',
+                                            'Risk',
+                                        ]}
+                                    >
+                                        {approvalIntelligence.slaRiskFlows.map(
+                                            (f) => (
+                                                <tr
+                                                    key={f.flowId}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {f.flowName}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {f.slaBreachMinutes ??
+                                                            '—'}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatMinutes(
+                                                            f.avgResolutionMinutes,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-error">
+                                                        {f.breachCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-warning">
+                                                        {f.pendingCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs">
+                                                        <span
+                                                            className={cn(
+                                                                'rounded-full px-2 py-0.5 text-[10px]',
+                                                                f.riskLevel ===
+                                                                    'high'
+                                                                    ? 'bg-red-400/10 text-error'
+                                                                    : f.riskLevel ===
+                                                                        'medium'
+                                                                      ? 'bg-yellow-400/10 text-warning'
+                                                                      : 'bg-green-400/10 text-success',
+                                                            )}
+                                                        >
+                                                            {f.riskLevel}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {approvalIntelligence.escalationHotspots.length > 0 && (
-                                    <DataTable title="Escalation Hotspots" cols={['Flow', 'Requests', 'Escalated', 'Escalation Rate', 'Avg Escalations']}>
-                                        {approvalIntelligence.escalationHotspots.map((h) => (
-                                            <tr key={h.flowId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{h.flowName}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{h.totalRequests}</td>
-                                                <td className="px-4 py-2.5 text-xs text-orange-400">{h.escalatedCount}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{formatPct(h.escalationRate)}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{h.avgEscalationCount ?? '—'}</td>
-                                            </tr>
-                                        ))}
+                                {approvalIntelligence.escalationHotspots
+                                    .length > 0 && (
+                                    <DataTable
+                                        title="Escalation Hotspots"
+                                        cols={[
+                                            'Flow',
+                                            'Requests',
+                                            'Escalated',
+                                            'Escalation Rate',
+                                            'Avg Escalations',
+                                        ]}
+                                    >
+                                        {approvalIntelligence.escalationHotspots.map(
+                                            (h) => (
+                                                <tr
+                                                    key={h.flowId}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {h.flowName}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {h.totalRequests}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-orange-400">
+                                                        {h.escalatedCount}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {formatPct(
+                                                            h.escalationRate,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {h.avgEscalationCount ??
+                                                            '—'}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
-                                {approvalIntelligence.approvalThroughput.length > 0 && (
-                                    <CollapsibleTable title="Approval Throughput (30 days)" cols={['Date', 'Created', 'Resolved', 'Pending', 'Approved', 'Rejected']}>
-                                        {approvalIntelligence.approvalThroughput.map((d) => (
-                                            <tr key={d.date} className="border-b border-border/70">
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.date}</td>
-                                                <td className="px-4 py-2 text-[10px] text-muted-foreground/70">{d.created}</td>
-                                                <td className="px-4 py-2 text-[10px] text-success">{d.resolved}</td>
-                                                <td className="px-4 py-2 text-[10px] text-warning">{d.pending}</td>
-                                                <td className="px-4 py-2 text-[10px] text-success">{d.approved}</td>
-                                                <td className="px-4 py-2 text-[10px] text-error">{d.rejected}</td>
-                                            </tr>
-                                        ))}
+                                {approvalIntelligence.approvalThroughput
+                                    .length > 0 && (
+                                    <CollapsibleTable
+                                        title="Approval Throughput (30 days)"
+                                        cols={[
+                                            'Date',
+                                            'Created',
+                                            'Resolved',
+                                            'Pending',
+                                            'Approved',
+                                            'Rejected',
+                                        ]}
+                                    >
+                                        {approvalIntelligence.approvalThroughput.map(
+                                            (d) => (
+                                                <tr
+                                                    key={d.date}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                        {d.date}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground/70">
+                                                        {d.created}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-success">
+                                                        {d.resolved}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-warning">
+                                                        {d.pending}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-success">
+                                                        {d.approved}
+                                                    </td>
+                                                    <td className="px-4 py-2 text-[10px] text-error">
+                                                        {d.rejected}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </CollapsibleTable>
                                 )}
 
-                                {workflowIntelligence.topFailureReasons.length === 0 && approvalIntelligence.bottleneckSteps.length === 0 && (
-                                    <EmptyState message="Not enough data for intelligence insights. Run more workflows and process more approvals." />
-                                )}
+                                {workflowIntelligence.topFailureReasons
+                                    .length === 0 &&
+                                    approvalIntelligence.bottleneckSteps
+                                        .length === 0 && (
+                                        <EmptyState message="Not enough data for intelligence insights. Run more workflows and process more approvals." />
+                                    )}
                             </>
                         )}
 
                         {tab === 'optimization' && (
                             <>
                                 <div className="flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Health Scores</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Health Scores
+                                    </span>
                                 </div>
 
                                 {healthScores.workflows.length > 0 && (
-                                    <DataTable title="Workflow Health" cols={['Workflow', 'Score', 'Status', 'Success Rate', 'Failure Rate', 'Action Failure Rate']}>
+                                    <DataTable
+                                        title="Workflow Health"
+                                        cols={[
+                                            'Workflow',
+                                            'Score',
+                                            'Status',
+                                            'Success Rate',
+                                            'Failure Rate',
+                                            'Action Failure Rate',
+                                        ]}
+                                    >
                                         {healthScores.workflows.map((h) => (
-                                            <tr key={h.entityId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{h.entityName}</td>
-                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">{h.score}/100</td>
+                                            <tr
+                                                key={h.entityId}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {h.entityName}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">
+                                                    {h.score}/100
+                                                </td>
                                                 <td className="px-4 py-2.5 text-xs">
-                                                    <HealthBadge status={h.status} />
+                                                    <HealthBadge
+                                                        status={h.status}
+                                                    />
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-success">
-                                                    {String(h.factors?.successRate ?? '')}%
+                                                    {String(
+                                                        h.factors
+                                                            ?.successRate ?? '',
+                                                    )}
+                                                    %
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-error">
-                                                    {String(h.factors?.failureRate ?? '')}%
+                                                    {String(
+                                                        h.factors
+                                                            ?.failureRate ?? '',
+                                                    )}
+                                                    %
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
-                                                    {String(h.factors?.actionFailureRate ?? '')}%
+                                                    {String(
+                                                        h.factors
+                                                            ?.actionFailureRate ??
+                                                            '',
+                                                    )}
+                                                    %
                                                 </td>
                                             </tr>
                                         ))}
@@ -865,22 +1579,55 @@ export default function CrmAnalytics({
                                 )}
 
                                 {healthScores.approvals.length > 0 && (
-                                    <DataTable title="Approval Flow Health" cols={['Flow', 'Score', 'Status', 'Approval Rate', 'Escalation Rate', 'Pending']}>
+                                    <DataTable
+                                        title="Approval Flow Health"
+                                        cols={[
+                                            'Flow',
+                                            'Score',
+                                            'Status',
+                                            'Approval Rate',
+                                            'Escalation Rate',
+                                            'Pending',
+                                        ]}
+                                    >
                                         {healthScores.approvals.map((h) => (
-                                            <tr key={h.entityId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{h.entityName}</td>
-                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">{h.score}/100</td>
+                                            <tr
+                                                key={h.entityId}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {h.entityName}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">
+                                                    {h.score}/100
+                                                </td>
                                                 <td className="px-4 py-2.5 text-xs">
-                                                    <HealthBadge status={h.status} />
+                                                    <HealthBadge
+                                                        status={h.status}
+                                                    />
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-success">
-                                                    {String(h.factors?.approvalRate ?? '')}%
+                                                    {String(
+                                                        h.factors
+                                                            ?.approvalRate ??
+                                                            '',
+                                                    )}
+                                                    %
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-orange-400">
-                                                    {String(h.factors?.escalationRate ?? '')}%
+                                                    {String(
+                                                        h.factors
+                                                            ?.escalationRate ??
+                                                            '',
+                                                    )}
+                                                    %
                                                 </td>
                                                 <td className="px-4 py-2.5 text-xs text-warning">
-                                                    {String(h.factors?.pendingCount ?? '0')}
+                                                    {String(
+                                                        h.factors
+                                                            ?.pendingCount ??
+                                                            '0',
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -888,7 +1635,9 @@ export default function CrmAnalytics({
                                 )}
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Recommendations</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Recommendations
+                                    </span>
                                 </div>
 
                                 {recommendations.length === 0 && (
@@ -901,39 +1650,63 @@ export default function CrmAnalytics({
                                             key={i}
                                             className={cn(
                                                 'rounded-lg border p-4',
-                                                r.severity === 'critical' ? 'border-red-400/20 bg-red-400/5' :
-                                                    r.severity === 'warning' ? 'border-yellow-400/20 bg-yellow-400/5' :
-                                                        'border-border/70 bg-card',
+                                                r.severity === 'critical'
+                                                    ? 'border-red-400/20 bg-red-400/5'
+                                                    : r.severity === 'warning'
+                                                      ? 'border-yellow-400/20 bg-yellow-400/5'
+                                                      : 'border-border/70 bg-card',
                                             )}
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div className="min-w-0 flex-1">
                                                     <div className="flex items-center gap-2">
-                                                        <span className={cn(
-                                                            'rounded-full px-2 py-0.5 text-[10px] font-medium',
-                                                            r.severity === 'critical' ? 'bg-red-400/10 text-error' :
-                                                                r.severity === 'warning' ? 'bg-yellow-400/10 text-warning' :
-                                                                    'bg-blue-400/10 text-info',
-                                                        )}>
+                                                        <span
+                                                            className={cn(
+                                                                'rounded-full px-2 py-0.5 text-[10px] font-medium',
+                                                                r.severity ===
+                                                                    'critical'
+                                                                    ? 'bg-red-400/10 text-error'
+                                                                    : r.severity ===
+                                                                        'warning'
+                                                                      ? 'bg-yellow-400/10 text-warning'
+                                                                      : 'bg-blue-400/10 text-info',
+                                                            )}
+                                                        >
                                                             {r.severity}
                                                         </span>
-                                                        <span className="text-[10px] text-muted-foreground">{r.type}</span>
-                                                        <span className="text-[10px] text-muted-foreground">·</span>
-                                                        <span className="text-[10px] text-muted-foreground">{r.entityType}</span>
+                                                        <span className="text-[10px] text-muted-foreground">
+                                                            {r.type}
+                                                        </span>
+                                                        <span className="text-[10px] text-muted-foreground">
+                                                            ·
+                                                        </span>
+                                                        <span className="text-[10px] text-muted-foreground">
+                                                            {r.entityType}
+                                                        </span>
                                                     </div>
-                                                    <p className="mt-1.5 text-xs text-foreground leading-relaxed">{r.message}</p>
+                                                    <p className="mt-1.5 text-xs leading-relaxed text-foreground">
+                                                        {r.message}
+                                                    </p>
                                                     {r.entityName && (
                                                         <p className="mt-1 text-[10px] text-muted-foreground">
-                                                            Entity: {r.entityName}{r.entityId ? ` (#${r.entityId})` : ''}
+                                                            Entity:{' '}
+                                                            {r.entityName}
+                                                            {r.entityId
+                                                                ? ` (#${r.entityId})`
+                                                                : ''}
                                                         </p>
                                                     )}
                                                 </div>
-                                                <span className={cn(
-                                                    'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium',
-                                                    r.priority >= 80 ? 'bg-red-400/10 text-error' :
-                                                        r.priority >= 60 ? 'bg-yellow-400/10 text-warning' :
-                                                            'bg-blue-400/10 text-info',
-                                                )}>
+                                                <span
+                                                    className={cn(
+                                                        'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium',
+                                                        r.priority >= 80
+                                                            ? 'bg-red-400/10 text-error'
+                                                            : r.priority >= 60
+                                                              ? 'bg-yellow-400/10 text-warning'
+                                                              : 'bg-blue-400/10 text-info',
+                                                    )}
+                                                >
                                                     P{r.priority}
                                                 </span>
                                             </div>
@@ -942,45 +1715,106 @@ export default function CrmAnalytics({
                                                 <>
                                                     <button
                                                         type="button"
-                                                        onClick={() => toggleCard(i)}
-                                                        className="mt-3 flex items-center gap-1 text-[10px] text-[#3b6cdb] hover:text-[#4d7dde] transition-colors"
+                                                        onClick={() =>
+                                                            toggleCard(i)
+                                                        }
+                                                        className="mt-3 flex items-center gap-1 text-[10px] text-[#3b6cdb] transition-colors hover:text-[#4d7dde]"
                                                     >
-                                                        <span>{expandedCards[i] ? '▼' : '▶'} Why am I seeing this?</span>
+                                                        <span>
+                                                            {expandedCards[i]
+                                                                ? '▼'
+                                                                : '▶'}{' '}
+                                                            Why am I seeing
+                                                            this?
+                                                        </span>
                                                     </button>
 
                                                     {expandedCards[i] && (
                                                         <div className="mt-2 rounded-md border border-border/70 bg-muted/50 p-3">
-                                                            <p className="text-[10px] text-muted-foreground mb-2">{r.explanation.summary}</p>
+                                                            <p className="mb-2 text-[10px] text-muted-foreground">
+                                                                {
+                                                                    r
+                                                                        .explanation
+                                                                        .summary
+                                                                }
+                                                            </p>
 
-                                                            {r.explanation.reasons.length > 0 && (
-                                                                <div className="space-y-1 mb-3">
-                                                                    {r.explanation.reasons.map((reason, j) => (
-                                                                        <div key={j} className="flex items-center gap-2">
-                                                                            <span className="text-[10px] text-muted-foreground/70 min-w-[120px]">{reason.label}</span>
-                                                                            <span className="text-[10px] text-foreground font-mono">{reason.value}</span>
-                                                                            <span className={cn(
-                                                                                'rounded px-1.5 py-0.5 text-[9px] capitalize',
-                                                                                reason.severity === 'critical' ? 'bg-red-400/10 text-error' :
-                                                                                    reason.severity === 'warning' ? 'bg-yellow-400/10 text-warning' :
-                                                                                        'bg-muted text-muted-foreground',
-                                                                            )}>
-                                                                                {reason.severity}
-                                                                            </span>
-                                                                        </div>
-                                                                    ))}
+                                                            {r.explanation
+                                                                .reasons
+                                                                .length > 0 && (
+                                                                <div className="mb-3 space-y-1">
+                                                                    {r.explanation.reasons.map(
+                                                                        (
+                                                                            reason,
+                                                                            j,
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    j
+                                                                                }
+                                                                                className="flex items-center gap-2"
+                                                                            >
+                                                                                <span className="min-w-[120px] text-[10px] text-muted-foreground/70">
+                                                                                    {
+                                                                                        reason.label
+                                                                                    }
+                                                                                </span>
+                                                                                <span className="font-mono text-[10px] text-foreground">
+                                                                                    {
+                                                                                        reason.value
+                                                                                    }
+                                                                                </span>
+                                                                                <span
+                                                                                    className={cn(
+                                                                                        'rounded px-1.5 py-0.5 text-[9px] capitalize',
+                                                                                        reason.severity ===
+                                                                                            'critical'
+                                                                                            ? 'bg-red-400/10 text-error'
+                                                                                            : reason.severity ===
+                                                                                                'warning'
+                                                                                              ? 'bg-yellow-400/10 text-warning'
+                                                                                              : 'bg-muted text-muted-foreground',
+                                                                                    )}
+                                                                                >
+                                                                                    {
+                                                                                        reason.severity
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
+                                                                        ),
+                                                                    )}
                                                                 </div>
                                                             )}
 
-                                                            {r.explanation.recommendedActions.length > 0 && (
+                                                            {r.explanation
+                                                                .recommendedActions
+                                                                .length > 0 && (
                                                                 <div>
-                                                                    <p className="text-[10px] text-muted-foreground mb-1">Recommended Actions</p>
+                                                                    <p className="mb-1 text-[10px] text-muted-foreground">
+                                                                        Recommended
+                                                                        Actions
+                                                                    </p>
                                                                     <ul className="space-y-0.5">
-                                                                        {r.explanation.recommendedActions.map((action, j) => (
-                                                                            <li key={j} className="flex items-center gap-1.5 text-[10px] text-muted-foreground/70">
-                                                                                <span className="text-[#3b6cdb]">•</span>
-                                                                                {action}
-                                                                            </li>
-                                                                        ))}
+                                                                        {r.explanation.recommendedActions.map(
+                                                                            (
+                                                                                action,
+                                                                                j,
+                                                                            ) => (
+                                                                                <li
+                                                                                    key={
+                                                                                        j
+                                                                                    }
+                                                                                    className="flex items-center gap-1.5 text-[10px] text-muted-foreground/70"
+                                                                                >
+                                                                                    <span className="text-[#3b6cdb]">
+                                                                                        •
+                                                                                    </span>
+                                                                                    {
+                                                                                        action
+                                                                                    }
+                                                                                </li>
+                                                                            ),
+                                                                        )}
                                                                     </ul>
                                                                 </div>
                                                             )}
@@ -993,7 +1827,9 @@ export default function CrmAnalytics({
                                 </div>
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Automation Insights</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Automation Insights
+                                    </span>
                                 </div>
 
                                 {insights.length === 0 && (
@@ -1006,21 +1842,32 @@ export default function CrmAnalytics({
                                             key={i}
                                             className={cn(
                                                 'rounded-lg border p-4',
-                                                insight.severity === 'critical' ? 'border-red-400/20 bg-red-400/5' :
-                                                    insight.severity === 'warning' ? 'border-yellow-400/20 bg-yellow-400/5' :
-                                                        'border-border/70 bg-card',
+                                                insight.severity === 'critical'
+                                                    ? 'border-red-400/20 bg-red-400/5'
+                                                    : insight.severity ===
+                                                        'warning'
+                                                      ? 'border-yellow-400/20 bg-yellow-400/5'
+                                                      : 'border-border/70 bg-card',
                                             )}
                                         >
                                             <div className="flex items-start gap-2">
-                                                <span className={cn(
-                                                    'mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium',
-                                                    insight.severity === 'critical' ? 'bg-red-400/10 text-error' :
-                                                        insight.severity === 'warning' ? 'bg-yellow-400/10 text-warning' :
-                                                            'bg-blue-400/10 text-info',
-                                                )}>
+                                                <span
+                                                    className={cn(
+                                                        'mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium',
+                                                        insight.severity ===
+                                                            'critical'
+                                                            ? 'bg-red-400/10 text-error'
+                                                            : insight.severity ===
+                                                                'warning'
+                                                              ? 'bg-yellow-400/10 text-warning'
+                                                              : 'bg-blue-400/10 text-info',
+                                                    )}
+                                                >
                                                     {insight.severity}
                                                 </span>
-                                                <p className="text-xs text-foreground leading-relaxed">{insight.message}</p>
+                                                <p className="text-xs leading-relaxed text-foreground">
+                                                    {insight.message}
+                                                </p>
                                             </div>
                                         </div>
                                     ))}
@@ -1031,7 +1878,9 @@ export default function CrmAnalytics({
                         {tab === 'predictions' && (
                             <>
                                 <div className="flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Workflow Risk Predictions</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Workflow Risk Predictions
+                                    </span>
                                 </div>
 
                                 {predictions.workflowRisks.length === 0 && (
@@ -1041,35 +1890,89 @@ export default function CrmAnalytics({
                                 {predictions.workflowRisks.length > 0 && (
                                     <DataTable
                                         title="Failure Risk by Workflow"
-                                        cols={['Workflow', 'Risk Score', 'Risk Level', 'Probability', 'Recent Failure Rate', 'Overall Failure Rate', 'Trend']}
+                                        cols={[
+                                            'Workflow',
+                                            'Risk Score',
+                                            'Risk Level',
+                                            'Probability',
+                                            'Recent Failure Rate',
+                                            'Overall Failure Rate',
+                                            'Trend',
+                                        ]}
                                     >
-                                        {predictions.workflowRisks.map((r, i) => (
-                                            <tr key={r.workflowId ?? i} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{r.workflowName ?? `Workflow #${r.workflowId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">{r.riskScore !== null ? `${r.riskScore}/100` : '—'}</td>
-                                                <td className="px-4 py-2.5 text-xs">
-                                                    <RiskBadge level={r.riskLevel} />
-                                                </td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{r.probability !== null ? `${Math.round(r.probability * 100)}%` : '—'}</td>
-                                                <td className="px-4 py-2.5 text-xs text-error">{String(r.factors?.recentFailureRate ?? '')}%</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{String(r.factors?.overallFailureRate ?? '')}%</td>
-                                                <td className="px-4 py-2.5 text-xs">
-                                                    <span className={cn(
-                                                        'rounded-full px-2 py-0.5 text-[10px]',
-                                                        r.factors?.trend === 'increasing' ? 'bg-red-400/10 text-error' :
-                                                            r.factors?.trend === 'decreasing' ? 'bg-green-400/10 text-success' :
-                                                                'bg-muted text-muted-foreground',
-                                                    )}>
-                                                        {String(r.factors?.trend ?? 'stable')}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {predictions.workflowRisks.map(
+                                            (r, i) => (
+                                                <tr
+                                                    key={r.workflowId ?? i}
+                                                    className="border-b border-border/70"
+                                                >
+                                                    <td className="px-4 py-2.5 text-xs text-foreground">
+                                                        {r.workflowName ??
+                                                            `Workflow #${r.workflowId}`}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs font-medium text-foreground">
+                                                        {r.riskScore !== null
+                                                            ? `${r.riskScore}/100`
+                                                            : '—'}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs">
+                                                        <RiskBadge
+                                                            level={r.riskLevel}
+                                                        />
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {r.probability !== null
+                                                            ? `${Math.round(r.probability * 100)}%`
+                                                            : '—'}
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-error">
+                                                        {String(
+                                                            r.factors
+                                                                ?.recentFailureRate ??
+                                                                '',
+                                                        )}
+                                                        %
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                        {String(
+                                                            r.factors
+                                                                ?.overallFailureRate ??
+                                                                '',
+                                                        )}
+                                                        %
+                                                    </td>
+                                                    <td className="px-4 py-2.5 text-xs">
+                                                        <span
+                                                            className={cn(
+                                                                'rounded-full px-2 py-0.5 text-[10px]',
+                                                                r.factors
+                                                                    ?.trend ===
+                                                                    'increasing'
+                                                                    ? 'bg-red-400/10 text-error'
+                                                                    : r.factors
+                                                                            ?.trend ===
+                                                                        'decreasing'
+                                                                      ? 'bg-green-400/10 text-success'
+                                                                      : 'bg-muted text-muted-foreground',
+                                                            )}
+                                                        >
+                                                            {String(
+                                                                r.factors
+                                                                    ?.trend ??
+                                                                    'stable',
+                                                            )}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </DataTable>
                                 )}
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">SLA Breach Predictions</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        SLA Breach Predictions
+                                    </span>
                                 </div>
 
                                 {predictions.slaBreaches.length === 0 && (
@@ -1079,28 +1982,82 @@ export default function CrmAnalytics({
                                 {predictions.slaBreaches.length > 0 && (
                                     <DataTable
                                         title="Pending SLA Breach Risk"
-                                        cols={['Request', 'Flow', 'Elapsed', 'Remaining', 'SLA (min)', 'Progress', 'Breach Probability', 'Risk', 'Expected Remaining']}
+                                        cols={[
+                                            'Request',
+                                            'Flow',
+                                            'Elapsed',
+                                            'Remaining',
+                                            'SLA (min)',
+                                            'Progress',
+                                            'Breach Probability',
+                                            'Risk',
+                                            'Expected Remaining',
+                                        ]}
                                     >
                                         {predictions.slaBreaches.map((p) => (
-                                            <tr key={p.approvalRequestId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-[10px] text-foreground">#{p.approvalRequestId}</td>
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{p.flowName ?? `Flow #${p.flowId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{p.status?.elapsedMinutes ?? '—'}m</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{p.status?.remainingMinutes ?? '—'}m</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{p.status?.slaBreachMinutes ?? '—'}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{p.status?.progressPercent ?? '—'}%</td>
-                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">{p.status?.breachProbability ?? '—'}%</td>
-                                                <td className="px-4 py-2.5 text-xs">
-                                                    <RiskBadge level={p.status?.riskLevel ?? 'unknown'} />
+                                            <tr
+                                                key={p.approvalRequestId}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-[10px] text-foreground">
+                                                    #{p.approvalRequestId}
                                                 </td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{p.status?.expectedRemainingMinutes ?? '—'}m</td>
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {p.flowName ??
+                                                        `Flow #${p.flowId}`}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {p.status?.elapsedMinutes ??
+                                                        '—'}
+                                                    m
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-warning">
+                                                    {p.status
+                                                        ?.remainingMinutes ??
+                                                        '—'}
+                                                    m
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {p.status
+                                                        ?.slaBreachMinutes ??
+                                                        '—'}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {p.status
+                                                        ?.progressPercent ??
+                                                        '—'}
+                                                    %
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs font-medium text-foreground">
+                                                    {p.status
+                                                        ?.breachProbability ??
+                                                        '—'}
+                                                    %
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs">
+                                                    <RiskBadge
+                                                        level={
+                                                            p.status
+                                                                ?.riskLevel ??
+                                                            'unknown'
+                                                        }
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {p.status
+                                                        ?.expectedRemainingMinutes ??
+                                                        '—'}
+                                                    m
+                                                </td>
                                             </tr>
                                         ))}
                                     </DataTable>
                                 )}
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Approval Delay Forecasts</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Approval Delay Forecasts
+                                    </span>
                                 </div>
 
                                 {predictions.delayForecasts.length === 0 && (
@@ -1110,18 +2067,58 @@ export default function CrmAnalytics({
                                 {predictions.delayForecasts.length > 0 && (
                                     <DataTable
                                         title="Expected Resolution Times"
-                                        cols={['Request', 'Flow', 'Elapsed', 'Expected Remaining', 'Expected Total', 'Expected At', 'Confidence']}
+                                        cols={[
+                                            'Request',
+                                            'Flow',
+                                            'Elapsed',
+                                            'Expected Remaining',
+                                            'Expected Total',
+                                            'Expected At',
+                                            'Confidence',
+                                        ]}
                                     >
                                         {predictions.delayForecasts.map((f) => (
-                                            <tr key={f.approvalRequestId} className="border-b border-border/70">
-                                                <td className="px-4 py-2.5 text-[10px] text-foreground">#{f.approvalRequestId}</td>
-                                                <td className="px-4 py-2.5 text-xs text-foreground">{f.flowName ?? `Flow #${f.flowId}`}</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{f.forecast.elapsedMinutes}m</td>
-                                                <td className="px-4 py-2.5 text-xs text-warning">{f.forecast.expectedRemainingMinutes}m</td>
-                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">{f.forecast.expectedTotalMinutes}m</td>
-                                                <td className="px-4 py-2.5 text-[10px] text-muted-foreground">{f.forecast.expectedResolutionAt}</td>
+                                            <tr
+                                                key={f.approvalRequestId}
+                                                className="border-b border-border/70"
+                                            >
+                                                <td className="px-4 py-2.5 text-[10px] text-foreground">
+                                                    #{f.approvalRequestId}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-foreground">
+                                                    {f.flowName ??
+                                                        `Flow #${f.flowId}`}
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {f.forecast.elapsedMinutes}m
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-warning">
+                                                    {
+                                                        f.forecast
+                                                            .expectedRemainingMinutes
+                                                    }
+                                                    m
+                                                </td>
+                                                <td className="px-4 py-2.5 text-xs text-muted-foreground/70">
+                                                    {
+                                                        f.forecast
+                                                            .expectedTotalMinutes
+                                                    }
+                                                    m
+                                                </td>
+                                                <td className="px-4 py-2.5 text-[10px] text-muted-foreground">
+                                                    {
+                                                        f.forecast
+                                                            .expectedResolutionAt
+                                                    }
+                                                </td>
                                                 <td className="px-4 py-2.5 text-xs">
-                                                    <ConfidenceBadge level={f.forecast.confidence} />
+                                                    <ConfidenceBadge
+                                                        level={
+                                                            f.forecast
+                                                                .confidence
+                                                        }
+                                                    />
                                                 </td>
                                             </tr>
                                         ))}
@@ -1129,43 +2126,133 @@ export default function CrmAnalytics({
                                 )}
 
                                 <div className="mt-8 flex items-center gap-2 border-b border-border/70 pb-2">
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Capacity Forecasts</span>
+                                    <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                                        Capacity Forecasts
+                                    </span>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p className="mb-3 text-[11px] font-medium text-foreground">Workflow Volume — Next 7 Days</p>
-                                        <p className="text-[10px] text-muted-foreground">{predictions.workflowVolume.last30Summary}</p>
-                                        <p className="mt-1 text-[10px] text-muted-foreground">
-                                            Daily avg: {predictions.workflowVolume.dailyAverage} · Trend: {predictions.workflowVolume.weeklyTrend}% ({predictions.workflowVolume.trendDirection})
+                                        <p className="mb-3 text-[11px] font-medium text-foreground">
+                                            Workflow Volume — Next 7 Days
                                         </p>
-                                        {predictions.workflowVolume.forecasts.length > 0 && (
-                                            <DataTable title="" cols={['Date', 'Predicted', 'Range']}>
-                                                {predictions.workflowVolume.forecasts.map((d) => (
-                                                    <tr key={d.date} className="border-b border-border/70">
-                                                        <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.date}</td>
-                                                        <td className="px-4 py-2 text-[10px] text-foreground">{d.predictedCount}</td>
-                                                        <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.lowerBound}–{d.upperBound}</td>
-                                                    </tr>
-                                                ))}
+                                        <p className="text-[10px] text-muted-foreground">
+                                            {
+                                                predictions.workflowVolume
+                                                    .last30Summary
+                                            }
+                                        </p>
+                                        <p className="mt-1 text-[10px] text-muted-foreground">
+                                            Daily avg:{' '}
+                                            {
+                                                predictions.workflowVolume
+                                                    .dailyAverage
+                                            }{' '}
+                                            · Trend:{' '}
+                                            {
+                                                predictions.workflowVolume
+                                                    .weeklyTrend
+                                            }
+                                            % (
+                                            {
+                                                predictions.workflowVolume
+                                                    .trendDirection
+                                            }
+                                            )
+                                        </p>
+                                        {predictions.workflowVolume.forecasts
+                                            .length > 0 && (
+                                            <DataTable
+                                                title=""
+                                                cols={[
+                                                    'Date',
+                                                    'Predicted',
+                                                    'Range',
+                                                ]}
+                                            >
+                                                {predictions.workflowVolume.forecasts.map(
+                                                    (d) => (
+                                                        <tr
+                                                            key={d.date}
+                                                            className="border-b border-border/70"
+                                                        >
+                                                            <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                                {d.date}
+                                                            </td>
+                                                            <td className="px-4 py-2 text-[10px] text-foreground">
+                                                                {
+                                                                    d.predictedCount
+                                                                }
+                                                            </td>
+                                                            <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                                {d.lowerBound}–
+                                                                {d.upperBound}
+                                                            </td>
+                                                        </tr>
+                                                    ),
+                                                )}
                                             </DataTable>
                                         )}
                                     </div>
                                     <div>
-                                        <p className="mb-3 text-[11px] font-medium text-foreground">Approval Volume — Next 7 Days</p>
-                                        <p className="text-[10px] text-muted-foreground">{predictions.approvalVolume.last30Summary}</p>
-                                        <p className="mt-1 text-[10px] text-muted-foreground">
-                                            Daily avg: {predictions.approvalVolume.dailyAverage} · Trend: {predictions.approvalVolume.weeklyTrend}% ({predictions.approvalVolume.trendDirection})
+                                        <p className="mb-3 text-[11px] font-medium text-foreground">
+                                            Approval Volume — Next 7 Days
                                         </p>
-                                        {predictions.approvalVolume.forecasts.length > 0 && (
-                                            <DataTable title="" cols={['Date', 'Predicted', 'Range']}>
-                                                {predictions.approvalVolume.forecasts.map((d) => (
-                                                    <tr key={d.date} className="border-b border-border/70">
-                                                        <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.date}</td>
-                                                        <td className="px-4 py-2 text-[10px] text-foreground">{d.predictedCount}</td>
-                                                        <td className="px-4 py-2 text-[10px] text-muted-foreground">{d.lowerBound}–{d.upperBound}</td>
-                                                    </tr>
-                                                ))}
+                                        <p className="text-[10px] text-muted-foreground">
+                                            {
+                                                predictions.approvalVolume
+                                                    .last30Summary
+                                            }
+                                        </p>
+                                        <p className="mt-1 text-[10px] text-muted-foreground">
+                                            Daily avg:{' '}
+                                            {
+                                                predictions.approvalVolume
+                                                    .dailyAverage
+                                            }{' '}
+                                            · Trend:{' '}
+                                            {
+                                                predictions.approvalVolume
+                                                    .weeklyTrend
+                                            }
+                                            % (
+                                            {
+                                                predictions.approvalVolume
+                                                    .trendDirection
+                                            }
+                                            )
+                                        </p>
+                                        {predictions.approvalVolume.forecasts
+                                            .length > 0 && (
+                                            <DataTable
+                                                title=""
+                                                cols={[
+                                                    'Date',
+                                                    'Predicted',
+                                                    'Range',
+                                                ]}
+                                            >
+                                                {predictions.approvalVolume.forecasts.map(
+                                                    (d) => (
+                                                        <tr
+                                                            key={d.date}
+                                                            className="border-b border-border/70"
+                                                        >
+                                                            <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                                {d.date}
+                                                            </td>
+                                                            <td className="px-4 py-2 text-[10px] text-foreground">
+                                                                {
+                                                                    d.predictedCount
+                                                                }
+                                                            </td>
+                                                            <td className="px-4 py-2 text-[10px] text-muted-foreground">
+                                                                {d.lowerBound}–
+                                                                {d.upperBound}
+                                                            </td>
+                                                        </tr>
+                                                    ),
+                                                )}
                                             </DataTable>
                                         )}
                                     </div>
@@ -1179,26 +2266,49 @@ export default function CrmAnalytics({
     );
 }
 
-function MetricCard({ label, value, color }: { label: string; value: string | number; color: string }) {
+function MetricCard({
+    label,
+    value,
+    color,
+}: {
+    label: string;
+    value: string | number;
+    color: string;
+}) {
     return (
         <div className="rounded-lg border border-border/70 bg-card p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+            <p className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                {label}
+            </p>
             <p className={cn('mt-1 text-xl font-semibold', color)}>{value}</p>
         </div>
     );
 }
 
-function DataTable({ title, cols, children }: { title: string; cols: string[]; children: React.ReactNode }) {
+function DataTable({
+    title,
+    cols,
+    children,
+}: {
+    title: string;
+    cols: string[];
+    children: React.ReactNode;
+}) {
     return (
         <div className="overflow-hidden rounded-lg border border-border/70">
             <div className="border-b border-border/70 bg-muted/50 px-4 py-2">
-                <p className="text-[11px] font-medium text-foreground">{title}</p>
+                <p className="text-[11px] font-medium text-foreground">
+                    {title}
+                </p>
             </div>
             <table className="w-full">
                 <thead>
                     <tr className="border-b border-border/70 bg-muted/50">
                         {cols.map((col) => (
-                            <th key={col} className="px-4 py-2 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                            <th
+                                key={col}
+                                className="px-4 py-2 text-left text-[10px] font-medium tracking-wider text-muted-foreground uppercase"
+                            >
                                 {col}
                             </th>
                         ))}
@@ -1210,7 +2320,15 @@ function DataTable({ title, cols, children }: { title: string; cols: string[]; c
     );
 }
 
-function CollapsibleTable({ title, cols, children }: { title: string; cols: string[]; children: React.ReactNode }) {
+function CollapsibleTable({
+    title,
+    cols,
+    children,
+}: {
+    title: string;
+    cols: string[];
+    children: React.ReactNode;
+}) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -1219,15 +2337,22 @@ function CollapsibleTable({ title, cols, children }: { title: string; cols: stri
                 onClick={() => setOpen(!open)}
                 className="flex w-full items-center justify-between border-b border-border/70 bg-muted/50 px-4 py-2 text-left transition-colors hover:bg-muted"
             >
-                <p className="text-[11px] font-medium text-foreground">{title}</p>
-                <span className="text-[10px] text-muted-foreground">{open ? '▲' : '▼'}</span>
+                <p className="text-[11px] font-medium text-foreground">
+                    {title}
+                </p>
+                <span className="text-[10px] text-muted-foreground">
+                    {open ? '▲' : '▼'}
+                </span>
             </button>
             {open && (
                 <table className="w-full">
                     <thead>
                         <tr className="border-b border-border/70 bg-muted/50">
                             {cols.map((col) => (
-                                <th key={col} className="px-4 py-2 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                                <th
+                                    key={col}
+                                    className="px-4 py-2 text-left text-[10px] font-medium tracking-wider text-muted-foreground uppercase"
+                                >
                                     {col}
                                 </th>
                             ))}
@@ -1242,12 +2367,16 @@ function CollapsibleTable({ title, cols, children }: { title: string; cols: stri
 
 function HealthBadge({ status }: { status: string }) {
     return (
-        <span className={cn(
-            'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
-            status === 'healthy' ? 'bg-green-400/10 text-success' :
-                status === 'needs_attention' ? 'bg-yellow-400/10 text-warning' :
-                    'bg-red-400/10 text-error',
-        )}>
+        <span
+            className={cn(
+                'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
+                status === 'healthy'
+                    ? 'bg-green-400/10 text-success'
+                    : status === 'needs_attention'
+                      ? 'bg-yellow-400/10 text-warning'
+                      : 'bg-red-400/10 text-error',
+            )}
+        >
             {status === 'needs_attention' ? 'Needs Attention' : status}
         </span>
     );
@@ -1255,14 +2384,20 @@ function HealthBadge({ status }: { status: string }) {
 
 function RiskBadge({ level }: { level: string }) {
     return (
-        <span className={cn(
-            'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
-            level === 'very_high' ? 'bg-red-400/10 text-error' :
-                level === 'high' ? 'bg-orange-400/10 text-orange-400' :
-                    level === 'moderate' ? 'bg-yellow-400/10 text-warning' :
-                        level === 'low' ? 'bg-green-400/10 text-success' :
-                            'bg-muted text-muted-foreground',
-        )}>
+        <span
+            className={cn(
+                'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
+                level === 'very_high'
+                    ? 'bg-red-400/10 text-error'
+                    : level === 'high'
+                      ? 'bg-orange-400/10 text-orange-400'
+                      : level === 'moderate'
+                        ? 'bg-yellow-400/10 text-warning'
+                        : level === 'low'
+                          ? 'bg-green-400/10 text-success'
+                          : 'bg-muted text-muted-foreground',
+            )}
+        >
             {level === 'very_high' ? 'Very High' : level}
         </span>
     );
@@ -1270,12 +2405,16 @@ function RiskBadge({ level }: { level: string }) {
 
 function ConfidenceBadge({ level }: { level: string }) {
     return (
-        <span className={cn(
-            'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
-            level === 'high' ? 'bg-green-400/10 text-success' :
-                level === 'medium' ? 'bg-yellow-400/10 text-warning' :
-                    'bg-muted text-muted-foreground',
-        )}>
+        <span
+            className={cn(
+                'inline-block rounded-full px-2 py-0.5 text-[10px] capitalize',
+                level === 'high'
+                    ? 'bg-green-400/10 text-success'
+                    : level === 'medium'
+                      ? 'bg-yellow-400/10 text-warning'
+                      : 'bg-muted text-muted-foreground',
+            )}
+        >
             {level === 'very_low' ? 'Very Low' : level}
         </span>
     );

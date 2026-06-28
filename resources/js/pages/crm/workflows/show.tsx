@@ -88,14 +88,23 @@ interface Props {
 }
 
 export default function WorkflowShow({ workflow, meta }: Props) {
-    const entityTypes = Array.from(new Set([workflow.entity_type, 'lead', 'deal', 'project', 'contact', 'organization']));
+    const entityTypes = Array.from(
+        new Set([
+            workflow.entity_type,
+            'lead',
+            'deal',
+            'project',
+            'contact',
+            'organization',
+        ]),
+    );
 
     return (
         <>
             <Head title={`CRM · ${workflow.name}`} />
 
             <div className="flex h-full flex-col bg-gray-50/30">
-                <div className="border-b border-gray-200 bg-white/90 backdrop-blur-xl px-6 py-2.5 sticky top-0 z-10">
+                <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 px-6 py-2.5 backdrop-blur-xl">
                     <button
                         onClick={() => router.visit(index().url)}
                         className="flex items-center gap-1.5 text-[11px] text-gray-500 transition-colors hover:text-gray-700"
@@ -107,7 +116,10 @@ export default function WorkflowShow({ workflow, meta }: Props) {
 
                 <div className="flex-1 overflow-auto">
                     <div className="mx-auto max-w-4xl space-y-6 p-6">
-                        <WorkflowHeader workflow={workflow} entityTypes={entityTypes} />
+                        <WorkflowHeader
+                            workflow={workflow}
+                            entityTypes={entityTypes}
+                        />
 
                         <TriggerSection
                             workflowId={workflow.id}

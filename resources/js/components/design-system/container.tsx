@@ -10,9 +10,5 @@ export function Container({
     children: ReactNode;
     as?: 'div' | 'section' | 'article' | 'main' | 'header' | 'footer';
 }) {
-    return (
-        <Tag className={cn('container-main', className)}>
-            {children}
-        </Tag>
-    );
+    return <Tag className={cn('container-main', className)}>{children}</Tag>;
 }
